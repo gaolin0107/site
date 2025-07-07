@@ -1,0 +1,25 @@
+.hi {
+  text-wrap: nowrap;
+  overflow: hidden;
+  width: 0;
+  animation: typing 2s steps(20) forwards;
+  outline: 1px solid;
+  padding-bottom: 20dvw;
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 20ch; } /* 根據你最長的字串調整 */
+}
+
+@media (min-width: 768px) {
+.hi {
+    height: 9dvw; /* 平板或桌機時字變小一些 */
+}
+}
+
+@media (max-width: 390px) {
+.hi {
+    height: 12dvw; /* 小手機螢幕，如 SE 機型 */
+}
+}
