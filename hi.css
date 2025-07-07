@@ -1,0 +1,23 @@
+.hi {
+  width: 100dvw;
+  height: 20dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 打字效果放內層 span */
+.typing {
+  width: 10dvw; /* 讓寬度自動調整 */
+  height: 20dvh; /* 調整高度 */
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  animation: typing 2s steps(40) forwards;
+  overflow: hidden;
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 20ch; }  /* 調整成符合文字長度 */
+}

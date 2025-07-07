@@ -25,10 +25,10 @@ let index = 0;
 const el = document.getElementById('greeting');
 
 function typeGreeting() {
-  el.classList.remove('hi');         // 移除動畫 class
+  el.classList.remove('typing');         // 移除動畫 class
   void el.offsetWidth;               // 強制 reflow，觸發動畫重播
   el.textContent = greetings[index]; // 更新文字
-  el.classList.add('hi');            // 再次加上動畫 class
+  el.classList.add('typing');            // 再次加上動畫 class
 }
 
 setInterval(() => {
