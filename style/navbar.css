@@ -101,7 +101,7 @@
     align-items: center;
 }
 .navbar-login {
-    background-image: url('assets/account.png');
+    background-image: url('../assets/account.png');
     background-size: cover;
     background-position: center;
     text-decoration: none;

@@ -1,24 +1,23 @@
 .hi {
-  text-wrap: nowrap;
+  width: 100dvw;
+  height: 20dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 打字效果放內層 span */
+.typing {
+  width: 10dvw; /* 讓寬度自動調整 */
+  height: 20dvh; /* 調整高度 */
+  white-space: nowrap;
   overflow: hidden;
-  width: 0;
-  animation: typing 2s steps(20) forwards;
-  padding-bottom: 20dvw;
+  display: inline-block;
+  animation: typing 2s steps(40) forwards;
+  overflow: hidden;
 }
 
 @keyframes typing {
   from { width: 0; }
-  to { width: 20ch; } /* 根據你最長的字串調整 */
-}
-
-@media (min-width: 768px) {
-.hi {
-    height: 9dvw; /* 平板或桌機時字變小一些 */
-}
-}
-
-@media (max-width: 390px) {
-.hi {
-    height: 12dvw; /* 小手機螢幕，如 SE 機型 */
-}
+  to { width: 20ch; }  /* 調整成符合文字長度 */
 }
