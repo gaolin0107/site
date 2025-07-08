@@ -4,7 +4,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: -10dvh; /* 或你想要的調整量 */
 }
+
 
 /* 打字效果放內層 span */
 .typing {

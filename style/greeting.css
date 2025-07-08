@@ -14,26 +14,13 @@
 #greeting {
   display: inline-block;
   white-space: nowrap;
-  font-size: clamp(24px, 8vw, 48px);
+  font-size: clamp(52px, 8dvw, 270px);
   line-height: 1.2;
   transition: opacity 0.5s ease-in-out;
   opacity: 1;
 }
+
 .fade-out {
   opacity: 0;
 }
--out {
-opacity: 0;
-}
 
-@media (min-width: 768px) {
-#greeting {
-    font-size: 6dvw; /* 平板或桌機時字變小一些 */
-}
-}
-
-@media (max-width: 390px) {
-#greeting {
-    font-size: 16dvw; /* 小手機螢幕，如 SE 機型 */
-}
-}

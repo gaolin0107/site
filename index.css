@@ -1,9 +1,13 @@
 @font-face { 
-    font-family: 'MyCustomFont'; 
+    font-family: 'font1'; 
     src: url('assets/jf2.1.woff') format('woff'); 
 } 
+@font-face { 
+    font-family: 'font2'; 
+    src: url('assets/ChenYuluoyan-2.0-Thin.ttf') format('truetype'); 
+} 
 body { 
-    font-family: 'MyCustomFont', sans-serif, serif; 
+    font-family: 'font1', 'font2'; 
     margin: 0; 
     padding: 0;
     

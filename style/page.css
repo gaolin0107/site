@@ -19,11 +19,22 @@
 .page-word-2 {
   font-size: 1.2em;
   opacity: 0;
-  animation: fadeIn 1s ease forwards;
+  transform: translateY(20px); /* 一開始從下方出現 */
+  animation: fadeInMove 1s ease forwards;
+  transform: translate(0, 30dvh);
+  padding: 10px;
 }
 
-.page-word-1 { animation-delay: 0.2s; }
-.page-word-2 { animation-delay: 1.2s; }
+@keyframes fadeInMove {
+  to {
+    opacity: 1;
+    transform: translateY(-100); /* 回到原來位置 */
+  }
+}
+
+
+.page-word-1 { animation-delay: 0.3s; }
+.page-word-2 { animation-delay: 1.3s; }
 
 @keyframes typing {
   from { width: 0; }
