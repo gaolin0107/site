@@ -4,7 +4,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 0px solid #00ff73;
 }
+
 
 /* 打字效果放內層 span */
 .typing {
