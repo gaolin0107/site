@@ -23,7 +23,7 @@
   animation: fadeInMove 1s ease forwards;
   transform: translate(0, 22dvh);
   padding: 10px;
-  border: 1px solid #00ff73;
+  border: 0px solid #00ff73;
   width: calc(100dvw - 80px); /* 預留左右各20px */
   box-sizing: border-box;
 }

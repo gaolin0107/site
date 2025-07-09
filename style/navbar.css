@@ -1,4 +1,3 @@
-
 .navbar {
     overflow: hidden;
     position: fixed;
@@ -21,7 +20,6 @@
     position: relative;
     white-space: nowrap;
 }
-
 .navbar-left {
     text-decoration: none;
     display: flex; /* 使用 Flexbox */
@@ -43,23 +41,6 @@
     transform: translateX(-50%);
     overflow: hidden;
 }  
-.navbar-middle-text {
-    display: flex;
-    gap: 80dvw;
-    animation: scroll 40s linear infinite;
-    will-change: transform;
-    white-space: nowrap;
-}
-.navbar-middle-text:hover {
-    animation-play-state: paused;
-}
-.navbar-middle-text a{
-    text-decoration: none;
-    color: #000000;
-}
-.navbar-middle-text a:hover {
-     color: #4f4b48;
-}
 .navbar-right {
     top: 100px; 
     right: 0;
@@ -70,7 +51,7 @@
     padding: 20px;
     visibility: hidden;
     opacity: 0;
-    transform: translateX(50px);
+    transform: translateX(260px);
     transition: transform 1s ease;
 }
 .navbar-right ul {
@@ -86,7 +67,6 @@
     font-size: 20px;
     color: #000000;
 }
-
 .navbar-login-container {
     overflow: hidden;
     position: fixed;
@@ -101,7 +81,7 @@
     align-items: center;
 }
 .navbar-login {
-    background-image: url('../assets/account.png');
+    background-image: url('assets/account.png');
     background-size: cover;
     background-position: center;
     text-decoration: none;
@@ -125,6 +105,37 @@
     }
 }
 
+.navbar-middle-text {
+    display: flex;
+    gap: 80dvw;
+    animation: scroll 20s linear infinite;
+    will-change: transform;
+    white-space: nowrap;
+}
+.navbar-middle-text:hover {
+    animation-play-state: paused;
+}
+.navbar-middle-text a{
+    text-decoration: none;
+    color: #000000;
+}
+.navbar-middle-text a:hover {
+     color: #4f4b48;
+}
+
+@keyframes scroll {
+    from {
+        transform: translateX(150%);
+    }
+    to {
+        transform: translateX(0%);
+    }
+}
+
+.text-link {
+    text-decoration: none;
+    color: #000000;
+}
 @keyframes scroll {
     from {
         transform: translateX(100dvw);
