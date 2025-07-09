@@ -1,0 +1,206 @@
+.navbar {
+    overflow: hidden;
+    position: fixed;
+    top: 20px;
+    left: 4dvw;
+    transform: none;
+    width: calc(92dvw - 40px);
+    max-width: 100%;
+    z-index: 1000;
+    height: 40px;
+    margin: 0;
+    border-radius: 25px;
+    opacity: 0.7;
+}
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+    position: relative;
+    white-space: nowrap;
+}
+.navbar-left {
+    text-decoration: none;
+    display: flex; /* 使用 Flexbox */
+    align-items: center; /* 垂直居中 */
+    justify-content: center; /* 水平居中 */
+    padding: 0 2dvw;
+    width: 12dvw;
+    position: relative; /* 為子元素提供定位參考 */
+}
+.navbar-middle {
+    font-size: 14px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    width: 60dvw;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    overflow: hidden;
+}  
+.navbar-right {
+    top: 100px; 
+    right: 0;
+    position: fixed;
+    z-index: 1000;
+    height: auto;
+    border-radius: 10px 0 0 10px;
+    padding: 20px;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateX(260px);
+    transition: transform 1s ease;
+}
+.navbar-right ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.navbar-right li {
+    margin: 5px 0;
+}
+.navbar-right a {
+    text-decoration: none;
+    font-size: 20px;
+    color: #000000;
+}
+.navbar-login-container {
+    overflow: hidden;
+    position: fixed;
+    top: 20px;
+    right: 2dvw;
+    width: calc(2dvw + 40px);
+    height: 40px;
+    max-width: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.navbar-login {
+    background-image: url('assets/account.png');
+    background-size: cover;
+    background-position: center;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    cursor: pointer; 
+}
+@media (max-device-width: 600px) {
+    .navbar-middle {
+        width: 52dvw;
+    }
+    .navbar-left, .navbar-label {
+        width: 17dvw;
+    }
+    .navbar-right {
+        width: 25dvw;
+    }
+}
+
+.navbar-middle-text {
+    display: flex;
+    gap: 80dvw;
+    animation: scroll 20s linear infinite;
+    will-change: transform;
+    white-space: nowrap;
+}
+.navbar-middle-text:hover {
+    animation-play-state: paused;
+}
+.navbar-middle-text a{
+    text-decoration: none;
+    color: #000000;
+}
+.navbar-middle-text a:hover {
+     color: #4f4b48;
+}
+
+@keyframes scroll {
+    from {
+        transform: translateX(150%);
+    }
+    to {
+        transform: translateX(0%);
+    }
+}
+
+.text-link {
+    text-decoration: none;
+    color: #000000;
+}
+@keyframes scroll {
+    from {
+        transform: translateX(100dvw);
+    }
+    to {
+        transform: translateX(-100%);
+    }
+}
+.navbar-login, .navbar-container, .prev, .next, .navbar-label, .navbar-right {
+    background-color: #f0ece1;
+}
+.text-link:hover {
+    color: #4f4b48;
+}
+.navbar-right a:hover, .prev:hover, .next:hover {
+    color: #4f4b48;
+}
+#menu {visibility: hidden;}
+.navbar-label {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 12dvw;
+    position: relative;
+    height: 40px;
+}
+label {
+    width: 14px;
+    height: 2px;
+    background: #918d8a;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: 0.4s ease; /* 平滑過渡 */
+}
+label:hover {
+    background-color: #4f4b48;
+}
+label:before, label:after {
+    content: "";
+    width: 14px;
+    height: 2px;
+    background: #918d8a;
+    position: absolute;
+    left: 0; /* 保持和主線對齊 */
+    transition: 0.4s ease;
+}
+label:before {
+    transform: translateY(-4px); /* 上方位置 */
+}
+label:after {
+    transform: translateY(4px); /* 下方位置 */
+}
+label:hover:before, label:hover:after {
+    background-color: #4f4b48;
+}
+#menu:checked + label {
+    background-color: transparent; /* 隱藏中間的主線 */
+}
+#menu:checked + label:before {
+    transform: rotate(45deg); /* 上線旋轉45度 */
+}
+#menu:checked + label:after {
+    transform: rotate(-45deg); /* 下線旋轉-45度 */
+}
