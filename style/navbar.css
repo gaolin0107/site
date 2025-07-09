@@ -97,12 +97,9 @@
     cursor: pointer;
 }
 .navbar-login {
-  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
-  transition: box-shadow 0.3s ease;
-}
-.navbar-login:hover {
   box-shadow: 0 12px 20px rgba(0,0,0,0.35);
 }
+
 
 
 @media (max-device-width: 600px) {
@@ -134,28 +131,11 @@
 .navbar-middle-text a:hover {
      color: #4f4b48;
 }
-
 @keyframes scroll {
-    from {
-        transform: translateX(150%);
-    }
-    to {
-        transform: translateX(0%);
-    }
+  from { transform: translateX(100dvw); }
+  to { transform: translateX(calc(-100% - 100dvw)); }
 }
 
-.text-link {
-    text-decoration: none;
-    color: #000000;
-}
-@keyframes scroll {
-    from {
-        transform: translateX(100dvw);
-    }
-    to {
-        transform: translateX(-100%);
-    }
-}
 .navbar-login, .navbar-container, .prev, .next, .navbar-label, .navbar-right {
     background-color: #f0ece1;
 }
