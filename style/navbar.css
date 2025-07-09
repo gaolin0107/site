@@ -11,6 +11,7 @@
     margin: 0;
     border-radius: 25px;
     opacity: 0.7;
+    box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.15);
 }
 .navbar-container {
     display: flex;
@@ -53,6 +54,7 @@
     opacity: 0;
     transform: translateX(260px);
     transition: transform 1s ease;
+    box-shadow: 0 12px 20px rgba(0,0,0,0.35);
 }
 .navbar-right ul {
     list-style: none;
@@ -79,9 +81,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: visible; /* 允許 box-shadow 展開 */
 }
 .navbar-login {
-    background-image: url('assets/account.png');
+    background-image: url('../assets/account.png');
     background-size: cover;
     background-position: center;
     text-decoration: none;
@@ -91,8 +94,17 @@
     height: 40px;
     width: 40px;
     border-radius: 50%;
-    cursor: pointer; 
+    cursor: pointer;
 }
+.navbar-login {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+  transition: box-shadow 0.3s ease;
+}
+.navbar-login:hover {
+  box-shadow: 0 12px 20px rgba(0,0,0,0.35);
+}
+
+
 @media (max-device-width: 600px) {
     .navbar-middle {
         width: 52dvw;
