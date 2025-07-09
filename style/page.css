@@ -21,8 +21,11 @@
   opacity: 0;
   transform: translateY(20px); /* 一開始從下方出現 */
   animation: fadeInMove 1s ease forwards;
-  transform: translate(0, 30dvh);
+  transform: translate(0, 22dvh);
   padding: 10px;
+  border: 1px solid #00ff73;
+  width: calc(100dvw - 80px); /* 預留左右各20px */
+  box-sizing: border-box;
 }
 
 @keyframes fadeInMove {
