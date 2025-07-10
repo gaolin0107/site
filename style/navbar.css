@@ -54,7 +54,7 @@
     opacity: 0;
     transform: translateX(260px);
     transition: transform 1s ease;
-    box-shadow: 0 12px 20px rgba(0,0,0,0.35);
+    box-shadow: 12px 12px 20px rgba(0, 0, 0, 0.35);
 }
 .navbar-right ul {
     list-style: none;
@@ -97,7 +97,7 @@
     cursor: pointer;
 }
 .navbar-login {
-  box-shadow: 0 12px 20px rgba(0,0,0,0.35);
+    box-shadow: 2px 5px 6px rgba(0, 0, 0, 0.18);
 }
 
 
@@ -121,9 +121,7 @@
     will-change: transform;
     white-space: nowrap;
 }
-.navbar-middle-text:hover {
-    animation-play-state: paused;
-}
+
 .navbar-middle-text a{
     text-decoration: none;
     color: #000000;
