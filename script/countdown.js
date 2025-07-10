@@ -23,11 +23,11 @@ function updateCountdown() {
   const seconds = Math.floor((diff / 1000) % 60);
 
   document.getElementById("year").textContent = year + 1;
-  document.getElementById("months").textContent = months;
-  document.getElementById("days").textContent = days;
-  document.getElementById("hours").textContent = hours;
-  document.getElementById("minutes").textContent = minutes;
-  document.getElementById("seconds").textContent = seconds;
+  document.getElementById("months").textContent = months.toString().padStart(2, '0');
+  document.getElementById("days").textContent = days.toString().padStart(2, '0');
+  document.getElementById("hours").textContent = hours.toString().padStart(2, '0');
+  document.getElementById("minutes").textContent = minutes.toString().padStart(2, '0');
+  document.getElementById("seconds").textContent = seconds.toString().padStart(2, '0');
 }
 
 setInterval(updateCountdown, 1000);
