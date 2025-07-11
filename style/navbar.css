@@ -126,12 +126,14 @@
     text-decoration: none;
     color: #000000;
 }
-.navbar-middle-text a:hover {
-     color: #4f4b48;
-}
+
 @keyframes scroll {
-  from { transform: translateX(100dvw); }
-  to { transform: translateX(calc(-100% - 100dvw)); }
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
 
 .navbar-login, .navbar-container, .prev, .next, .navbar-label, .navbar-right {

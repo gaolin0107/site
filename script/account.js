@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
 
     const clientId = '773368697158-iqbth9pmc75qbg4knmvnmabc7h3hmve2.apps.googleusercontent.com';
-    const redirectUri = 'https://gaolin0107.serv00.net/html/callback.html';
+    const redirectUri = 'https://gaolin.org/html/callback.html';
     const scope = 'profile';
     const responseType = 'token';
     const prompt = 'select_account'; // 強制每次登入選擇帳號
