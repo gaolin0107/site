@@ -60,7 +60,8 @@
     padding: 0;
 }
 .navbar-right li {
-    margin: 5px 0;}
+    margin: 5px 0;
+}
 .navbar-right a {
     text-decoration: none;
     font-size: 20px;
@@ -93,12 +94,56 @@
     width: 40px;
     border-radius: 50%;
     cursor: pointer;
-}
-.navbar-login {
     box-shadow: 2px 5px 6px rgba(0, 0, 0, 0.18);
 }
 
-
+    .login-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      padding: 30px;
+      width: 320px;
+      display: none;
+      flex-direction: column;
+    }
+    .login-popup h2 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+    .login-popup input {
+      padding: 10px;
+      margin: 10px 0;
+      width: 100%;
+      border-radius: 10px;
+      border: none;
+      background: rgba(255, 255, 255, 0.2);
+      color: #000000;
+    }
+    .login-popup button {
+      padding: 10px;
+      margin-top: 10px;
+      width: 100%;
+      border-radius: 10px;
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 20px;
+      cursor: pointer;
+      color: #000000;
+    }
 
 @media (max-device-width: 600px) {
     .navbar-middle {
@@ -112,6 +157,7 @@
 .navbar-middle-text {
     display: flex;
     gap: 80dvw;
+    width: auto;
     animation: scroll 20s linear infinite;
     will-change: transform;
     white-space: nowrap;
@@ -124,20 +170,20 @@
 
 @keyframes scroll {
   0% {
-    transform: translateX(100%);
+    transform: translateX(50%);
   }
   100% {
     transform: translateX(-100%);
   }
 }
 
-.navbar-login, .navbar-container, .prev, .next, .navbar-label, .navbar-right {
+.navbar-login, .navbar-container, .navbar-label, .navbar-right {
     background-color: #f0ece1;
 }
 .text-link:hover {
     color: #4f4b48;
 }
-.navbar-right a:hover, .prev:hover, .next:hover {
+.navbar-right a:hover {
     color: #4f4b48;
 }
 #menu {visibility: hidden;}

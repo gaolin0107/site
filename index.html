@@ -3,8 +3,9 @@
 <head> 
   <meta charset="utf-8"> 
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1.0, user-scalable=no"> 
+  <meta name="theme-color" content="#FEFAEF">
   <meta name="description" content="高林的個人網頁"> 
-  <meta name="keywords" content="高林,gaolin,Gaolin,GaoLin,帥哥,高林網站,gaolin.org"> 
+  <meta name="keywords" content="高林,gaolin,Gaolin,GaoLin,zyric,高林網站,gaolin.org"> 
   <meta name="author" content="GaoLin"> 
   <meta name="robots" content="all"> 
   <meta name="copyright" content="stevechow"> 
@@ -31,7 +32,16 @@
       </div>
     <div class="navbar-middle">
       <div class="navbar-middle-text">
-        <a></a>
+        <a>
+          <div id="countdown">
+            <span>離<span id="year"></span>年還有</span>
+            <span id="months"></span> 月
+            <span id="days"></span> 天
+            <span id="hours"></span> 小時
+            <span id="minutes"></span> 分
+            <span id="seconds"></span> 秒，時間過真快阿！
+        </div>
+        </a>
         <a>你知道嗎? 圓周率小數點後10位數是3.1415926535</a>
         <a>感覺還要一年這個網站才會做好</a>
         <a>這個網頁有彩蛋，你找得到嗎？</a>
@@ -43,7 +53,15 @@
       </div>
     </div> 
     <div class="navbar-login-container">
-      <div class="navbar-login" id="navbarlog"></div>
+      <div class="navbar-login" id="navbarlog">
+      <div class="login-popup" id="popup">
+        <span class="close-btn" onclick="closePopup()">✖</span>
+        <input type="text" id="username" placeholder="帳號">
+        <input type="password" id="password" placeholder="密碼">
+        <button onclick="checkLogin()">登入</button>
+        <button onclick="googleLogin()">Google 登入</button>
+      </div>
+      </div>
     </div>
   </div>
   <div class="navbar-right">
@@ -67,7 +85,7 @@
         <span id="greeting" class="notranslate" translate="no"></span>
     </div>
       <div class="page-word-1">目前還在製作中，有什麼想法可以告訴我!</div>
-      <div class="page-word-2">完成度:6%，版本:WB017 07/12</div>
+      <div class="page-word-2">完成度:6%，版本:WB018 07/12</div>
       
   </div>
 </div>
@@ -75,14 +93,7 @@
 <div class="slideshow-container" id="slideshow"> 
   <div class="slideshow-page">
       <div class="slideshow-word">
-        <div id="countdown">
-          <span>離<span id="year"></span>年還有</span>
-          <span id="months"></span> 月
-          <span id="days"></span> 天
-          <span id="hours"></span> 小時
-          <span id="minutes"></span> 分
-          <span id="seconds"></span> 秒，時間過真快阿！
-        </div>
+
       </div>
   </div>
   <div class="slideshow-page">
@@ -104,18 +115,7 @@
 </div> 
 </div> 
 
-<div class="contact">
-  <div class="contact-word"  id="contact">
-  </div>
-  <div class="contact-container">
-    <div href="https://www.instagram.com/gaolin_0107/"><img src="assets/Instagram.webp" class="contact-img-1"></div>
-    <div href="https://www.facebook.com/gaolin0107"><img src="assets/Facebook.webp" class="contact-img-2"></div> 
-    <div href="https://line.me/ti/p/1Evl6D6DyO"><img src="assets/Line.webp" class="contact-img-3"></div>
-  </div>
-</div>
-
 <link rel="stylesheet" href="style/navbar.css">
-<link rel="stylesheet" href="style/contact.css">
 <link rel="stylesheet" href="style/slideshow.css">
 <link rel="stylesheet" href="style/greeting.css">
 <link rel="stylesheet" href="style/page.css">
