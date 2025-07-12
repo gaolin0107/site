@@ -1,10 +1,15 @@
 .page { 
-    position: static;
-    margin-bottom: 0;
-    transform: translateY(0); /* 或移除此屬性 */
-    width: 100dvw;
-    height: 100dvh;
-    z-index: 1;
+  position: static;
+  margin-bottom: 0;
+  transform: translateY(0); /* 或移除此屬性 */
+  width: 100dvw;
+  height: 100dvh;
+  z-index: 1;
+  background-image: url('../1assets/002.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
 }
 
 .page-container {
