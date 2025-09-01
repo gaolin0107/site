@@ -1,0 +1,105 @@
+@font-face { 
+    font-family: 'font1'; 
+    src: url('assets/jf2.1.woff') format('woff'); 
+} 
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: 'font1';
+    background-color: #FEFAEF;
+    color: #6b5b4b;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    overflow: hidden;
+    padding-top: env(safe-area-inset-top);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+
+.wrapper {
+    overflow: scroll;
+    height: 100dvh;
+    width: 100dvw;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.wrapper::-webkit-scrollbar {
+    display: none;
+}
+img { 
+    -webkit-user-drag: none; 
+    -khtml-user-drag: none; 
+    -moz-user-drag: none; 
+    -o-user-drag: none; 
+    pointer-events: none; 
+} 
+img, video {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+#loading-screen { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background-color: rgb(0, 0, 0); 
+    z-index: 9999; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+} 
+.loader { 
+    width: fit-content; 
+    clip-path: inset(0 15ch 0 0); 
+    animation: l4 2s steps(50) infinite; 
+} 
+.loader:before { 
+    content: "載入中..."; 
+    font-size: 24px; 
+    color: white; 
+    line-height: 1.3; 
+} 
+@keyframes l4 { 
+    0% { 
+        clip-path: inset(0 15ch 0 0); 
+    } 
+    50% { 
+        clip-path: inset(0 0 0 0); 
+    } 
+    100% { 
+        clip-path: inset(0 0 0 0); 
+    } 
+} 
+
+
+
+
+
+
+
+
+
+
+
+
+
