@@ -3,14 +3,14 @@
     color: #6b5b4b; 
     display: flex;           /* 讓內容在容器內排版 */
     align-items: center; /* 垂直置中所有子元素 */
-    box-sizing: border-box;  /* 讓 padding 不會撐大容器 */
-    overflow: hidden;        /* 超出範圍的內容隱藏 */
-    margin: 30px;
+    margin: 30px 0 0 30px;
     height: 70px;
     border-radius: 50px;
     background-color: #f0ece1;         
     box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.15);
     width: 140px;
+    position: relative;
+    z-index: 10;
 }
 
 .navbar-login {
@@ -19,15 +19,16 @@
     background-position: center;
     background-size: calc(100% - 20px) calc(100% - 20px); /* 左右各 20px，上下各 20px */
     cursor: pointer;
-
+    overflow: hidden;
 }
-
 .navbar-right{
     position: relative;
+    cursor: pointer;
 }
+
 .navbar-login, .navbar-right {
     border-radius: 50%;
-    height: 70px;
+    height: 70px;   
     width: 70px;
     display: flex;
     align-items: center;
@@ -35,22 +36,20 @@
 label {
     width: 25px;
     height: 3px;
-    background: #6b5b4b;
+    background: #ffffff;
     cursor: pointer;
     position: absolute;
     top: 50%;    /* 垂直置中 */
     left: 50%;   /* 水平置中 */
     transform: translate(-50%, -50%); /* 修正偏移 */
 }
-label:hover, label:hover:before, label:hover:after {
-    background-color: #000000;
-}
+
 label:before, label:after {
     content: "";
     width: 25px;
     height: 3px;
     padding: 1px 0;
-    background: #6b5b4b;
+    background: #ffffff;
     position: absolute;
     transition: transform 0.4s ease; /* 只針對 transform */
 }
@@ -71,25 +70,65 @@ label:after {
 }
 
 #menu {visibility: hidden;}
+.navbar-list-container {
+    position: absolute;
+    top: 15px;
+    right: 0px;
+    height: 100px;
+    z-index: 7;
+    width: calc(100% + -30px);
+    overflow: hidden;
+    border-radius: 100% 0 0 80%;
+    border: 1px solid #000000;
+}
+
 .navbar-list {
-    position: fixed;
-    visibility: hidden;
+    top: 30px;
+    left: 30px;
+    width: 140px;
+    background-color: #f0ece1;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12); /* 更貼近 navbar 的質感 */
+    border-radius: 50px;
+    z-index: 5;
+    position: absolute;
+    transform: translateX(0px);
+    opacity: 0;
+    display: none;
 }
 .navbar-list ul{
     list-style: none;
-    margin: 0;
-    padding: 0;
     display: flex;          /* 啟用彈性盒 */
     flex-direction: row;    /* 橫向排列 */
-    justify-content: flex-end; /* 往右對齊 */
     align-items: center;    /* 垂直置中 */
 }
 .navbar-list li{
-    margin: 0 10px; /* 左右間距 */
+    border-radius: 50px;
+    height: 70px;
+    width: 70px;
+    display: flex;
+    align-items: center;
 }
 .navbar-list a{
     text-decoration: none;
-    color: #6b5b4b;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    border-radius: 50px;
+}
+.navbar-list.open {
+    display: block;
+    transform: translateX(150px);
+    opacity: 1;
+    transition: transform 1s ease, opacity 1s ease;
+}
+
+.navbar-list.close {
+    transform: translateX(0px);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 
@@ -126,15 +165,15 @@ label:after {
     z-index: 1000;
 }
 .login-popup button {
-  margin: 50px auto; /* 上下 20px，左右自動置中 */
-  padding: 15px;
-  border-radius: 15px;
-  cursor: pointer;
-  background-color: #fefaef;
-  border: none;
-  font-family: font1;
-  font-size: 20px;
-  display: block; /* 讓 margin auto 生效 */
+    margin: 50px auto; /* 上下 20px，左右自動置中 */
+    padding: 15px;
+    border-radius: 15px;
+    cursor: pointer;
+    background-color: #fefaef;
+    border: none;
+    font-family: font1;
+    font-size: 20px;
+    display: block; /* 讓 margin auto 生效 */
 }
 
 .close-btn {
@@ -167,4 +206,10 @@ label:after {
 @keyframes popupOut {
   from { transform: scale(1); opacity: 1; }
   to { transform: scale(0.95); opacity: 0; }
+}
+
+header {
+  display: flex;
+  align-items: center;
+  width: 100%;
 }

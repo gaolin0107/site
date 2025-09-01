@@ -1,17 +1,18 @@
 const menu = document.getElementById('menu');
-  const navbarList = document.querySelector('.navbar-list');
+const navbarList = document.querySelector('.navbar-list');
 
-  menu.addEventListener('change', () => {
-      if (menu.checked) {
-        navbarList.style.visibility = 'visible';
-        navbarList.style.opacity = '0.7';
-        navbarList.style.transform = 'translateX(100px)';
-        navbarList.style.transition = 'transform 1s ease';
+menu.addEventListener('change', () => {
+  if (menu.checked) {
+    navbarList.classList.remove('close'); // 移除關閉狀態
+    navbarList.style.display = 'block';   // 先顯示
+    // 等瀏覽器渲染一幀後再加 open，確保有初始狀態
+    requestAnimationFrame(() => {
+      navbarList.classList.add('open');
+    });
+  } else {
+    navbarList.classList.remove('open');
+    navbarList.classList.add('close');
+  }
+});
 
-      } else {
-        navbarList.style.transform = 'translateX(-50px)';
-        setTimeout(() => {
-            navbarList.style.visibility = 'hidden';
-        }, 1000);
-      }
-  });
+
