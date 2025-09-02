@@ -10,18 +10,17 @@
   <meta name="author" content="GaoLin">
   <meta name="robots" content="all">
   <meta name="copyright" content="stevechow">
-  <title>WB025 09/02</title>
+  <title>WB026 09/02</title>
   <link rel="icon" type="image/x-icon" href="assets/webimg.ico">
   <link rel="stylesheet" href="index.css">
   <script src="script/loader.js"></script>
 </head>
 
 <body>
-  <div class="wrapper">
-
-    <div id="loading-screen">
-      <div class="loader"></div>
-    </div>
+<div class="wrapper">
+  <div id="loading-screen">
+    <div class="loader"></div>
+  </div>
 
   <header>
     <div class="navbar">
@@ -37,40 +36,33 @@
     <div class="navbar-list">
       <ul>
         <li><a id="navbarout">登出</a></li>
-        <li><a href="">更多</a></li>
+        <li><a href="/html/others.html">更多</a></li>
       </ul>
     </div>
     <div class="login-popup" id="popup">
       <div class="login-popup-content">
         <button onclick="googleLogin()">Google登入</button>
-        <button onclick="closePopup()">關閉</button>
-        
+        <button onclick="closePopup()" id="closepopup">關閉</button>
       </div>
     </div>
   </header>
 
-  <div class="aboutme">
-    <div class="aboutme-image">
-      <img src="assets/aboutme.png">
-    </div>
-    <div class="aboutme-text">
-      <h1>高林</h1>
-      <p>嗨！我是高林，一個熱愛程式設計和網頁開發的學生。我喜歡探索新技術，並將創意轉化為實際的應用程式和網站。歡迎來到我的個人網頁，這裡展示了我的作品和專案。</p>
-    </div>
+
+
+  <div class="test">
+    <h2>測試區域</h2>
+    <button id="testButton">點擊我</button>
+    <p id="testOutput"></p>
   </div>
 
   <link rel="stylesheet" href="style/navbar.css">
   <link rel="stylesheet" href="style/aboutme.css">
   <link rel="stylesheet" href="style/test.css">
 
-
-
   <script src="script/account.js"></script>
   <script src="script/navbar-list.js"></script>
   <script src="script/test.js"></script>
-
-
-  </div> <!-- wrapper -->
+</div> <!-- wrapper -->
 </body>
 
 </html>

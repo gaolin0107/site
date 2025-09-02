@@ -1,4 +1,22 @@
-.aboutme{
-    height: 200dvh;
-    width: 100dvw;
+.aboutme {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100dvh;
+  border: 1px solid #000;
+  gap: 30px; /* 子元素之間的間距 */
+}
+
+.aboutme-image {
+  height: 30dvw;
+  width: 30dvw;
+  border-radius: 30%;
+  border: 1px solid #000;
+}
+
+.aboutme-text {
+  text-align: center;
+  margin: 20px;
+  font-size: clamp(1rem, 3dvw, 70px);
 }

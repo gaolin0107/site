@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const popup = document.getElementById("popup");
   const loginBtn = document.getElementById("navbarlog");
-  const closeBtn = document.querySelector(".close-btn");
+  const closeBtn = document.getElementById("closepopup");
 // 開啟彈窗
 loginBtn.addEventListener("click", () => {
   popup.classList.add("show");
