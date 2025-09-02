@@ -1,0 +1,8 @@
+.a {
+    font-size: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center; /* 水平置中 */
+    align-items: center;     /* 垂直置中 */
+    height: 100px;           /* 建議加上高度，才看得出垂直置中效果 */
+}
