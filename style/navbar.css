@@ -26,7 +26,7 @@
 }
 
 .navbar-login {
-    background-image: url('../assets/account-black.png');
+    background-image: url('../assets/account-001.png');
     background-repeat: no-repeat;
     background-position: center;
     background-size: 40px 40px;
@@ -38,7 +38,7 @@
     height: 40px !important;
 }
 .navbar-login:hover {
-    background-image: url('../assets/account-white.png');
+    background-image: url('../assets/account-002.png');
 }
 .navbar-right{
     position: relative;
@@ -47,7 +47,7 @@
 .navbar-right:hover label,
 .navbar-right:hover label::before,
 .navbar-right:hover label::after {
-    background-color: #ffffff;
+    background-color: #BCAAA4;
 }
 
 .navbar-login, .navbar-right {
@@ -60,7 +60,7 @@
 label {
     width: 25px;
     height: 3px;
-    background: #000000;
+    background: #5C4A3D;
     cursor: pointer;
     position: absolute;
     top: 50%;    /* 垂直置中 */
@@ -73,7 +73,7 @@ label:before, label:after {
     width: 25px;
     height: 3px;
     padding: 1px 0;
-    background: #000000;
+    background: #5C4A3D;
     position: absolute;
     transition: transform 0.4s ease; /* 只針對 transform */
 }
@@ -124,7 +124,7 @@ label:after {
 }
 .navbar-list a{
     text-decoration: none;
-    color: #000000;
+    color: #5C4A3D;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -133,7 +133,7 @@ label:after {
     border-radius: 50px;
 }
 .navbar-list a:hover {
-    color: #ffffff;
+    color: #BCAAA4;
 }
 .navbar-list.open {
     display: block;
@@ -192,8 +192,11 @@ label:after {
     display: block; /* 讓 margin auto 生效 */
     margin: 20px auto; /* 上下 20px，左右自動置中 */
     width: 150px;
-    color: black;
+    color: #5C4A3D;
     text-decoration: none;
+}
+.login-popup button:hover {
+    color: #BCAAA4;
 }
 
 
