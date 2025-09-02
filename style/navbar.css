@@ -113,6 +113,7 @@ label:after {
     width: 60px;
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 .navbar-list a{
     text-decoration: none;
@@ -160,7 +161,7 @@ label:after {
 .login-popup-content {
     border-radius: 25px;
     width: 200px;
-    height: 150px;
+    height: 170px;
     background-color: #f0ece1;
     position: fixed;
     justify-content: center;
@@ -170,8 +171,7 @@ label:after {
     transform: translate(-50%, -50%);
     z-index: 1000;
 }
-.login-popup button {
-    margin: 50px auto; /* 上下 20px，左右自動置中 */
+.login-popup button, .close-btn {
     padding: 15px;
     border-radius: 15px;
     cursor: pointer;
@@ -180,16 +180,12 @@ label:after {
     font-family: font1;
     font-size: 20px;
     display: block; /* 讓 margin auto 生效 */
+    margin: 20px auto; /* 上下 20px，左右自動置中 */
+    width: 150px;
+    color: black;
+    text-decoration: none;
 }
 
-.close-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 20px;
-    cursor: pointer;
-    color: #000000;
-}
 
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -221,6 +217,4 @@ header {
     position: sticky;
     top: 0;
     z-index: 9999;
-    -webkit-tap-highlight-color: transparent; /* 或 rgba(0,0,0,0) */
 }
-
