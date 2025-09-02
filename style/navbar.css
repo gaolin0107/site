@@ -13,14 +13,30 @@
     z-index: 10;
 }
 
+.navbar-login-container {
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+
+    /* 置中關鍵 */
+    display: flex;
+    align-items: center;   /* 垂直置中 */
+    justify-content: center; /* 水平置中 */
+}
+
 .navbar-login {
     background-image: url('../assets/account.png');
     background-repeat: no-repeat;
     background-position: center;
-    background-size: calc(100% - 20px) calc(100% - 20px); /* 左右各 20px，上下各 20px */
+    background-size: 40px 40px;
     border-radius: 50%;
     cursor: pointer;
     overflow: hidden;
+    /* 讓寬高生效，需加 display:block 並避免被父層flex覆蓋 */
+    display: block;
+    width: 40px !important;
+    height: 40px !important;
 }
 .navbar-right{
     position: relative;
@@ -199,7 +215,11 @@ label:after {
 }
 
 header {
-  display: flex;
-  align-items: center;
-  width: 100%;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
 }
+
