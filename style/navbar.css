@@ -221,5 +221,6 @@ header {
     position: sticky;
     top: 0;
     z-index: 9999;
+    -webkit-tap-highlight-color: transparent; /* 或 rgba(0,0,0,0) */
 }
 

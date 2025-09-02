@@ -58,6 +58,7 @@ popup.addEventListener("click", (e) => {
             loginElement.style.opacity = '1';
 
             alert('您已成功登出！');
+            location.reload();
         } else {
             alert('您尚未登入！');
         }
