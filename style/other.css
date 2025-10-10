@@ -1,17 +1,3 @@
-<!DOCTYPE html>
-
-<head>
-    <html lang="zh-TW">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="UTF-8">
-
-    <title>條款 | 高林的個人網頁</title>
-
-    <script src="../script/loader.js"></script>
-    <link rel="stylesheet" href="../style/loader.css">
-    <link rel="icon" type="image/x-icon" href="../assets/logo/webicon.ico">
-
-    <style>
         html {
             -webkit-font-smoothing: antialiased;
             scroll-behavior: smooth;
@@ -65,11 +51,6 @@
             transition: transform 0.3s ease;
         }
 
-        .card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 6px 12px rgba(100, 80, 50, 0.3);
-        }
-
         .card h2 {
             font-family: 'Playfair Display', serif;
             font-size: 1.8rem;
@@ -81,7 +62,7 @@
         }
 
         .home-link {
-            margin-top: 2rem;
+            margin-bottom: 1rem;
             text-align: center;
         }
 
@@ -121,15 +102,6 @@
             }
         }
 
-        a {
-            text-decoration: none;
-            color: #3e2f1c;
-        }
-
-        .card:hover {
-            background-color: #f0e4d0;
-        }
-
         .wrapper {
             overflow: scroll;
             height: 100dvh;
@@ -141,35 +113,3 @@
         .wrapper::-webkit-scrollbar {
             display: none;
         }
-    </style>
-</head>
-
-<body>
-    <div class="wrapper">
-        <div id="loading-screen">
-            <div class="loader"></div>
-        </div>
-
-        <header>條款與政策</header>
-
-        <div class="container">
-            <div class="card">
-                <a href="privacy_policy.html">
-                    <h2>隱私條款</h2>
-                    <p>我們重視您的個人資料保護，所有資訊僅用於提升使用體驗，不會任意分享給第三方。</p>
-                </a>
-            </div>
-            <div class="card">
-                <a href="terms_of_service.html">
-                    <h2>服務條款</h2>
-                    <p>使用本網站即表示您同意遵守相關規範，包括但不限於內容使用、互動行為與資料安全。</p>
-                </a>
-            </div>
-            <div class="home-link">
-                <a href="../index.html">回首頁</a>
-            </div>
-        </div>
-    </div>
-</body>
-
-</html>
