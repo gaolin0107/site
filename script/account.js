@@ -1,35 +1,15 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const popup = document.getElementById("popup");
-  const loginBtn = document.getElementById("navbarlog");
-  const closeBtn = document.getElementById("closepopup");
-// 開啟彈窗
-loginBtn.addEventListener("click", () => {
-  popup.classList.add("show");
-});
+document.addEventListener("DOMContentLoaded", function () {
 
-// 關閉彈窗（按關閉按鈕）
-closeBtn.addEventListener("click", () => {
-  popup.classList.remove("show");
-});
-
-// 點擊背景關閉
-popup.addEventListener("click", (e) => {
-  if (e.target === popup) {
-    popup.classList.remove("show");
-  }
-});
-
-
-  // 🌐 Google OAuth 登入流程
-  window.googleLogin = () => {
     const clientId = "773368697158-iqbth9pmc75qbg4knmvnmabc7h3hmve2.apps.googleusercontent.com";
     const redirectUri = "https://gaolin.org/html/callback.html";
     const scope = "profile";
     const responseType = "token";
     const prompt = "select_account";
 
-    window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=${responseType}&prompt=${prompt}`;
-  };
+    // 點擊登入按鈕邏輯
+    document.getElementById('navbarlog').addEventListener('click', () => {
+        window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=${responseType}&prompt=${prompt}`;
+    });
 
     // 加載用戶頭像邏輯
     const userPicture = localStorage.getItem('userPicture');
@@ -53,18 +33,18 @@ popup.addEventListener("click", (e) => {
             // 重置 .navbar-login 背景為預設
             const loginElement = document.querySelector('.navbar-login');
             loginElement.style.backgroundImage = '';
+            loginElement.style.backgroundColor = '#ccc';
+
             // 恢復按鈕可用狀態
             loginElement.style.pointerEvents = 'auto';
             loginElement.style.opacity = '1';
 
             alert('您已成功登出！');
-            location.reload();
         } else {
             alert('您尚未登入！');
         }
 
-        console.log('userPicture:', localStorage.getItem('userPicture')); 
-        console.log('access_token:', localStorage.getItem('access_token')); 
+        console.log('userPicture:', localStorage.getItem('userPicture'));
+        console.log('access_token:', localStorage.getItem('access_token'));
     });
 });
-

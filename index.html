@@ -34,26 +34,29 @@
 
     <header class="navbar">
       <nav class="nav">
-        <a href="#top" class="logo" aria-label="logo">Gaolin</a>
-        <button class="nav-toggle" aria-label="opennavbar" aria-expanded="false">
-          <span class="nav-toggle-bar"></span>
-        </button>
-        <ul class="nav-list">
-          <li><a href="#about">首頁</a></li>
+        <div class="navbar-login" id="navbarlog"></div>
+        <input id="menu" type="checkbox" aria-label="opennavbar" aria-expanded="false">
+        <label for="menu">
+          <span></span>
+        </label>
+        <ul class="nav-list"> 
+          <li><a href="#top">首頁</a></li>
           <li><a href="#works">作品</a></li>
-          <li><a href="#services">服務</a></li>
           <li><a href="html/others.html">條款</a></li>
+          <li><a id="navbarout">登出</a></li>
         </ul>
       </nav>
     </header>
 
     <section class="hero" id="top">
-      <div class="hero-content">
-        <h1 class="hero-title">在技術的幾何中落下一縷光</h1>
-        <p class="hero-subtitle">讓介面說話，讓設計回應靈魂。</p>
-        <a href="#works" class="btn btn-primary">探索作品</a>
+      <div class="container">
+        <div class="hero-content">
+          <h1 class="hero-title">在技術的幾何中落下一縷光</h1>
+          <p class="hero-subtitle">讓介面說話，讓設計回應靈魂。</p>
+          <a href="#works" class="btn btn-primary">探索作品</a>
+        </div>
+        <div class="hero-art" aria-hidden="true"></div>
       </div>
-      <div class="hero-art" aria-hidden="true"></div>
     </section>
 
     <main>
@@ -95,8 +98,7 @@
             </article>
 
             <article class="card" data-tags="uiux creative">
-              <div class="card-media"
-                style="background-image:url('/assets/account/account-003.png');">
+              <div class="card-media" style="background-image:url('/assets/account/account-003.png');">
               </div>
               <div class="card-body">
                 <h3>月光主題介面</h3>
@@ -143,16 +145,19 @@
 
       <footer class="site-footer">
         <div class="container">
-          <p>©<span id="year"></span>高林 WB030 25.10.11</p>
+          <p>©<span id="year"></span>高林 WB031 25.10.11</p>
           <a href="#top" class="link to-top">回到頂部</a>
         </div>
       </footer>
 
       <link rel="stylesheet" href="style/navbar.css">
       <link rel="stylesheet" href="style/top.css">
+      <link rel="stylesheet" href="style/1.css">
 
       <script src="script/year.js"></script>
       <script src="script/navbar.js"></script>
+      <script src="script/account.js"></script>
+
 
 
 

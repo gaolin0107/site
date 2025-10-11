@@ -1,14 +1,16 @@
-// 導覽列開關
-const navToggle = document.querySelector('.nav-toggle');
+const navToggleInput = document.getElementById('menu');
 const navList = document.querySelector('.nav-list');
-if (navToggle) {
-  navToggle.addEventListener('click', () => {
-    const expanded = navToggle.getAttribute('aria-expanded') === 'true';
-    navToggle.setAttribute('aria-expanded', String(!expanded));
-    navList.classList.toggle('is-open');
+
+if (navToggleInput) {
+  navToggleInput.addEventListener('change', () => {
+    const expanded = navToggleInput.checked;
+    navToggleInput.setAttribute('aria-expanded', String(expanded));
+    navList.classList.toggle('is-open', expanded);
   });
 }
 
+
+// 點擊 logo 回到頂部
 document.querySelector('.logo').addEventListener('click', function(e) {
   e.preventDefault();
   window.scrollTo({
