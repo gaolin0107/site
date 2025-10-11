@@ -13,7 +13,7 @@
 
   /* Typography */
   --font-serif: "Cormorant Garamond", "Noto Serif TC", serif;
-  --font-sans: "Inter", "Noto Sans TC";
+  --font-sans: "Inter", "Noto Sans TC", sans-serif;
 
   /* Rhythm */
   --radius: 14px;
@@ -85,3 +85,8 @@ a:hover {
   color: var(--garnet);
 }
 
+.container {
+  width: 90%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
