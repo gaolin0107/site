@@ -15,6 +15,7 @@
   line-height: 1.1;
   margin: 0 0 12px;
   color: var(--charcoal);
+  text-shadow: 0 2px 6px rgba(160, 120, 90, 0.3);
 }
 
 .top-subtitle {
