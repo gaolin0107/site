@@ -36,7 +36,7 @@
   display: block;
   width: 40px !important;
   height: 40px !important;
-  border-radius: 50%;;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   left: 0px;
@@ -44,7 +44,6 @@
 
 .navbar-login:hover {
   background-image: url('../assets/account/navloghov.png');
-  transition: background-image 0.4s ease, transform 0.4s ease;
 }
 
 .nav-list {
@@ -52,8 +51,24 @@
   display: flex;
   gap: 22px;
   margin: 0;
-  padding: 0;
+  padding: 0px;
+  animation: slideFromRight 0.6s ease forwards;
+
 }
+
+@keyframes slideFromRight {
+  0% {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+
 
 .nav-list a {
   padding: 8px 12px;
@@ -123,4 +138,3 @@ label:after {
 #menu {
   visibility: hidden;
 }
-

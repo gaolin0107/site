@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // 登出按鈕邏輯，這裡可以正確獲得 #navbarout 元素
-    document.getElementById('navbarout').addEventListener('click', () => {
+    document.getElementById('navbarlogout').addEventListener('click', () => {
         const storedPicture = localStorage.getItem('userPicture');
         const accessToken = localStorage.getItem('access_token');
 
@@ -32,14 +32,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // 重置 .navbar-login 背景為預設
             const loginElement = document.querySelector('.navbar-login');
-            loginElement.style.backgroundImage = '';
-            loginElement.style.backgroundColor = '#ccc';
-
+            loginElement.style.backgroundImage = "url('./assests/account/navbarlog.png')";
             // 恢復按鈕可用狀態
             loginElement.style.pointerEvents = 'auto';
             loginElement.style.opacity = '1';
 
             alert('您已成功登出！');
+            location.reload();
         } else {
             alert('您尚未登入！');
         }

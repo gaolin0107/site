@@ -143,7 +143,7 @@
 
 /* Responsive */
 @media (max-width: 980px) {
-  .hero {
+  .top {
     grid-template-columns: 1fr;
   }
 
@@ -188,7 +188,5 @@
     grid-template-columns: 1fr;
   }
 
-  .hero-art {
-    height: 200px;
-  }
+
 }

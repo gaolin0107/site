@@ -10,11 +10,3 @@ if (navToggleInput) {
 }
 
 
-// 點擊 logo 回到頂部
-document.querySelector('.logo').addEventListener('click', function(e) {
-  e.preventDefault();
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  });
-});

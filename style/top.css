@@ -1,47 +1,67 @@
-/* Hero */
-.hero {
+.top {
+  max-width: min(90%, 1500px);
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  padding: 120px 5% 40px;
   align-items: center;
-  gap: var(--gap);
-  padding: 56px 5% 40px;
+  /* 左右東西欄垂直置中 */
 }
 
-.hero-title {
+.top-title {
   font-family: var(--font-serif);
   font-size: clamp(32px, 4.8vw, 56px);
   line-height: 1.1;
   margin: 0 0 12px;
   color: var(--charcoal);
 }
-.hero-subtitle {
+
+.top-subtitle {
   font-size: 18px;
-  margin: 0 0 24px;
-  color: rgba(43,43,43,0.8);
-}
-.hero-art {
-  height: 280px;
-  border-radius: var(--radius);
-  background:
-    radial-gradient(120px 90px at 28% 35%, rgba(205,164,106,0.5), transparent 60%),
-    radial-gradient(100px 80px at 70% 60%, rgba(177,106,91,0.45), transparent 60%),
-    linear-gradient(145deg, rgba(245,239,230,0.8), rgba(245,239,230,0.3));
-  box-shadow: var(--shadow-medium);
-  border: 1px solid rgba(43,43,43,0.06);
+  margin: 0;
+  line-height: 1.4;
+  color: rgba(43, 43, 43, 0.8);
 }
 
-/* Buttons */
+.top-art {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  /* 16:9 */
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-medium);
+  border: 1px solid rgba(43, 43, 43, 0.06);
+}
+
+.top-art iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  border: none;
+  pointer-events: auto;
+}
+
+
+/* 橘色按鈕 */
 .btn {
   display: inline-block;
   padding: 12px 18px;
   border-radius: 12px;
   transition: transform 200ms ease, box-shadow 200ms ease, background 200ms ease;
 }
+
 .btn-primary {
+  margin: 12px 0 0;
   background: var(--ochre);
   color: #fff;
   box-shadow: var(--shadow-soft);
 }
+
 .btn-primary:hover {
   background: #bf945e;
   transform: translateY(-1px);
