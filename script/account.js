@@ -25,25 +25,26 @@ document.addEventListener("DOMContentLoaded", function () {
         const storedPicture = localStorage.getItem('userPicture');
         const accessToken = localStorage.getItem('access_token');
 
-        if (storedPicture || accessToken) {
-            // 清除 LocalStorage 中的數據
-            localStorage.removeItem('userPicture');
-            localStorage.removeItem('access_token');
-
-            // 重置 .navbar-login 背景為預設
-            const loginElement = document.querySelector('.navbar-login');
-            loginElement.style.backgroundImage = "url('./assests/account/navbarlog.png')";
-            // 恢復按鈕可用狀態
-            loginElement.style.pointerEvents = 'auto';
-            loginElement.style.opacity = '1';
-
-            alert('您已成功登出！');
-            location.reload();
-        } else {
-            alert('您尚未登入！');
+        if (userPicture) {
+            loginElement.style.backgroundImage = `url(${userPicture})`;
+            loginElement.classList.add('logged-in');
+            loginElement.style.pointerEvents = 'none';
         }
 
+    if (userPicture) {
+        localStorage.removeItem('userPicture');
+        localStorage.removeItem('access_token');
+        loginElement.classList.remove('logged-in');
+        loginElement.style.backgroundImage = "url('../assets/account/navlog.png')";
+        loginElement.style.pointerEvents = 'auto';
+        loginElement.style.opacity = '1';
+        alert('您已成功登出！');
+        location.reload();
+    } else {
+        alert('您尚未登入！');
+    }
+
         console.log('userPicture:', localStorage.getItem('userPicture'));
-        console.log('access_token:', localStorage.getItem('access_token'));
-    });
+    console.log('access_token:', localStorage.getItem('access_token'));
+});
 });

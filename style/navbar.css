@@ -27,6 +27,7 @@
 
 .navbar-login {
   background-image: url('../assets/account/navlog.png');
+  transition: background-image 0.3s ease;
   background-repeat: no-repeat;
   background-position: center;
   background-size: 40px 40px;
@@ -42,9 +43,10 @@
   left: 0px;
 }
 
-.navbar-login:hover {
+.navbar-login:hover:not(.logged-in) {
   background-image: url('../assets/account/navloghov.png');
 }
+
 
 .nav-list {
   list-style: none;
