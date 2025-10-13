@@ -1,4 +1,3 @@
-
 /* Sections */
 .section {
   padding: 64px 0;
@@ -177,6 +176,10 @@
   .nav-list.is-open {
     display: flex;
   }
+
+  .navbar-login:hover:not(.logged-in) {
+    background-image: url('../assets/account/navloghov.png');
+  }
 }
 
 @media (max-width: 640px) {
@@ -188,5 +191,9 @@
     grid-template-columns: 1fr;
   }
 
+  .navbar-login:hover:not(.logged-in) {
+    background-image: url('../assets/account/navlog.png');
+  }
 
 }
+

@@ -43,10 +43,6 @@
   left: 0px;
 }
 
-.navbar-login:hover:not(.logged-in) {
-  background-image: url('../assets/account/navloghov.png');
-}
-
 
 .nav-list {
   list-style: none;
@@ -54,22 +50,36 @@
   gap: 22px;
   margin: 0;
   padding: 0px;
-  animation: slideFromRight 0.6s ease forwards;
-
 }
 
+
+
+
+.nav-list.open {
+  animation: slideFromRight 0.6s ease forwards;
+}
 @keyframes slideFromRight {
   0% {
     transform: translateX(50px);
-    opacity: 0;
   }
 
   100% {
     transform: translateX(0);
-    opacity: 1;
   }
 }
-
+.nav-list.close {
+  animation: slideToRight 0.6s ease forwards;
+}
+@keyframes slideToRight {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+}
 
 
 .nav-list a {
