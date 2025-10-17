@@ -44,6 +44,10 @@
 }
 
 
+.navbar-login:hover:not(.logged-in) {
+  background-image: url('../assets/account/navloghov.png');
+}
+
 .nav-list {
   list-style: none;
   display: flex;

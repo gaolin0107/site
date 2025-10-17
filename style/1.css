@@ -177,9 +177,6 @@
     display: flex;
   }
 
-  .navbar-login:hover:not(.logged-in) {
-    background-image: url('../assets/account/navloghov.png');
-  }
 }
 
 @media (max-width: 640px) {
