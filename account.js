@@ -19,9 +19,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
+    // 點擊頭像導向新介面
+    loginElement.addEventListener('click', () => {
+        window.location.href = "url('../html/profile.html')"; // 替換成你要導向的頁面
+    });
+
     if (!accessToken || !userPicture) {
         alert("請先登入才能使用此頁面！");
-        window.location.href = "../html/login.html"; // 替換成你的登入頁面
+        window.location.href = "../index.html"; // 替換成你的登入頁面
         return; // 停止後續執行
     }
 
@@ -36,10 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
             loginElement.addEventListener('mouseenter', () => {
                 loginElement.style.backgroundImage = `url(${userPicture})`;
             });
-            // 點擊頭像導向新介面
-            loginElement.addEventListener('click', () => {
-                window.location.href = "url('../html/profile.html')"; // 替換成你要導向的頁面
-            });
+
         }
 
         if (userPicture) {
