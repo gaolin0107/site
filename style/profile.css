@@ -1,0 +1,85 @@
+/* 背景層 */
+.profile-info {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(8px);
+    /* 模糊背景，macOS感 */
+    z-index: 1000;
+}
+
+/* 顯示時 */
+.profile-info.show {
+    display: flex;
+    animation: fadeIn 0.4s ease forwards;
+}
+
+/* 隱藏時 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.profile-info.fade-out {
+    animation: fadeOut 0.4s ease forwards;
+}
+
+/* 背景淡出 */
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+.profile-info-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 24px;
+    border-radius: 50px;
+    width: 80%;
+    max-width: var(--max-w);
+    height: 600px;
+    background-color: #f0ece1;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    box-shadow: var(--shadow-medium);
+    overflow: hidden;
+}
+
+.logout-link:hover,
+.close-link:hover {
+    color: #000000;
+}
+
+.logout-link, .close-link {
+    width: 90%;
+    padding: 14px 0;
+    border: none;
+    border-radius: 50px;
+    background-color: #fefaef;
+    font-size: 18px;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: var(--shadow-medium);
+    margin-top: auto;
+    color: #5C4A3D;
+}
+
+

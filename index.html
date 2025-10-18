@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="高林的個人網頁">
+  <meta name="keywords" content="高林,gaolin,Gaolin,GaoLin,zyric,高林網站,gaolin.org,gaolin0107,gaolin_0107">
+  <meta name="author" content="GaoLin">
+  <meta name="robots" content="all">
+  <meta name="copyright" content="stevechow">
+  <title>高林的個人網頁</title>
+
+  <link rel="icon" type="image/x-icon" href="assets/webicon.ico">
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="/style/loader.css">
+
+  <script src="script/loader.js"></script>
+
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Noto+Serif+TC:wght@400;700&display=swap">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+TC:wght@400;700&display=swap">
+
+</head>
+
+<body>
+  <div class="wrapper">
+    <div id="loading-screen">
+      <div class="loader"></div>
+    </div>
+
+    <header class="navbar">
+      <nav class="nav">
+        <div class="navbar-login" id="navbarlogin">
+
+        </div>
+        <input id="menu" type="checkbox" aria-label="opennavbar" aria-expanded="false">
+        <label for="menu">
+          <span></span>
+        </label>
+        <ul class="nav-list">
+          <li><a href="#top">首頁</a></li>
+          <li><a href="#works">作品</a></li>
+          <li><a href="html/others.html">條款</a></li>
+        </ul>
+      </nav>
+
+      <section class="top" id="top">
+        <div class="top-content">
+          <h1 class="top-title">立即觀賞高林最新的YT影片</h1>
+          <p class="top-subtitle">內容最詳細的個人介紹!</p>
+          <p class="top-subtitle">如果無法觀看請點擊以下按鈕</p>
+          <a href="https://www.youtube.com/watch?v=7S1_M7wlTWI" class="btn btn-primary" target="_blank"
+            rel="noopener noreferrer">帶我過去</a>
+        </div>
+        <div class="top-art" aria-hidden="true">
+          <iframe
+            src="https://www.youtube.com/embed/7S1_M7wlTWI?controls=0&mute=1&loop=1&playlist=7S1_M7wlTWI&modestbranding=1&playsinline=1"
+            frameborder="0" allow="autoplay; encrypted-media" allowfullscreen webkitallowfullscreen
+            mozallowfullscreen></iframe>
+        </div>
+      </section>
+    </header>
+
+    <div class="profile-info" id="profile-info-popup">
+      <div class="profile-info-container">
+                        <h2>個人資料</h2>
+                <img class="profile-picture">
+                <p>名字:
+                <p class="user-name"></p>
+                </p>
+                <p>電郵:
+                <p class="user-email"></p>
+                </p>
+        <button id="close-profile-info" class="close-link">關閉</button>
+        <button id="account-logout" class="logout-link">登出</button>
+
+      </div>
+    </div>
+
+
+    <main>
+      <section id="about" class="section about">
+        <div class="container">
+          <h2 class="section-title">關於高林</h2>
+          <p>
+            嗨，我是高林，這是我的個人網站。目前還在製作中，有什麼意見可以告訴我!
+          </p>
+          <ul class="about-list">
+            <li>我好帥</li>
+            <li>我好帥</li>
+            <li>我好帥</li>
+            <li>我好帥</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="about" class="section about">
+        <div class="container">
+          <h2 class="section-title">品牌介紹</h2>
+          <p class="lead">
+            我是林，專注於介面本地化、結構化學習與創意設計。於層次分明的語境裡，讓每一個字與按鈕擁有恰當的位置；在溫暖的色調中，讓科技有肌理、讓美學有秩序。
+          </p>
+          <p>
+            我相信設計不止於視覺，它是一種能被理解、被傳遞的語言——以標準化的流程、精準的細節與詩意的節制，將複雜變得可親，將想像落為可執行。歐洲藝術的克制與優雅，是我面向科技的方式：讓系統有呼吸、讓介面有禮節、讓每一次點擊都流向更好的體驗。
+          </p>
+
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h3>介面本地化</h3>
+              <p>語氣一致、文化細節與技術準確性，讓產品在不同語境中依然清晰動人。</p>
+            </div>
+            <div class="feature-card">
+              <h3>結構化學習</h3>
+              <p>以流程、檢核清單與視覺化框架，將複雜轉化為可執行與可維護的知識系統。</p>
+            </div>
+            <div class="feature-card">
+              <h3>創意設計</h3>
+              <p>在節制與詩意之間取得平衡，讓每一次互動都體現目的、風格與細節。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <section id="contact" class="section contact">
+        <div class="container">
+          <h2 class="section-title">聯絡我</h2>
+          <form class="contact-form" novalidate>
+            <iframe
+              src="https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAO__UFA2sZUMUhaRUg2MEtJQ1BVWlpLT05PMVo1NTVGMS4u&embed=true"
+              frameborder="0" marginwidth="0" marginheight="0" allowfullscreen webkitallowfullscreen mozallowfullscreen
+              msallowfullscreen> </iframe>
+            <p class="form-note">我通常於 2–3 個工作日內回覆。</p>
+          </form>
+        </div>
+      </section>
+
+
+
+
+
+      <section id="works" class="section works">
+        <div class="container">
+          <h2 class="section-title">作品展示</h2>
+          <div class="filters" role="group" aria-label="篩選作品">
+            <button class="filter-btn is-active" data-filter="1">1</button>
+            <button class="filter-btn" data-filter="2">2</button>
+            <button class="filter-btn" data-filter="3">3</button>
+            <button class="filter-btn" data-filter="all">全部</button>
+          </div>
+
+
+
+
+          <div class="grid">
+            <!-- 範例作品卡片，可替換為真實連結與圖片 -->
+            <article class="card" data-tags="1">
+              <div class="card-media" style="background-image:url('');"></div>
+              <div class="card-body">
+                <h3>標題</h3>
+                <p>一個小卡片</p>
+                <a href="#" class="link">按鈕</a>
+              </div>
+            </article>
+
+            <article class="card" data-tags="2">
+              <div class="card-media" style="background-image:url('');"></div>
+              <div class="card-body">
+                <h3>標題</h3>
+                <p>一個小卡片</p>
+                <a href="#" class="link">按鈕</a>
+              </div>
+            </article>
+
+            <article class="card" data-tags="3">
+              <div class="card-media" style="background-image:url('');"></div>
+              <div class="card-body">
+                <h3>標題</h3>
+                <p>一個小卡片</p>
+                <a href="#" class="link">按鈕</a>
+              </div>
+            </article>
+
+            <article class="card" data-tags="3">
+              <div class="card-media" style="background-image:url('');"></div>
+              <div class="card-body">
+                <h3>標題</h3>
+                <p>一個小卡片</p>
+                <a href="#" class="link">按鈕</a>
+              </div>
+            </article>
+
+            <article class="card" data-tags="3">
+              <div class="card-media" style="background-image:url('');"></div>
+              <div class="card-body">
+                <h3>標題</h3>
+                <p>一個小卡片</p>
+                <a href="#" class="link">按鈕</a>
+              </div>
+            </article>
+
+          </div>
+        </div>
+      </section>
+      <section id="services" class="section services">
+        <div class="container">
+          <h2 class="section-title">選單</h2>
+          <ul class="service-list">
+            <li><strong>標題1：</strong>內容</li>
+            <li><strong>標題2：</strong>內容</li>
+            <li><strong>標題3：</strong>內容</li>
+            <li><strong>標題4：</strong>內容</li>
+          </ul>
+        </div>
+      </section>
+
+      <footer class="site-footer">
+        <div class="container">
+          <p>©<span id="year"></span>高林 WB039 25.10.19</p>
+          <a href="#top" class="link to-top">回頂部</a>
+        </div>
+      </footer>
+
+      <link rel="stylesheet" href="style/contact-form.css">
+      <link rel="stylesheet" href="style/profile.css">
+      <link rel="stylesheet" href="style/navbar.css">
+      <link rel="stylesheet" href="style/top.css">
+      <link rel="stylesheet" href="style/1.css">
+
+
+      <script src="script/card.js"></script>
+      <script src="script/year.js"></script>
+      <script src="script/navbar.js"></script>
+      <script src="script/account.js"></script>
+
+
+
+
+  </div> <!-- wrapper -->
+</body>
+
+</html>
