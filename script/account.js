@@ -1,5 +1,5 @@
-document.addEventListener("DOMContentLoaded", function () {
 
+document.addEventListener("DOMContentLoaded", function () {
     const clientId = "773368697158-iqbth9pmc75qbg4knmvnmabc7h3hmve2.apps.googleusercontent.com";
     const redirectUri = "https://gaolin.org/html/callback.html";
     const scope = "profile";
@@ -8,7 +8,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 點擊登入按鈕邏輯
     document.getElementById('navbarlogin').addEventListener('click', () => {
-        window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=${responseType}&prompt=${prompt}`;
+        const accessToken = localStorage.getItem('access_token');
+        if (accessToken) {
+            // ✅ 已登入，導向 account.html
+            window.location.href = '/html/account.html';
+        } else {
+            // ❌ 未登入，導向 Google 登入頁面
+            window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=${responseType}&prompt=${prompt}`;
+        }
     });
 
     // 加載用戶頭像
@@ -19,16 +26,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // 登出按鈕
-    document.getElementById('navbarout').addEventListener('click', () => {
+    document.getElementById('navbarlogout').addEventListener('click', () => {
         const storedPicture = localStorage.getItem('userPicture');
         const accessToken = localStorage.getItem('access_token');
 
         if (storedPicture || accessToken) {
-            // 清除 LocalStorage 中的數據
             localStorage.removeItem('userPicture');
             localStorage.removeItem('access_token');
 
-            // 重置 .navbar-login 背景為預設
             const loginElement = document.querySelector('.navbar-login');
             loginElement.style.backgroundImage = "url('../assets/account/navlog.png')";
 
