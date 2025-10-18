@@ -17,10 +17,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // 加載用戶頭像邏輯
     const userPicture = localStorage.getItem('userPicture');
     if (userPicture) {
+        const loginElement = document.querySelector('.navbar-login');
         loginElement.style.backgroundImage = `url(${userPicture})`;
-        loginElement.classList.add('logged-in');
     }
-
+    
     loginElement.addEventListener('click', () => {
         if (loginElement.classList.contains('logged-in')) {
             window.location.href = '../html/profile.html'; // 或你想導向的頁面
