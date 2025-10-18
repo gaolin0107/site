@@ -16,15 +16,12 @@
 
 <body>
     <script>
-        // 從 URL hash 中提取 access_token
         const hashParams = new URLSearchParams(window.location.hash.substring(1));
         const accessToken = hashParams.get('access_token');
 
         if (accessToken) {
-            // 儲存 access_token 以供後續使用
             localStorage.setItem('access_token', accessToken);
 
-            // 獲取用戶資料
             fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
                 headers: { Authorization: `Bearer ${accessToken}` },
             })
@@ -34,17 +31,20 @@
                 })
                 .then(userInfo => {
                     if (userInfo.picture) {
-                        localStorage.setItem('userPicture', userInfo.picture); // 保存頭像
+                        localStorage.setItem('userPicture', userInfo.picture);
                     }
                     if (userInfo.name) {
-                        localStorage.setItem('userName', userInfo.name); // 保存名字
+                        localStorage.setItem('userName', userInfo.name);
                     }
                     if (userInfo.email) {
-                        localStorage.setItem('userEmail', userInfo.email); // 保存 email
+                        localStorage.setItem('userEmail', userInfo.email);
+                    }
+                    if (userInfo.sub) {
+                        localStorage.setItem('userId', userInfo.sub);
                     }
 
-                    // 取得資料後重定向
-                    window.location.href = '/index.html';
+                    // 導向首頁
+                    window.location.replace('/index.html');
                 })
                 .catch(error => {
                     console.error('無法獲取用戶信息：', error);
@@ -53,7 +53,6 @@
         } else if (window.location.pathname.includes('callback.html')) {
             alert('無法獲取授權，請重新登入。');
         }
-
     </script>
 </body>
 
