@@ -8,6 +8,14 @@ document.addEventListener('DOMContentLoaded', () => {
     card.style.display = tags.includes('1') ? '' : 'none';
   });
 
+  cards.forEach(card => {
+    const tags = (card.dataset.tags || '').split(' ');
+    const shouldShow = tags.includes('1');
+    card.style.display = shouldShow ? '' : 'none';
+    console.log(`card ${card.dataset.tags} → ${shouldShow ? '顯示' : '隱藏'}`);
+  });
+
+
   // 套用按鈕點擊邏輯
   if (filterBtns.length && cards.length) {
     filterBtns.forEach(btn => {

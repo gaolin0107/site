@@ -10,10 +10,10 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById('navbarlogin').addEventListener('click', () => {
         const accessToken = localStorage.getItem('access_token');
         if (accessToken) {
-            // ✅ 已登入，導向 account.html
-            window.location.href = '/html/account.html';
+            // 已登入，導向 account.html
+            window.location.href = '/html/profile.html';
         } else {
-            // ❌ 未登入，導向 Google 登入頁面
+            // 未登入，導向 Google 登入頁面
             window.location.href = `https://accounts.google.com/o/oauth2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=${responseType}&prompt=${prompt}`;
         }
     });
