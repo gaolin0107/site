@@ -33,7 +33,9 @@
 
     <header class="navbar">
       <nav class="nav">
-        <div class="navbar-login" id="navbarlogin"></div>
+        <div class="navbar-login" id="navbarlogin">
+
+        </div>
         <input id="menu" type="checkbox" aria-label="opennavbar" aria-expanded="false">
         <label for="menu">
           <span></span>
@@ -42,7 +44,6 @@
           <li><a href="#top">首頁</a></li>
           <li><a href="#works">作品</a></li>
           <li><a href="html/others.html">條款</a></li>
-          <li><a id="navbarlogout">登出</a></li>
         </ul>
       </nav>
 
@@ -63,6 +64,21 @@
       </section>
     </header>
 
+    <div class="profile-info" id="profile-info-popup">
+      <div class="profile-info-container">
+                        <h2>個人資料</h2>
+                <img class="profile-picture">
+                <p>名字:
+                <p class="user-name"></p>
+                </p>
+                <p>電郵:
+                <p class="user-email"></p>
+                </p>
+        <button id="close-profile-info" class="close-link">關閉</button>
+        <button id="account-logout" class="logout-link">登出</button>
+
+      </div>
+    </div>
 
 
     <main>
@@ -203,15 +219,17 @@
 
       <footer class="site-footer">
         <div class="container">
-          <p>©<span id="year"></span>高林 WB038.1 25.10.18</p>
-          <a href="#top" class="link to-top">回到頂部</a>
+          <p>©<span id="year"></span>高林 WB039 25.10.19</p>
+          <a href="#top" class="link to-top">回頂部</a>
         </div>
       </footer>
 
       <link rel="stylesheet" href="style/contact-form.css">
+      <link rel="stylesheet" href="style/profile.css">
       <link rel="stylesheet" href="style/navbar.css">
       <link rel="stylesheet" href="style/top.css">
       <link rel="stylesheet" href="style/1.css">
+
 
       <script src="script/card.js"></script>
       <script src="script/year.js"></script>
