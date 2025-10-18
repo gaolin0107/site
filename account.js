@@ -16,16 +16,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 加載用戶頭像邏輯
     const userPicture = localStorage.getItem('userPicture');
-    if (userPicture) {
-        const loginElement = document.querySelector('.navbar-login');
-        loginElement.style.backgroundImage = `url(${userPicture})`;
+    if (userPicture && loginElement) {
+        // 使用已存在的 loginElement，不要重新宣告
+        loginElement.style.backgroundImage = `url("${userPicture}")`;
+        loginElement.classList.add('logged-in');
+        if (loginButton) loginButton.style.display = 'none';
     }
     
-    loginElement.addEventListener('click', () => {
-        if (loginElement.classList.contains('logged-in')) {
-            window.location.href = '../html/profile.html'; // 或你想導向的頁面
-        }
-    });
+    if (loginElement) {
+        loginElement.addEventListener('click', () => {
+            if (loginElement.classList.contains('logged-in')) {
+                window.location.href = '../html/profile.html'; // 或你想導向的頁面
+            }
+        });
+    }
 
 
     // 登出按鈕邏輯
