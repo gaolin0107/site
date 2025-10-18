@@ -1,10 +1,12 @@
 document.addEventListener("DOMContentLoaded", function () {
-
     const clientId = "773368697158-iqbth9pmc75qbg4knmvnmabc7h3hmve2.apps.googleusercontent.com";
     const redirectUri = "https://gaolin.org/html/callback.html";
     const scope = "profile";
     const responseType = "token";
     const prompt = "select_account";
+
+    const loginElement = document.querySelector('.navbar-login');
+    const loginButton = document.getElementById('navbarlog');
 
     // 點擊登入按鈕邏輯
     document.getElementById('navbarlog').addEventListener('click', () => {
