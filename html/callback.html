@@ -28,14 +28,23 @@
             fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
                 headers: { Authorization: `Bearer ${accessToken}` },
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
                 .then(userInfo => {
                     if (userInfo.picture) {
                         localStorage.setItem('userPicture', userInfo.picture); // 保存頭像
-                        window.location.href = '/index.html';
-                    } else {
-                        alert('無法獲取用戶頭像。');
                     }
+                    if (userInfo.name) {
+                        localStorage.setItem('userName', userInfo.name); // 保存名字
+                    }
+                    if (userInfo.email) {
+                        localStorage.setItem('userEmail', userInfo.email); // 保存 email
+                    }
+
+                    // 取得資料後重定向
+                    window.location.href = '/index.html';
                 })
                 .catch(error => {
                     console.error('無法獲取用戶信息：', error);

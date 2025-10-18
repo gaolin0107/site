@@ -18,10 +18,23 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    // 加載用戶名稱
+    const userName = localStorage.getItem('userName');
+    if (userName) {
+        document.querySelector('.user-name').textContent = userName;
+    }
+
+    // 加載用戶電子郵件
+    const userEmail = localStorage.getItem('userEmail');
+    if (userEmail) {
+        document.querySelector('.user-email').textContent = userEmail;
+    }
+
+
     // 加載用戶頭像
     const userPicture = localStorage.getItem('userPicture');
     if (userPicture) {
-        const loginElement = document.querySelector('.navbar-login');
+        const loginElement = document.querySelectorAll('.navbar-login, .profile-picture');
         loginElement.style.backgroundImage = `url(${userPicture})`;
     }
 
