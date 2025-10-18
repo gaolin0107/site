@@ -20,13 +20,12 @@ document.addEventListener("DOMContentLoaded", function () {
         // 使用已存在的 loginElement，不要重新宣告
         loginElement.style.backgroundImage = `url("${userPicture}")`;
         loginElement.classList.add('logged-in');
-        if (loginButton) loginButton.style.display = 'none';
     }
     
     if (loginElement) {
         loginElement.addEventListener('click', () => {
             if (loginElement.classList.contains('logged-in')) {
-                window.location.href = '../html/profile.html'; // 或你想導向的頁面
+                window.location.href = '/html/profile.html'; // 或你想導向的頁面
             }
         });
     }
