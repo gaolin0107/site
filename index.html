@@ -65,16 +65,24 @@
 
     <div class="profile-info" id="profile-info-popup">
       <div class="profile-info-container">
-                        <h2>個人資料</h2>
-                <img class="profile-picture">
-                <p>名字:
-                <p class="user-name"></p>
-                </p>
-                <p>電郵:
-                <p class="user-email"></p>
-                </p>
-        <button id="close-profile-info" class="close-link">關閉</button>
-        <button id="account-logout" class="logout-link">登出</button>
+
+        <h2>個人資料</h2>
+        <div class="profile-header">
+          <img class="profile-picture">
+          <div class="profile-text">
+            <p>名字:</p>
+            <p class="profile-name"></p>
+            <p>電郵:</p>
+
+            <p class="profile-email"></p>
+          </div>
+        </div>
+        <div class="profile-button">
+          <button id="close-profile-info" class="close-link">關閉</button>
+          <button id="account-logout" class="logout-link">登出</button>
+        </div>
+
+
 
       </div>
     </div>
@@ -218,7 +226,7 @@
 
       <footer class="site-footer">
         <div class="container">
-          <p>©<span id="year"></span>高林 WB039 25.10.19</p>
+          <p>©<span id="year"></span>高林 WB40 25.10.19</p>
           <a href="#top" class="link to-top">回頂部</a>
         </div>
       </footer>
