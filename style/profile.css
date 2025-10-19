@@ -48,125 +48,114 @@
     }
 }
 
-
-.profile-info.fade-out {
-    animation: fadeOut 0.4s ease forwards;
-}
-
-/* 卡片容器：香檳奶茶色 + 光暈 */
 .profile-info-container {
+    position: fixed;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    padding: 24px;
-    border-radius: 50px;
-    width: 80%;
-    max-width: 500px;
-    height: 80vh;
-    /* 改為視窗高度的 80% */
-    background-color: #f7f3ea;
-    position: fixed;
+
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 1000;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-    overflow-y: auto;
-    /* 啟用垂直滾動 */
-    color: #4b3f36;
-    scrollbar-width: thin;
-    /* Firefox */
-    scrollbar-color: #d6cfc2 transparent;
+    width: 90%;
+    max-width: 420px;
+    max-height: 90dvh;
+    background-color: #FCF8F3;
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: #5a4a3a;
+    overflow: hidden;
+    padding: 24px 32px;
 }
 
-.profile-info-container::-webkit-scrollbar {
-    width: 8px;
-}
 
-.profile-info-container::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.profile-info-container::-webkit-scrollbar-thumb {
-    background-color: #d6cfc2;
-    border-radius: 4px;
-}
-
+/* --- 卡片頂部標題 (使用 profile-top) --- */
 .profile-top {
     width: 100%;
-    padding: 14px 0;
-    border: none;
-    border-radius: 50px;
-    background-color: #fdfaf6;
-    /* 柔米白 */
-    font-size: 20px;
+    padding-bottom: 24px;
+    font-size: 22px;
     text-align: center;
-    text-decoration: none;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-    color: #6e5c4f;
-    /* 金褐色字體 */
-    margin: 0 0 24px 0;
+    color: #4b3f36;
     font-family: 'Noto Serif TC', serif;
+    border-bottom: 1px solid #EAE5DD;
+    margin-bottom: 24px;
 }
 
-/* 頭像區塊 */
+/* --- 頭像區塊 (使用 profile-header) --- */
 .profile-header {
-    display: flex;
-    align-items: flex-start;
+    align-items: center;
+    gap: 16px;
 }
 
+/* --- 頭像圖片 (使用 profile-picture) --- */
 .profile-picture {
-    width: 120px;
-    height: 120px !important;
+    width: 72px;
+    height: 72px;
     border-radius: 50%;
     object-fit: cover;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 3px solid #FFFFFF;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* 文字區塊 */
 .profile-text {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    position: fixed;
-    left: 50%;
-    width: 35%;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+    gap: 2px;
+    /* ✅ 改小一點，讓 name 和 email 更靠近 */
+    font-size: 15px;
+    line-height: 1.5;
     color: #5a4a3a;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    max-width: 80%;
 }
 
-/* 按鈕區塊 */
+.profile-text .profile-name {
+    font-size: 22px;
+    font-weight: 600;
+    color: #4b3f36;
+    line-height: 1.5;
+    /* ✅ 統一行距，避免視覺落差 */
+}
+
+.profile-text .profile-email {
+    font-size: 14px;
+    color: #9c8c7e;
+    line-height: 1.5;
+    /* ✅ 同樣統一行距 */
+}
+
+/* --- 按鈕區塊 (使用 profile-button) --- */
 .profile-button {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     margin-top: auto;
+    /* 將按鈕推到底部 */
+    padding-top: 32px;
+    /* 增加與上方內容的間距 */
+    display: flex;
+    gap: 12px;
 }
 
-.logout-link,
-.close-link {
-    width: 45%;
-    padding: 14px 0;
+.close-link,
+.logout-link {
+    flex-grow: 1;
+    padding: 14px;
+    border-radius: 16px;
     border: none;
-    border-radius: 50px;
-    background-color: #fdfaf6;
-    /* 柔米白 */
-    font-size: 18px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
     text-align: center;
     text-decoration: none;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-    color: #6e5c4f;
-    /* 金褐色字體 */
-}
-
-.logout-link:hover,
-.close-link:hover {
     background-color: #E9E2D6;
-    color: #3a2f28;
+    color: #6e5c4f;
 }
 
-.logout-link {
-    margin-left: auto;
+.close-link:hover,
+.logout-link:hover {
+    background-color: #C1A88B;
+    /* 更醒目的登出顏色 */
+    color: #FFFFFF;
 }

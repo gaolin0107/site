@@ -25,35 +25,23 @@
             fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
                 headers: { Authorization: `Bearer ${accessToken}` },
             })
-                .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(userInfo => {
-                    if (userInfo.picture) {
-                        localStorage.setItem('userPicture', userInfo.picture);
-                    }
-                    if (userInfo.name) {
-                        localStorage.setItem('userName', userInfo.name);
-                    }
-                    if (userInfo.email) {
-                        localStorage.setItem('userEmail', userInfo.email);
-                    }
-                    if (userInfo.sub) {
-                        localStorage.setItem('userId', userInfo.sub);
-                    }
-
-                    // 導向首頁
+                    localStorage.setItem('userPicture', userInfo.picture || '');
+                    localStorage.setItem('userName', userInfo.name || '');
+                    localStorage.setItem('userEmail', userInfo.email || '');
+                    localStorage.setItem('userId', userInfo.sub || '');
                     window.location.replace('/index.html');
                 })
                 .catch(error => {
                     console.error('無法獲取用戶信息：', error);
                     alert('發生錯誤，請稍後再試。');
                 });
-        } else if (window.location.pathname.includes('callback.html')) {
+        } else {
             alert('無法獲取授權，請重新登入。');
         }
     </script>
+
 </body>
 
 </html>
