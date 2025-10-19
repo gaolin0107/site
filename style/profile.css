@@ -1,23 +1,34 @@
-/* 背景層 */
+/* --- 背景層：象牙白霧感 + 模糊 + 漸層光暈 (使用 profile-info) --- */
 .profile-info {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, rgba(245, 240, 235, 0.5), rgba(230, 225, 220, 0.4));
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     justify-content: center;
     align-items: center;
-    backdrop-filter: blur(8px);
-    /* 模糊背景，macOS感 */
     z-index: 1000;
 }
 
-/* 顯示時 */
+/* --- 動畫效果 --- */
 .profile-info.show {
     display: flex;
-    animation: fadeIn 0.4s ease forwards;
+    animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* 隱藏時 */
+.profile-info.show .profile-info-container {
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.profile-info.fade-out {
+    animation: fadeOut 0.4s ease-out forwards;
+}
+
+.profile-info.fade-out .profile-info-container {
+    animation: slideDown 0.4s ease-out forwards;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -28,11 +39,6 @@
     }
 }
 
-.profile-info.fade-out {
-    animation: fadeOut 0.4s ease forwards;
-}
-
-/* 背景淡出 */
 @keyframes fadeOut {
     from {
         opacity: 1;
@@ -43,87 +49,123 @@
     }
 }
 
+@keyframes slideUp {
+    from {
+        transform: translateY(30px) scale(0.98);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateY(30px) scale(0.98);
+        opacity: 0;
+    }
+}
+
 .profile-info-container {
+    position: fixed; /* ✅ 加上這行才能讓 top/left 生效 */
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    padding: 24px;
-    border-radius: 50px;
-    width: 80%;
-    max-width: var(--max-w);
-    height: 600px;
-    background-color: #f0ece1;
-    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 1000;
-    box-shadow: var(--shadow-medium);
+
+    width: 90%;
+    max-width: 420px;
+    max-height: 90dvh;
+    background-color: #FCF8F3;
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: #5a4a3a;
     overflow: hidden;
+    padding: 24px 32px;
 }
 
+
+/* --- 卡片頂部標題 (使用 profile-top) --- */
+.profile-top {
+    width: 100%;
+    padding-bottom: 24px;
+    font-size: 22px;
+    text-align: center;
+    color: #4b3f36;
+    font-family: 'Noto Serif TC', serif;
+    border-bottom: 1px solid #EAE5DD;
+    margin-bottom: 24px;
+}
+
+/* --- 頭像區塊 (使用 profile-header) --- */
 .profile-header {
     display: flex;
-    align-items: flex-start;
-    /* ✨ 關鍵：讓圖片與文字上緣對齊 */
-    /* 圖片與文字間距 */
+    align-items: center;
+    gap: 16px;
 }
 
+/* --- 頭像圖片 (使用 profile-picture) --- */
 .profile-picture {
-    width: 80px;
-    height: 80px !important;
+    width: 72px;
+    height: 72px;
     border-radius: 50%;
     object-fit: cover;
-    overflow: hidden;
-    box-shadow: var(--shadow-medium);
+    border: 3px solid #FFFFFF;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-
-.profile-text {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    position: fixed;
-    left: 50%;
-    width: 35%;
-    word-wrap: break-word;
-    /* ✨ 讓長字串換行 */
-    overflow-wrap: break-word;
-    /* ✨ 讓內容在容器內斷行 */
+/* --- 文字區塊 (使用 profile-text) --- */
+.profile-text .profile-name {
+    font-size: 22px;
+    font-weight: 600;
+    color: #4b3f36;
+    line-height: 1.2;
 }
 
-
-
-
-
-.logout-link:hover,
-.close-link:hover {
-    color: #000000;
+.profile-text .profile-email {
+    font-size: 14px;
+    color: #9c8c7e;
+    margin-top: 4px;
 }
 
+/* --- 按鈕區塊 (使用 profile-button) --- */
 .profile-button {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     margin-top: auto;
-    /*推到底部 */
+    /* 將按鈕推到底部 */
+    padding-top: 32px;
+    /* 增加與上方內容的間距 */
+    display: flex;
+    gap: 12px;
 }
 
-.logout-link,
-.close-link {
-    width: 45%;
-    padding: 14px 0;
+.close-link,
+.logout-link {
+    flex-grow: 1;
+    padding: 14px;
+    border-radius: 16px;
     border: none;
-    border-radius: 50px;
-    background-color: #fefaef;
-    font-size: 18px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
     text-align: center;
     text-decoration: none;
-    box-shadow: var(--shadow-medium);
-    color: #5C4A3D;
+    background-color: #E9E2D6;
+    color: #6e5c4f;
 }
 
-
-.logout-link {
-    margin-left: auto;
+.close-link:hover,
+.logout-link:hover {
+    background-color: #C1A88B;
+    /* 更醒目的登出顏色 */
+    color: #FFFFFF;
 }
