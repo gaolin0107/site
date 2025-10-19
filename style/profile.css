@@ -75,13 +75,11 @@
 
 .profile-info-container {
     position: fixed;
-    /* ✅ 加上這行才能讓 top/left 生效 */
     display: flex;
     flex-direction: column;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-
     width: 90%;
     max-width: 420px;
     max-height: 90dvh;
@@ -109,7 +107,6 @@
 
 /* --- 頭像區塊 (使用 profile-header) --- */
 .profile-header {
-    display: flex;
     align-items: center;
     gap: 16px;
 }
@@ -123,20 +120,12 @@
     border: 3px solid #FFFFFF;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
-
-/* --- 文字區塊 (使用 profile-text) --- */
-.profile-text .profile-name {
-    font-size: 22px;
-    font-weight: 600;
-    color: #4b3f36;
-    line-height: 1.2;
-}
 .profile-text {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 2px; /* ✅ 改小一點，讓 name 和 email 更靠近 */
     font-size: 15px;
-    line-height: 1.6;
+    line-height: 1.5;
     color: #5a4a3a;
     word-break: break-word;
     overflow-wrap: break-word;
@@ -144,10 +133,17 @@
     max-width: 60%;
 }
 
+.profile-text .profile-name {
+    font-size: 22px;
+    font-weight: 600;
+    color: #4b3f36;
+    line-height: 1.5; /* ✅ 統一行距，避免視覺落差 */
+}
+
 .profile-text .profile-email {
     font-size: 14px;
     color: #9c8c7e;
-
+    line-height: 1.5; /* ✅ 同樣統一行距 */
 }
 
 /* --- 按鈕區塊 (使用 profile-button) --- */
