@@ -109,23 +109,23 @@
     word-break: break-word;
     overflow-wrap: break-word;
     white-space: normal;
-    max-width: 80%;
+    flex: 1;
+    min-width: 0;
 }
 
 .profile-text .profile-name {
     font-size: 22px;
     font-weight: 600;
     color: #4b3f36;
-    line-height: 1.5;
     /* ✅ 統一行距，避免視覺落差 */
 }
 
-.profile-text .profile-email {
+.profile-email .profile-vip {
     font-size: 14px;
     color: #9c8c7e;
-    line-height: 1.5;
     /* ✅ 同樣統一行距 */
 }
+
 
 /* --- 按鈕區塊 (使用 profile-button) --- */
 .profile-button {

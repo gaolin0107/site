@@ -36,4 +36,27 @@ window.addEventListener('resize', () => {
   }
 });
 
+const nav = document.querySelector('.nav');
+const list = document.querySelector('.nav-list');
+const topSection = document.querySelector('.top');
+
+const observer = new IntersectionObserver(
+  ([entry]) => {
+    if (entry.isIntersecting) {
+      nav.classList.add('active');
+      list.classList.add('active');
+    } else {
+      nav.classList.remove('active');
+      list.classList.remove('active');
+    }
+  },
+  {
+    root: null,
+    threshold: 0.1, // 只要有 10% 進入畫面就觸發
+  }
+);
+
+observer.observe(topSection);
+
+
 
