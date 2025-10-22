@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (loginElement) {
             loginElement.style.backgroundImage = "url('../assets/account/navlog.png')";
         }
-        alert("您已成功登出！");
+        alert("您已成功登出！Logout successful!");
         location.reload();
     });
 });
