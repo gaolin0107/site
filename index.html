@@ -5,7 +5,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" content="高林的個人網頁">
-  <meta name="keywords" content="高林,gaolin,Gaolin,GaoLin,zyric,高林網站,gaolin.org,gaolin0107,gaolin_0107">
+  <meta name="keywords"
+    content="高林,高林瀚翔,興國,興國高中,中信國際高中,興國高中,gaolin,Gaolin,GaoLin,zyric,高林網站,gaolin.org,gaolin0107,gaolin_0107">
+  <meta name="description" content="嗨，我是就讀中信高一三國際班的高林，這是我在空閒時間做的網站。目前尚未做好，有甚麼建議可以跟我說! IG:gaolin_0107">
+  <meta property="og:title" content="高林的個人網頁" />
+  <meta property="og:description" content="嗨，我是就讀中信高一三國際班的高林，這是我在空閒時間做的網站。目前尚未做好，有甚麼建議可以跟我說! IG:gaolin_0107" />
+
   <meta name="author" content="GaoLin">
   <meta name="robots" content="all">
   <meta name="copyright" content="stevechow">
@@ -46,21 +51,32 @@
         </ul>
       </nav>
 
-      <section class="top" id="top">
-        <div class="top-content">
-          <h1 class="top-title">立即觀賞高林最新的YT影片</h1>
-          <p class="top-subtitle">內容最詳細的個人介紹!</p>
-          <p class="top-subtitle">如果無法觀看請點擊以下按鈕</p>
-          <a href="https://www.youtube.com/watch?v=7S1_M7wlTWI" class="btn btn-primary" target="_blank"
-            rel="noopener noreferrer">帶我過去</a>
+
+
+      <section class="page-slider">
+        <button class="nav-btn prev-btn">←</button>
+        <div class="page-container">
+          <div class="page-slide top" id="top">
+              <div class="top-content">
+                <h1 class="top-title">立即觀賞高林最新的YT影片</h1>
+                <p class="top-subtitle">內容最詳細的個人介紹!</p>
+                <p class="top-subtitle">如果無法觀看請點擊以下按鈕</p>
+                <a href="https://www.youtube.com/watch?v=7S1_M7wlTWI" class="btn btn-primary" target="_blank"
+                  rel="noopener noreferrer">帶我過去</a>
+              </div>
+              <div class="top-art" aria-hidden="true">
+                <iframe
+                  src="https://www.youtube.com/embed/7S1_M7wlTWI?controls=0&mute=1&loop=1&playlist=7S1_M7wlTWI&modestbranding=1&playsinline=1"
+                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+              </div>
+          </div>
+          <div class="page-slide">第 2 頁內容</div>
+          <div class="page-slide">第 3 頁內容</div>
         </div>
-        <div class="top-art" aria-hidden="true">
-          <iframe
-            src="https://www.youtube.com/embed/7S1_M7wlTWI?controls=0&mute=1&loop=1&playlist=7S1_M7wlTWI&modestbranding=1&playsinline=1"
-            frameborder="0" allow="autoplay; encrypted-media" allowfullscreen webkitallowfullscreen
-            mozallowfullscreen></iframe>
-        </div>
+        <button class="nav-btn next-btn">→</button>
       </section>
+
+
     </header>
 
     <div class="profile-info" id="profile-info-popup">
@@ -86,6 +102,8 @@
 
 
     <main>
+
+
       <section id="about" class="section about">
         <div class="container">
           <h2 class="section-title">關於高林</h2>
@@ -217,7 +235,7 @@
 
       <footer class="site-footer">
         <div class="container">
-          <p>©<span id="year"></span>高林 WB046-25.10.23</p>
+          <p>©<span id="year"></span>高林 WB047-25.10.24</p>
           <a href="#top" class="link to-top">回頂部</a>
         </div>
       </footer>
@@ -225,10 +243,11 @@
       <link rel="stylesheet" href="style/contact-form.css">
       <link rel="stylesheet" href="style/profile.css">
       <link rel="stylesheet" href="style/navbar.css">
+      <link rel="stylesheet" href="style/page.css">
       <link rel="stylesheet" href="style/top.css">
       <link rel="stylesheet" href="style/1.css">
 
-
+      <script src="script/page.js"></script>
       <script src="script/card.js"></script>
       <script src="script/year.js"></script>
       <script src="script/navbar.js"></script>

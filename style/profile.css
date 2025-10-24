@@ -117,13 +117,14 @@
     font-size: 22px;
     font-weight: 600;
     color: #4b3f36;
-    /* ✅ 統一行距，避免視覺落差 */
+    text-decoration: none;
+
 }
 
 .profile-email .profile-vip {
     font-size: 14px;
     color: #9c8c7e;
-    /* ✅ 同樣統一行距 */
+    text-decoration: none;
 }
 
 
