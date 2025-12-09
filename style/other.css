@@ -42,7 +42,7 @@
         .card {
             background: #fffaf3;
             border: 1px solid #d4c2a6;
-            border-radius: 12px;
+            border-radius: 25px;
             box-shadow: 0 4px 8px rgba(100, 80, 50, 0.2);
             width: 80%;
             max-width: 640px;
@@ -53,12 +53,12 @@
 
         .card h2 {
             font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             margin-bottom: 1rem;
         }
 
         .card p {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
         }
 
         .home-link {
@@ -74,7 +74,7 @@
             padding: 0.6rem 1.2rem;
             border-radius: 8px;
             background-color: #fdf6e9;
-            font-size: 1.4rem;
+            font-size: 1rem;
             transition: background-color 0.3s ease;
         }
 

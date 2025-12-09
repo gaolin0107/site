@@ -2,8 +2,8 @@
   position: relative;
   overflow: hidden;
   width: 100dvw;
-
 }
+
 
 .page-container {
   display: flex;
@@ -23,18 +23,27 @@
   /* 初始值，JS 會同步高度 */
 }
 
+
 .nav-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.5);
-  color: #fff;
+  background: #f1e6d7; /* 呼應導覽列背景 */
+  color: #333;         /* 深色字，對比清楚 */
   border: none;
-  padding: 12px;
-  font-size: 24px;
+  padding: 10px;
+  font-size: 20px;
   cursor: pointer;
   z-index: 10;
   border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2); /* 增加立體感 */
+  transition: background 0.3s ease, transform 0.2s ease;
+  font-family: "jffont";
+}
+
+.nav-btn:hover {
+  background: #e0d0b8; /* hover 時稍微加深 */
+  transform: translateY(-50%) scale(1.1);
 }
 
 .prev-btn {
@@ -43,4 +52,75 @@
 
 .next-btn {
   right: 12px;
+}
+
+.top {
+  max-width: min(90%, 1500px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  padding: 120px 5% 40px;
+  align-items: center;
+  /* 左右東西欄垂直置中 */
+  border: 1px;
+}
+
+.top-title {
+  font-family: var(--font-serif);
+  font-size: clamp(32px, 4.8vw, 56px);
+  line-height: 1.1;
+  margin: 0 0 12px;
+  color: var(--charcoal);
+  text-shadow: 0 2px 6px rgba(160, 120, 90, 0.3);
+}
+
+.top-subtitle {
+  font-size: 18px;
+  margin: 0;
+  line-height: 1.4;
+  color: rgba(43, 43, 43, 0.8);
+}
+
+.top-art {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  /* 16:9 */
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-medium);
+  border: 1px solid rgba(43, 43, 43, 0.06);
+}
+
+.top-art iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  border: none;
+  pointer-events: auto;
+}
+
+
+/* 橘色按鈕 */
+.btn {
+  font-size: 18px;
+  display: inline-block;
+  padding: 12px 18px;
+  border-radius: 12px;
+  transition: box-shadow 200ms ease, background 200ms ease;
+}
+
+.btn-primary {
+  margin: 12px 0 0;
+  background: var(--ochre);
+  color: #fff;
+  box-shadow: var(--shadow-soft);
+}
+
+.btn-primary:hover {
+  background: #bf945e;
 }

@@ -20,6 +20,7 @@ if (navToggleInput) {
     }
   });
 }
+
 window.addEventListener('resize', () => {
   const isDesktop = window.innerWidth >= 980; // 根據你的斷點設定
   if (isDesktop) {
@@ -38,11 +39,12 @@ window.addEventListener('resize', () => {
 
 const nav = document.querySelector('.nav');
 const list = document.querySelector('.nav-list');
-const topSection = document.querySelector('.top');
+const topSection = document.querySelector('#top');
 
 const observer = new IntersectionObserver(
   ([entry]) => {
-    if (entry.isIntersecting) {
+    // 離開頂部才加上 active
+    if (!entry.isIntersecting) {
       nav.classList.add('active');
       list.classList.add('active');
     } else {
@@ -57,6 +59,5 @@ const observer = new IntersectionObserver(
 );
 
 observer.observe(topSection);
-
 
 

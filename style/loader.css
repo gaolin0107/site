@@ -9,6 +9,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: opacity 0.5s ease;
+  /* 淡出效果 */
+  opacity: 1;
+}
+
+#loading-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+  /* 避免遮擋 */
 }
 
 .loader {

@@ -21,6 +21,15 @@
   --max-w: 1100px;
 }
 
+@font-face {
+  font-family: "jffont";
+  src: url("/assets/jf-openhuninn-2.1.ttf") format("truetype");
+}
+@font-face {
+  font-family: "jffont2";
+  src: url("/assets/ChenYuluoyan-2.0-Thin.ttf") format("truetype");
+}
+
 * {
   box-sizing: border-box;
 }
@@ -90,4 +99,3 @@ a:hover {
   max-width: var(--max-w);
   margin: 0 auto;
 }
-

@@ -23,7 +23,7 @@
 
 .nav,
 .nav-list {
-  background-color: #eee8de;
+  background-color: #f1e6d7;
   transition: background-color 0.3s ease;
   border-bottom: 1px solid #EAE5DD;
 
@@ -32,7 +32,7 @@
 
 .nav.active,
 .nav-list.active {
-  background-color: #f1e6d7;
+  background-color: #eee8de;
 
 }
 
