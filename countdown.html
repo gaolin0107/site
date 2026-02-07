@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>計時器</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* 隱藏/顯示的工具類 */
+        .hidden-force {
+            display: none !important;
+        }
+
+        /* 移除輸入框預設樣式 */
+        input:focus {
+            outline: none;
+        }
+
+        /* 自定義顏色變數 */
+        :root {
+            --cream: #FEFAEF;
+            /* 米白色 */
+            --dark: #222222;
+            /* 黑色 */
+            --grey: #A3A3A3;
+            /* 輸入框灰色 */
+        }
+
+        /* 使用 CSS 變數的 Helper Classes */
+        .text-cream {
+            color: var(--cream);
+        }
+
+        .bg-cream {
+            background-color: var(--cream);
+        }
+
+        .text-dark {
+            color: var(--dark);
+        }
+
+        .bg-dark {
+            background-color: var(--dark);
+        }
+
+        /* 按鈕懸停效果 */
+        .btn-hover {
+            transition: all 0.2s ease;
+        }
+
+        .btn-hover:hover {
+            transform: scale(1.1);
+            background-color: #ffffff;
+        }
+
+        .btn-hover:active {
+            transform: scale(0.95);
+        }
+
+        /* 編輯視窗專用樣式 */
+        .modal-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* 快速預設按鈕樣式 */
+        .preset-btn {
+            border: 1px solid #A3A3A3;
+            color: #A3A3A3;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover {
+            border-color: #222222;
+            color: #222222;
+            background-color: rgba(34, 34, 34, 0.05);
+        }
+
+        /* 模式切換按鈕樣式 */
+        .mode-switch-container {
+            background-color: rgba(254, 250, 239, 0.1);
+            border-radius: 9999px;
+            padding: 4px;
+            display: flex;
+            gap: 4px;
+        }
+
+        .mode-btn {
+            padding: 6px 16px;
+            border-radius: 9999px;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(254, 250, 239, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn.active {
+            background-color: var(--cream);
+            color: var(--dark);
+            font-weight: 700;
+        }
+
+        /* 自定義 Range Slider 樣式 */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #222222;
+            cursor: pointer;
+            margin-top: -10px;
+            box-shadow: 0 0 0 4px #FEFAEF;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #222222;
+            border-radius: 2px;
+        }
+
+        input[type=range]:focus {
+            outline: none;
+        }
+
+        /* 讓計時器在編輯模式下平滑移動 */
+        #timer-container {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* 編輯模式下的計時器位置：上移以佔據 70% 空間的視覺中心 */
+        .edit-mode-active #timer-container {
+            transform: translateY(-20vh);
+            /* 稍微再往上移一點，避開變高的編輯視窗 */
+        }
+
+        /* 進度條樣式 */
+        #progress-bar {
+            transition: width 1s linear;
+        }
+
+        /* 碼錶進度條隱藏過渡 */
+        #progress-bar.hidden-bar {
+            opacity: 0;
+            width: 0 !important;
+            transition: opacity 0.3s, width 0s 0.3s;
+        }
+    </style>
+</head>
+
+<body
+    class="min-h-screen bg-[#222222] text-[#FEFAEF] flex flex-col items-center justify-center relative font-sans selection:bg-orange-500/30 overflow-hidden">
+
+    <!-- Top Progress Bar (New Feature) -->
+    <div class="absolute top-0 left-0 w-full h-1 bg-[#222222] z-50">
+        <div id="progress-bar" class="h-full bg-cream w-full"></div>
+    </div>
+
+    <!-- Top Utility Bar -->
+    <div id="top-bar"
+        class="absolute top-0 left-0 w-full p-4 md:p-8 flex justify-between items-center z-10 transition-opacity duration-300">
+        <!-- Home Button -->
+        <button onclick="location.href='../index.html'"
+            class="w-12 h-12 rounded-full bg-cream text-dark flex items-center justify-center btn-hover shadow-lg"
+            title="回首頁">
+            <i data-lucide="home" width="24" height="24"></i>
+        </button>
+
+
+        <!-- Mode Switcher (New Feature) -->
+        <div class="mode-switch-container">
+            <button onclick="switchAppMode('timer')" id="btn-mode-timer" class="mode-btn active">計時器</button>
+            <button onclick="switchAppMode('stopwatch')" id="btn-mode-stopwatch" class="mode-btn">碼錶</button>
+        </div>
+
+        <!-- Fullscreen Button -->
+        <button onclick="toggleFullscreen()" id="fullscreen-btn"
+            class="w-12 h-12 rounded-full bg-cream text-dark flex items-center justify-center btn-hover shadow-lg"
+            title="全螢幕 (Esc退出)">
+            <i data-lucide="maximize" width="24" height="24" id="icon-maximize"></i>
+            <i data-lucide="minimize" width="24" height="24" id="icon-minimize" class="hidden-force"></i>
+        </button>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex flex-col items-center gap-6 md:gap-12 w-full max-w-2xl px-4">
+
+        <!-- Timer Display Wrapper -->
+        <div id="timer-container" class="relative group cursor-default w-full flex justify-center">
+            <!-- 初始字體大小會由 JS 設定 -->
+            <h1 id="timer-display"
+                class="font-bold tracking-tight text-cream leading-none tabular-nums font-sans whitespace-nowrap">
+                59:59
+            </h1>
+            <!-- Status Text -->
+            <div id="timer-status"
+                class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-sm font-medium tracking-widest uppercase opacity-0 transition-opacity duration-300 whitespace-nowrap">
+                按空白鍵開始
+            </div>
+        </div>
+
+        <!-- Primary Controls View -->
+        <div id="controls-view" class="flex items-center gap-6 animate-in fade-in zoom-in duration-300">
+
+            <!-- Reset Button -->
+            <button onclick="resetTimer()"
+                class="w-14 h-14 rounded-full bg-cream text-dark flex items-center justify-center btn-hover shadow-xl"
+                title="重置">
+                <i data-lucide="rotate-ccw" width="24" height="24"></i>
+            </button>
+
+            <!-- Play/Pause Button -->
+            <button id="play-pause-btn" onclick="toggleTimer()"
+                class="w-14 h-14 rounded-full bg-cream text-dark flex items-center justify-center btn-hover shadow-xl"
+                title="開始/暫停 (Space)">
+                <span id="play-icon-wrapper" class="flex items-center justify-center">
+                    <i data-lucide="play" width="24" height="24" class="fill-current ml-0.5"></i>
+                </span>
+                <span id="pause-icon-wrapper" class="hidden-force flex items-center justify-center">
+                    <i data-lucide="pause" width="24" height="24" class="fill-current"></i>
+                </span>
+            </button>
+
+            <!-- Edit Button -->
+            <button onclick="openEditMode()"
+                class="w-14 h-14 rounded-full bg-cream text-dark flex items-center justify-center btn-hover shadow-xl"
+                title="設定">
+                <i data-lucide="pencil" width="24" height="24"></i>
+            </button>
+        </div>
+
+        <!-- Edit Mode Input Panel -->
+        <form id="edit-view"
+            class="hidden-force fixed bottom-0 left-0 w-full h-auto min-h-[50vh] bg-[#FEFAEF] rounded-t-[2rem] md:rounded-t-[3rem] shadow-[0_-10px_40px_rgba(0,0,0,0.5)] z-50 p-6 md:p-8 pb-10 flex flex-col items-center justify-between gap-10 animate-in slide-in-from-bottom duration-300">
+
+            <!-- Dynamic Title -->
+            <h2 id="modal-title"
+                class="absolute top-8 left-1/2 -translate-x-1/2 text-[#222222] text-xl font-bold tracking-wide">設定時間
+            </h2>
+
+            <!-- Top Tabs (Icons) -->
+            <div class="absolute top-6 left-6">
+                <button type="button" id="tab-btn-time" onclick="switchTab('time')"
+                    class="w-10 h-10 rounded-full bg-[#222222] text-white flex items-center justify-center transition-transform active:scale-95 hover:bg-neutral-800">
+                    <i data-lucide="clock" width="20" height="20"></i>
+                </button>
+            </div>
+            <div class="absolute top-6 right-6">
+                <button type="button" id="tab-btn-font" onclick="switchTab('font')"
+                    class="w-10 h-10 rounded-full bg-[#222222] text-white flex items-center justify-center transition-transform active:scale-95 hover:bg-neutral-800">
+                    <i data-lucide="type" width="20" height="20"></i>
+                </button>
+            </div>
+
+            <!-- Content Container -->
+            <div class="flex-1 w-full flex items-center justify-center mt-12">
+
+                <!-- Section 1: Time Settings -->
+                <div id="section-time" class="flex flex-col items-center gap-6 w-full transition-opacity duration-300">
+
+                    <!-- Input Fields -->
+                    <div class="flex items-center justify-center gap-2 md:gap-4 text-7xl md:text-8xl font-bold">
+                        <!-- Minutes Input -->
+                        <div class="relative group">
+                            <input id="min-input" type="text" inputmode="numeric" placeholder="00"
+                                class="w-32 md:w-40 bg-transparent border-b-[6px] border-[#A3A3A3]/50 focus:border-[#222222] outline-none text-center placeholder:text-[#A3A3A3] pb-2 transition-colors font-sans text-[#A3A3A3]" />
+                        </div>
+                        <!-- Colon -->
+                        <span id="time-colon" class="text-[#A3A3A3] pb-4 transition-colors">:</span>
+                        <!-- Seconds Input -->
+                        <div class="relative group">
+                            <input id="sec-input" type="text" inputmode="numeric" placeholder="00"
+                                class="w-32 md:w-40 bg-transparent border-b-[6px] border-[#A3A3A3]/50 focus:border-[#222222] outline-none text-center placeholder:text-[#A3A3A3] pb-2 transition-colors font-sans text-[#A3A3A3]" />
+                        </div>
+                    </div>
+
+                    <!-- Quick Presets -->
+                    <div class="flex gap-2 md:gap-3 flex-wrap justify-center mt-2">
+                        <button type="button" onclick="quickSetTime(5)"
+                            class="preset-btn px-5 py-2.5 md:px-6 md:py-3 rounded-full text-sm md:text-base font-medium">5分</button>
+                        <button type="button" onclick="quickSetTime(10)"
+                            class="preset-btn px-5 py-2.5 md:px-6 md:py-3 rounded-full text-sm md:text-base font-medium">10分</button>
+                        <button type="button" onclick="quickSetTime(25)"
+                            class="preset-btn px-5 py-2.5 md:px-6 md:py-3 rounded-full text-sm md:text-base font-medium">25分</button>
+                        <button type="button" onclick="quickSetTime(30)"
+                            class="preset-btn px-5 py-2.5 md:px-6 md:py-3 rounded-full text-sm md:text-base font-medium">30分</button>
+                    </div>
+
+                </div>
+
+                <!-- Section 2: Font Settings (Hidden by default) -->
+                <div id="section-font"
+                    class="hidden-force flex flex-col items-center justify-center gap-6 w-full px-4 md:px-8 transition-opacity duration-300">
+                    <div class="text-[#222222] text-2xl font-bold tracking-tight font-sans" id="font-size-display">160px
+                    </div>
+                    <div class="w-full relative py-4 max-w-md">
+                        <input type="range" id="font-slider" min="20" max="600" value="160" step="5" class="w-full">
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Buttons -->
+            <div class="flex items-center gap-8 mb-2">
+                <!-- Cancel Button -->
+                <button type="button" onclick="closeEditMode()"
+                    class="w-20 h-12 md:w-24 md:h-14 rounded-full bg-[#222222] hover:bg-neutral-800 text-white transition-colors flex items-center justify-center modal-btn shadow-lg">
+                    <i data-lucide="x" width="24" height="24"></i>
+                </button>
+
+                <!-- Confirm Button -->
+                <button type="submit" id="confirm-btn"
+                    class="w-20 h-12 md:w-24 md:h-14 rounded-full bg-[#222222] hover:bg-neutral-800 text-white transition-colors flex items-center justify-center modal-btn shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i data-lucide="check" width="24" height="24"></i>
+                </button>
+            </div>
+        </form>
+
+    </div>
+
+    <script>
+        // --- 初始化圖示 ---
+        lucide.createIcons();
+
+        // --- 全域變數 ---
+        let appMode = 'timer'; // 'timer' | 'stopwatch'
+
+        // 計時器變數
+        let initialTime = 3599;
+        let timeLeft = 3599;
+        let isTimerActive = false;
+        let timerInterval = null;
+
+        // 碼錶變數
+        let stopwatchTime = 0; // ms
+        let isStopwatchActive = false;
+        let stopwatchInterval = null;
+        let lastStopwatchTime = 0; // 用於計算 delta
+
+        // UI 狀態
+        let currentEditMode = 'time';
+        let currentFontSize = 160;
+
+        // --- 音效上下文 (AudioContext) ---
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playAlarmSound() {
+            initAudio();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.5);
+            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.5);
+
+            setTimeout(() => {
+                const osc2 = audioCtx.createOscillator();
+                const gain2 = audioCtx.createGain();
+                osc2.connect(gain2);
+                gain2.connect(audioCtx.destination);
+                osc2.type = 'sine';
+                osc2.frequency.setValueAtTime(880, audioCtx.currentTime);
+                osc2.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.5);
+                gain2.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                osc2.start();
+                osc2.stop(audioCtx.currentTime + 0.5);
+            }, 600);
+        }
+
+        // --- DOM 元素 ---
+        const body = document.body;
+        const topBar = document.getElementById('top-bar');
+        const timerDisplay = document.getElementById('timer-display');
+        const timerStatus = document.getElementById('timer-status');
+        const progressBar = document.getElementById('progress-bar');
+
+        const playBtn = document.getElementById('play-pause-btn');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const iconMaximize = document.getElementById('icon-maximize');
+        const iconMinimize = document.getElementById('icon-minimize');
+
+        const playWrapper = document.getElementById('play-icon-wrapper');
+        const pauseWrapper = document.getElementById('pause-icon-wrapper');
+
+        const controlsView = document.getElementById('controls-view');
+        const editView = document.getElementById('edit-view');
+
+        const minInput = document.getElementById('min-input');
+        const secInput = document.getElementById('sec-input');
+        const timeColon = document.getElementById('time-colon');
+        const confirmBtn = document.getElementById('confirm-btn');
+        const modalTitle = document.getElementById('modal-title');
+
+        const sectionTime = document.getElementById('section-time');
+        const sectionFont = document.getElementById('section-font');
+        const fontSlider = document.getElementById('font-slider');
+        const fontSizeDisplay = document.getElementById('font-size-display');
+        const tabBtnTime = document.getElementById('tab-btn-time');
+        const tabBtnFont = document.getElementById('tab-btn-font'); // 新增選取 Font 按鈕
+
+        // --- 核心功能: 計算安全字體大小 ---
+
+        function getSafeFontSize(requestedSize, textContent) {
+            const windowHeight = window.innerHeight;
+            const windowWidth = window.innerWidth;
+
+            const reservedHeight = 280;
+            const maxSafeHeight = windowHeight - reservedHeight;
+
+            const charCount = textContent ? textContent.length : 5;
+            const widthRatio = charCount > 6 ? 5.5 : 3.5;
+
+            const paddingX = 40;
+            const maxSafeWidth = (windowWidth - paddingX) / widthRatio;
+
+            let finalRequested = requestedSize;
+
+            const safeSize = Math.floor(Math.min(finalRequested, Math.max(20, maxSafeHeight), maxSafeWidth));
+
+            return safeSize;
+        }
+
+        function formatTimerTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function formatStopwatchTime(ms) {
+            const totalSeconds = Math.floor(ms / 1000);
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            const centiseconds = Math.floor((ms % 1000) / 10);
+
+            return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${centiseconds.toString().padStart(2, '0')}`;
+        }
+
+        function updateDisplay() {
+            let timeString = "";
+            let isActive = false;
+
+            if (appMode === 'timer') {
+                timeString = formatTimerTime(timeLeft);
+                isActive = isTimerActive;
+
+                const progress = initialTime > 0 ? (timeLeft / initialTime) * 100 : 0;
+                progressBar.style.width = `${progress}%`;
+                progressBar.classList.remove('hidden-bar');
+
+            } else {
+                timeString = formatStopwatchTime(stopwatchTime);
+                isActive = isStopwatchActive;
+
+                progressBar.classList.add('hidden-bar');
+            }
+
+            timerDisplay.textContent = timeString;
+            document.title = isActive ? `(${timeString}) 計時器` : '計時器';
+
+            const safeSize = getSafeFontSize(currentFontSize, timeString);
+
+            if (safeSize < currentFontSize) {
+                // 自動縮小
+            }
+            timerDisplay.style.fontSize = `${safeSize}px`;
+
+            if (isActive) {
+                timerStatus.classList.remove('opacity-100');
+                timerStatus.classList.add('opacity-0');
+                playWrapper.classList.add('hidden-force');
+                pauseWrapper.classList.remove('hidden-force');
+            } else {
+                playWrapper.classList.remove('hidden-force');
+                pauseWrapper.classList.add('hidden-force');
+
+                timerStatus.textContent = appMode === 'timer' ? "按空白鍵開始" : "碼錶已暫停";
+                timerStatus.classList.remove('opacity-0');
+                timerStatus.classList.add('opacity-100');
+            }
+        }
+
+        window.addEventListener('resize', updateDisplay);
+
+        // --- 模式切換邏輯 ---
+        function switchAppMode(mode) {
+            if (mode === appMode) return;
+
+            if (isTimerActive) toggleTimer();
+            if (isStopwatchActive) toggleTimer();
+
+            appMode = mode;
+
+            document.getElementById('btn-mode-timer').classList.toggle('active', mode === 'timer');
+            document.getElementById('btn-mode-stopwatch').classList.toggle('active', mode === 'stopwatch');
+
+            updateDisplay();
+        }
+
+        function toggleTimer() {
+            initAudio();
+
+            if (appMode === 'timer') {
+                if (timeLeft === 0 && !isTimerActive) return;
+
+                isTimerActive = !isTimerActive;
+                updateDisplay();
+
+                if (isTimerActive) {
+                    timerInterval = setInterval(() => {
+                        if (timeLeft > 0) {
+                            timeLeft--;
+                            updateDisplay();
+                        } else {
+                            isTimerActive = false;
+                            clearInterval(timerInterval);
+                            updateDisplay();
+                            playAlarmSound();
+                        }
+                    }, 1000);
+                } else {
+                    clearInterval(timerInterval);
+                }
+            } else {
+                isStopwatchActive = !isStopwatchActive;
+
+                if (isStopwatchActive) {
+                    lastStopwatchTime = Date.now();
+                    stopwatchInterval = setInterval(() => {
+                        const now = Date.now();
+                        const delta = now - lastStopwatchTime;
+                        lastStopwatchTime = now;
+                        stopwatchTime += delta;
+                        updateDisplay();
+                    }, 10);
+                } else {
+                    clearInterval(stopwatchInterval);
+                }
+                updateDisplay();
+            }
+        }
+
+        function resetTimer() {
+            if (appMode === 'timer') {
+                isTimerActive = false;
+                clearInterval(timerInterval);
+                timeLeft = initialTime;
+            } else {
+                isStopwatchActive = false;
+                clearInterval(stopwatchInterval);
+                stopwatchTime = 0;
+            }
+            updateDisplay();
+        }
+
+
+        // --- 快速設定功能 ---
+        function quickSetTime(minutes) {
+            minInput.value = minutes.toString().padStart(2, '0');
+            secInput.value = "00";
+            updateInputColors();
+            checkInputs();
+        }
+
+        // --- 全螢幕邏輯 ---
+        function updateFullscreenIcon() {
+            if (document.fullscreenElement) {
+                iconMaximize.classList.add('hidden-force');
+                iconMinimize.classList.remove('hidden-force');
+                fullscreenBtn.title = "退出全螢幕";
+            } else {
+                iconMaximize.classList.remove('hidden-force');
+                iconMinimize.classList.add('hidden-force');
+                fullscreenBtn.title = "全螢幕 (Esc退出)";
+            }
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(e => console.log(e));
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        document.addEventListener('fullscreenchange', updateFullscreenIcon);
+
+        // --- 鍵盤快捷鍵 ---
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && e.target.tagName !== 'INPUT') {
+                e.preventDefault();
+                toggleTimer();
+            }
+            if (e.code === 'Escape') {
+                if (!editView.classList.contains('hidden-force')) {
+                    closeEditMode();
+                }
+            }
+        });
+
+        // --- 編輯模式邏輯 ---
+
+        function openEditMode() {
+            if (isTimerActive || isStopwatchActive) toggleTimer();
+
+            topBar.classList.add('hidden-force');
+            controlsView.classList.add('hidden-force');
+            editView.classList.remove('hidden-force');
+            body.classList.add('edit-mode-active');
+
+            fontSlider.value = currentFontSize;
+            fontSizeDisplay.textContent = `${currentFontSize}px`;
+
+            // 根據模式決定顯示哪個 Tab 以及是否顯示右上角的圖示
+            if (appMode === 'timer') {
+                // 計時器模式：顯示兩個 Tab
+                tabBtnTime.classList.remove('hidden-force');
+                tabBtnTime.style.display = 'flex';
+
+                tabBtnFont.classList.remove('hidden-force');
+                tabBtnFont.style.display = 'flex';
+
+                switchTab('time');
+
+                minInput.value = '';
+                secInput.value = '';
+                updateInputColors();
+                checkInputs();
+                minInput.focus();
+            } else {
+                // 碼錶模式：隱藏所有 Tab 圖示，直接顯示 Font 設定
+                tabBtnTime.classList.add('hidden-force');
+                tabBtnTime.style.display = 'none';
+
+                // 這裡就是您要求的修改：隱藏右上角的文字大小圖示
+                tabBtnFont.classList.add('hidden-force');
+                tabBtnFont.style.display = 'none';
+
+                switchTab('font');
+            }
+        }
+
+        function closeEditMode() {
+            topBar.classList.remove('hidden-force');
+            controlsView.classList.remove('hidden-force');
+            editView.classList.add('hidden-force');
+            body.classList.remove('edit-mode-active');
+
+            updateDisplay();
+        }
+
+        function switchTab(mode) {
+            currentEditMode = mode;
+            if (mode === 'time') {
+                modalTitle.textContent = "設定時間";
+                sectionTime.classList.remove('hidden-force');
+                sectionFont.classList.add('hidden-force');
+                checkInputs();
+            } else {
+                modalTitle.textContent = "文字大小";
+                sectionTime.classList.add('hidden-force');
+                sectionFont.classList.remove('hidden-force');
+                confirmBtn.disabled = false;
+            }
+        }
+
+        function checkInputs() {
+            if (currentEditMode === 'time') {
+                const m = minInput.value;
+                const s = secInput.value;
+                confirmBtn.disabled = !(m || s);
+            } else {
+                confirmBtn.disabled = false;
+            }
+        }
+
+        function updateInputColors() {
+            if (minInput.value.length > 0) {
+                minInput.classList.remove('text-[#A3A3A3]', 'border-[#A3A3A3]/50');
+                minInput.classList.add('text-[#222222]', 'border-[#222222]');
+                timeColon.classList.remove('text-[#A3A3A3]');
+                timeColon.classList.add('text-[#222222]');
+            } else {
+                minInput.classList.add('text-[#A3A3A3]', 'border-[#A3A3A3]/50');
+                minInput.classList.remove('text-[#222222]', 'border-[#222222]');
+                timeColon.classList.add('text-[#A3A3A3]');
+                timeColon.classList.remove('text-[#222222]');
+            }
+
+            if (secInput.value.length > 0) {
+                secInput.classList.remove('text-[#A3A3A3]', 'border-[#A3A3A3]/50');
+                secInput.classList.add('text-[#222222]', 'border-[#222222]');
+            } else {
+                secInput.classList.add('text-[#A3A3A3]', 'border-[#A3A3A3]/50');
+                secInput.classList.remove('text-[#222222]', 'border-[#222222]');
+            }
+        }
+
+        function submitEdit(e) {
+            if (e) e.preventDefault();
+
+            if (currentEditMode === 'time') {
+                if (minInput.value || secInput.value) {
+                    const mins = parseInt(minInput.value) || 0;
+                    const secs = parseInt(secInput.value) || 0;
+                    const totalSeconds = (Math.min(mins, 99) * 60) + Math.min(secs, 59);
+
+                    if (totalSeconds > 0) {
+                        initialTime = totalSeconds;
+                        timeLeft = totalSeconds;
+                    }
+                }
+            }
+
+            currentFontSize = parseInt(fontSlider.value);
+
+            updateDisplay();
+            closeEditMode();
+        }
+
+        // --- 輸入處理與監聽 ---
+
+        function handleInput(e) {
+            let val = e.target.value;
+            val = val.replace(/\D/g, '');
+            if (val.length > 2) {
+                val = val.slice(-1);
+            }
+            e.target.value = val;
+            updateInputColors();
+            checkInputs();
+        }
+
+        function handleKeyDown(e, type) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (type === 'minutes') {
+                    secInput.focus();
+                } else if (type === 'seconds') {
+                    submitEdit();
+                }
+            }
+        }
+
+        fontSlider.addEventListener('input', (e) => {
+            let requestedSize = parseInt(e.target.value);
+            const currentString = timerDisplay.textContent;
+            const safeSize = getSafeFontSize(requestedSize, currentString);
+
+            if (requestedSize > safeSize) {
+                e.target.value = safeSize;
+                requestedSize = safeSize;
+            }
+
+            fontSizeDisplay.textContent = `${requestedSize}px`;
+            timerDisplay.style.fontSize = `${requestedSize}px`;
+        });
+
+        minInput.addEventListener('input', handleInput);
+        secInput.addEventListener('input', handleInput);
+
+        minInput.addEventListener('keydown', (e) => handleKeyDown(e, 'minutes'));
+        secInput.addEventListener('keydown', (e) => handleKeyDown(e, 'seconds'));
+
+        editView.addEventListener('submit', submitEdit);
+
+        // 初始化顯示
+        updateDisplay();
+
+    </script>
+</body>
+
+</html>
