@@ -4,10 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- 設定瀏覽器網址列顏色 -->
-    <meta name="theme-color" content="#222222">
+    <!-- 設定瀏覽器網址列顏色為純黑 -->
+    <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>計時器</title>
+    <!-- 引入 Noto Sans 與 Noto Serif 字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&family=Noto+Serif:wght@400;700&display=swap"
+        rel="stylesheet">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -19,108 +26,86 @@
             outline: none;
         }
 
+        /* 極簡變數與字體統一 */
         :root {
-            --cream: #FEFAEF;
-            --dark: #222222;
-            --grey: #A3A3A3;
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --muted-color: #666666;
         }
 
-        .text-cream {
-            color: var(--cream);
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Noto Sans', system-ui, -apple-system, sans-serif;
         }
 
-        .bg-cream {
-            background-color: var(--cream);
-        }
-
-        .text-dark {
-            color: var(--dark);
-        }
-
-        .bg-dark {
-            background-color: var(--dark);
-        }
-
-        .btn-hover {
+        /* 統一按鈕樣式：移除所有背景、陰影，僅保留縮放與透明度變化 */
+        button {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            color: inherit;
             transition: all 0.2s ease;
+            cursor: pointer;
+            padding: 8px;
         }
 
-        .btn-hover:hover {
+        button:hover {
+            opacity: 0.7;
             transform: scale(1.1);
-            background-color: #ffffff;
         }
 
-        .btn-hover:active {
+        button:active {
             transform: scale(0.95);
         }
 
         button:disabled {
-            opacity: 0.5;
+            opacity: 0.2 !important;
             cursor: not-allowed;
             transform: none !important;
         }
 
-        .modal-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* 預設/歷史按鈕樣式 */
-        .preset-btn {
-            border: 1px solid #A3A3A3;
-            color: #A3A3A3;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-
-        .preset-btn:hover {
-            border-color: #222222;
-            color: #222222;
-            background-color: rgba(34, 34, 34, 0.05);
-        }
-
-        /* 功能按鈕 */
-        .func-btn {
-            background-color: rgba(34, 34, 34, 0.05);
-            color: #555;
-            font-weight: 600;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-
-        .func-btn:hover {
-            background-color: #222222;
-            color: #FEFAEF;
-        }
-
-        .func-btn.active {
-            background-color: #222222;
-            color: #FEFAEF;
-        }
-
+        /* 頂部模式切換 */
         .mode-switch-container {
-            background-color: rgba(254, 250, 239, 0.1);
-            border-radius: 9999px;
-            padding: 4px;
             display: flex;
-            gap: 4px;
+            gap: 16px;
         }
 
         .mode-btn {
-            padding: 6px 16px;
-            border-radius: 9999px;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 500;
-            color: rgba(254, 250, 239, 0.5);
+            color: var(--text-color);
+            opacity: 0.4;
             transition: all 0.3s ease;
+            padding: 4px 8px;
         }
 
         .mode-btn.active {
-            background-color: var(--cream);
-            color: var(--dark);
+            opacity: 1;
             font-weight: 700;
         }
 
-        /* 自定義 Range Slider */
+        /* 藥丸狀設定按鈕統一樣式 (字體與時間設定共用) */
+        .setting-pill-btn {
+            border: 2px solid transparent;
+            padding: 8px 24px;
+            border-radius: 9999px;
+            transition: all 0.3s;
+            font-size: 15px;
+            color: #666666;
+        }
+
+        .setting-pill-btn:hover {
+            color: #000000;
+        }
+
+        .setting-pill-btn.active {
+            border-color: #000000;
+            color: #000000;
+            font-weight: 700;
+        }
+
+        /* 自定義 Range Slider (優化軌道顏色與長度) */
         input[type=range] {
             -webkit-appearance: none;
             width: 100%;
@@ -132,17 +117,17 @@
             height: 24px;
             width: 24px;
             border-radius: 50%;
-            background: #222222;
+            background: #000000;
             cursor: pointer;
             margin-top: -10px;
-            box-shadow: 0 0 0 4px #FEFAEF;
         }
 
         input[type=range]::-webkit-slider-runnable-track {
             width: 100%;
             height: 4px;
             cursor: pointer;
-            background: #222222;
+            background: #E5E5E5;
+            /* 改為更柔和的淺灰色 */
             border-radius: 2px;
         }
 
@@ -155,7 +140,7 @@
         }
 
         .edit-mode-active #timer-container {
-            transform: translateY(-20vh);
+            transform: translateY(-15vh);
         }
 
         #progress-bar {
@@ -170,19 +155,18 @@
     </style>
 </head>
 
-<body
-    class="min-h-screen bg-[#222222] text-[#FEFAEF] flex flex-col items-center justify-center relative font-sans selection:bg-orange-500/30 overflow-hidden">
+<body class="min-h-screen flex flex-col items-center justify-center relative selection:bg-gray-700 overflow-hidden">
 
-    <div class="absolute top-0 left-0 w-full h-1 bg-[#222222] z-50">
-        <div id="progress-bar" class="h-full bg-cream w-full"></div>
+    <!-- 頂部進度條 -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-[#222222] z-50">
+        <div id="progress-bar" class="h-full bg-[#ffffff] w-full"></div>
     </div>
 
+    <!-- 頂部列：首頁、模式切換、全螢幕 -->
     <div id="top-bar"
-        class="absolute top-0 left-0 w-full p-4 md:p-8 flex justify-between items-center z-10 transition-opacity duration-300">
-        <button onclick="goHome()"
-            class="w-12 h-12 rounded-full bg-cream text-dark flex items-center justify-center btn-hover shadow-lg"
-            title="回首頁">
-            <i data-lucide="home" width="24" height="24"></i>
+        class="fixed top-0 left-0 w-full p-6 flex justify-between items-center z-40 transition-opacity duration-300">
+        <button onclick="goHome()" title="回首頁">
+            <i data-lucide="home" width="28" height="28"></i>
         </button>
 
         <div class="mode-switch-container">
@@ -190,161 +174,165 @@
             <button onclick="switchAppMode('stopwatch')" id="btn-mode-stopwatch" class="mode-btn">碼錶</button>
         </div>
 
-        <button onclick="toggleFullscreen()" id="fullscreen-btn"
-            class="w-12 h-12 rounded-full bg-cream text-dark flex items-center justify-center btn-hover shadow-lg"
-            title="全螢幕 (Esc退出)">
-            <i data-lucide="maximize" width="24" height="24" id="icon-maximize"></i>
-            <i data-lucide="minimize" width="24" height="24" id="icon-minimize" class="hidden-force"></i>
+        <button onclick="toggleFullscreen()" id="fullscreen-btn" title="全螢幕 (Esc退出)">
+            <i data-lucide="maximize" width="28" height="28" id="icon-maximize"></i>
+            <i data-lucide="minimize" width="28" height="28" id="icon-minimize" class="hidden-force"></i>
         </button>
     </div>
 
-    <div class="flex flex-col items-center gap-6 md:gap-12 w-full max-w-2xl px-4">
+    <!-- 時間顯示區塊 -->
+    <div
+        class="flex flex-col items-center justify-center w-full h-screen px-4 z-0 absolute top-0 left-0 pointer-events-none">
+        <div id="timer-container" class="relative flex items-center justify-center pointer-events-auto">
 
-        <div id="timer-container"
-            class="relative group cursor-default w-full flex flex-col items-center justify-center">
-
+            <!-- 狀態文字 -->
             <div id="timer-status"
-                class="text-sm font-medium tracking-widest uppercase opacity-0 transition-opacity duration-300 whitespace-nowrap mb-2 min-h-[20px]">
+                class="absolute bottom-full mb-4 left-1/2 -translate-x-1/2 text-sm font-medium tracking-widest text-[#888888] uppercase opacity-0 transition-opacity duration-300 whitespace-nowrap min-h-[20px]">
             </div>
 
-            <h1 id="timer-display"
-                class="font-bold tracking-tight text-cream leading-none tabular-nums font-sans whitespace-nowrap">
+            <!-- 時間數字 -->
+            <h1 id="timer-display" class="tracking-wide leading-none tabular-nums whitespace-nowrap text-center"
+                style="font-family: 'Noto Sans', sans-serif; font-weight: 700;">
                 Loading...
             </h1>
+
+        </div>
+    </div>
+
+    <!-- 底部控制列 -->
+    <div id="controls-view"
+        class="fixed bottom-[80px] left-0 w-full flex justify-center items-center gap-16 z-20 animate-in fade-in duration-300">
+        <button onclick="resetTimer()" title="重置">
+            <i data-lucide="rotate-ccw" width="36" height="36"></i>
+        </button>
+
+        <button id="play-pause-btn" onclick="toggleTimer()" title="開始/暫停 (Space)">
+            <span id="play-icon-wrapper" class="flex items-center justify-center">
+                <i data-lucide="play" width="56" height="56" class="fill-current"></i>
+            </span>
+            <span id="pause-icon-wrapper" class="hidden-force flex items-center justify-center">
+                <i data-lucide="pause" width="56" height="56" class="fill-current"></i>
+            </span>
+        </button>
+
+        <button onclick="openEditMode()" title="設定">
+            <i data-lucide="pencil" width="36" height="36"></i>
+        </button>
+    </div>
+
+    <!-- 編輯介面 -->
+    <form id="edit-view"
+        class="hidden-force fixed bottom-0 left-0 w-full h-auto min-h-[50vh] bg-[#FEFAEF] text-[#000000] z-50 p-6 md:p-8 pb-10 flex flex-col items-center justify-between gap-6 animate-in slide-in-from-bottom duration-300 rounded-t-[2rem]">
+
+        <!-- 左上角切換分頁 (永遠黑色) -->
+        <div class="absolute top-8 left-8 flex gap-4 text-[#000000]">
+            <button type="button" id="tab-btn-time" onclick="switchTab('time')"
+                class="opacity-100 transition-opacity duration-300 hover:opacity-70">
+                <i data-lucide="clock" width="28" height="28"></i>
+            </button>
+            <button type="button" id="tab-btn-font" onclick="switchTab('font')"
+                class="opacity-100 transition-opacity duration-300 hover:opacity-70">
+                <i data-lucide="type" width="28" height="28"></i>
+            </button>
         </div>
 
-        <div id="controls-view" class="flex items-center gap-6 animate-in fade-in zoom-in duration-300">
-
-            <button onclick="resetTimer()"
-                class="w-14 h-14 rounded-full bg-cream text-dark flex items-center justify-center btn-hover shadow-xl"
-                title="重置">
-                <i data-lucide="rotate-ccw" width="24" height="24"></i>
+        <!-- 右上角確認/取消 -->
+        <div class="absolute top-8 right-8 flex gap-4 text-[#000000]">
+            <button type="button" onclick="closeEditMode()">
+                <i data-lucide="x" width="32" height="32"></i>
             </button>
-
-            <button id="play-pause-btn" onclick="toggleTimer()"
-                class="w-14 h-14 rounded-full bg-cream text-dark flex items-center justify-center btn-hover shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-                title="開始/暫停 (Space)">
-                <span id="play-icon-wrapper" class="flex items-center justify-center">
-                    <i data-lucide="play" width="24" height="24" class="fill-current ml-0.5"></i>
-                </span>
-                <span id="pause-icon-wrapper" class="hidden-force flex items-center justify-center">
-                    <i data-lucide="pause" width="24" height="24" class="fill-current"></i>
-                </span>
-            </button>
-
-            <button onclick="openEditMode()"
-                class="w-14 h-14 rounded-full bg-cream text-dark flex items-center justify-center btn-hover shadow-xl"
-                title="設定">
-                <i data-lucide="pencil" width="24" height="24"></i>
+            <button type="submit" id="confirm-btn">
+                <i data-lucide="check" width="32" height="32"></i>
             </button>
         </div>
 
-        <form id="edit-view"
-            class="hidden-force fixed bottom-0 left-0 w-full h-auto min-h-[50vh] bg-[#FEFAEF] rounded-t-[2rem] md:rounded-t-[3rem] shadow-[0_-10px_40px_rgba(0,0,0,0.5)] z-50 p-6 md:p-8 pb-10 flex flex-col items-center justify-between gap-6 animate-in slide-in-from-bottom duration-300">
+        <div class="flex-1 w-full flex flex-col items-center justify-center mt-20 mb-8">
 
-            <div class="absolute top-6 left-6 flex gap-3">
-                <button type="button" id="tab-btn-time" onclick="switchTab('time')"
-                    class="w-10 h-10 rounded-full bg-[#222222] text-white flex items-center justify-center transition-transform active:scale-95 hover:bg-neutral-800">
-                    <i data-lucide="clock" width="20" height="20"></i>
-                </button>
-                <button type="button" id="tab-btn-font" onclick="switchTab('font')"
-                    class="w-10 h-10 rounded-full bg-[#222222] text-white flex items-center justify-center transition-transform active:scale-95 hover:bg-neutral-800">
-                    <i data-lucide="type" width="20" height="20"></i>
-                </button>
-            </div>
+            <!-- 時間設定區塊 -->
+            <div id="section-time" class="flex flex-col items-center gap-12 w-full transition-opacity duration-300">
+                <h3 id="modal-title"
+                    class="text-xl font-bold tracking-wide text-[#666666] text-center w-full absolute top-10 left-0 pointer-events-none">
+                    設定時間</h3>
 
-            <div class="absolute top-6 right-6 flex gap-3">
-                <button type="button" onclick="closeEditMode()"
-                    class="w-10 h-10 rounded-full bg-[#222222] text-white flex items-center justify-center transition-transform active:scale-95 hover:bg-neutral-800">
-                    <i data-lucide="x" width="20" height="20"></i>
-                </button>
-                <button type="submit" id="confirm-btn"
-                    class="w-10 h-10 rounded-full bg-[#222222] text-white flex items-center justify-center transition-transform active:scale-95 hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed">
-                    <i data-lucide="check" width="20" height="20"></i>
-                </button>
-            </div>
+                <div id="time-inputs-container"
+                    class="flex items-center justify-center gap-2 md:gap-4 text-7xl md:text-8xl font-bold transition-all duration-300">
 
-            <div class="flex-1 w-full flex items-center justify-center mt-12 mb-8">
-
-                <div id="section-time" class="flex flex-col items-center gap-8 w-full transition-opacity duration-300">
-
-                    <h3 id="modal-title"
-                        class="text-[#222222] text-xl font-bold tracking-wide absolute top-8 left-1/2 -translate-x-1/2">
-                        設定時間</h3>
-
-                    <div id="time-inputs-container"
-                        class="flex items-center justify-center gap-2 md:gap-4 text-7xl md:text-8xl font-bold transition-all duration-300">
-
-                        <!-- Hour Input (Only shown when hour mode is active) -->
-                        <div id="hour-group" class="hidden-force flex items-center gap-2 md:gap-4">
-                            <div class="relative group">
-                                <input id="hour-input" type="text" inputmode="numeric" placeholder="00"
-                                    class="w-32 md:w-40 bg-transparent border-b-[6px] border-[#A3A3A3]/50 focus:border-[#222222] outline-none text-center placeholder:text-[#A3A3A3] pb-2 transition-colors font-sans text-[#A3A3A3]" />
-                            </div>
-                            <!-- No colon as requested -->
-                        </div>
-
-                        <!-- Minute & Second Group (Hidden when hour mode is active) -->
-                        <div id="min-sec-group" class="flex items-center gap-2 md:gap-4">
-                            <div class="relative group">
-                                <input id="min-input" type="text" inputmode="numeric" placeholder="00"
-                                    class="w-32 md:w-40 bg-transparent border-b-[6px] border-[#A3A3A3]/50 focus:border-[#222222] outline-none text-center placeholder:text-[#A3A3A3] pb-2 transition-colors font-sans text-[#A3A3A3]" />
-                            </div>
-                            <span id="time-colon" class="text-[#A3A3A3] pb-4 transition-colors">:</span>
-                            <div class="relative group">
-                                <input id="sec-input" type="text" inputmode="numeric" placeholder="00"
-                                    class="w-32 md:w-40 bg-transparent border-b-[6px] border-[#A3A3A3]/50 focus:border-[#222222] outline-none text-center placeholder:text-[#A3A3A3] pb-2 transition-colors font-sans text-[#A3A3A3]" />
-                            </div>
+                    <!-- 小時輸入 -->
+                    <div id="hour-group" class="hidden-force flex items-center gap-2 md:gap-4">
+                        <div class="relative group">
+                            <input id="hour-input" type="text" inputmode="numeric" placeholder="00"
+                                class="w-32 md:w-40 bg-transparent border-b-[4px] border-[#A3A3A3] text-[#A3A3A3] focus:border-[#000000] focus:text-[#000000] outline-none text-center placeholder:text-[#D1D1D1] pb-2 transition-colors" />
                         </div>
                     </div>
 
-                    <div class="flex flex-wrap justify-center gap-3 w-full px-4 mt-auto">
-                        <button type="button" id="btn-history-1" onclick="useHistory(0)"
-                            class="preset-btn px-6 py-2.5 rounded-full text-sm font-medium">
-                            5m
-                        </button>
-                        <button type="button" id="btn-history-2" onclick="useHistory(1)"
-                            class="preset-btn px-6 py-2.5 rounded-full text-sm font-medium">
-                            30m
-                        </button>
-                        <button type="button" onclick="resetInputs()"
-                            class="func-btn px-6 py-2.5 rounded-full text-sm font-medium">
-                            歸零
-                        </button>
-                        <button type="button" id="btn-toggle-hour" onclick="toggleHourInput()"
-                            class="func-btn px-6 py-2.5 rounded-full text-sm font-medium">
-                            小時
-                        </button>
-                    </div>
-
-                </div>
-
-                <div id="section-font"
-                    class="hidden-force flex flex-col items-center justify-center gap-6 w-full px-4 md:px-8 transition-opacity duration-300">
-                    <div class="text-[#222222] text-2xl font-bold tracking-tight font-sans" id="font-size-display">160px
-                    </div>
-                    <div class="w-full relative py-4 max-w-md">
-                        <input type="range" id="font-slider" min="20" max="600" value="160" step="5" class="w-full">
+                    <!-- 分鐘/秒數輸入 -->
+                    <div id="min-sec-group" class="flex items-center gap-2 md:gap-4">
+                        <div class="relative group">
+                            <input id="min-input" type="text" inputmode="numeric" placeholder="00"
+                                class="w-32 md:w-40 bg-transparent border-b-[4px] border-[#A3A3A3] text-[#A3A3A3] focus:border-[#000000] focus:text-[#000000] outline-none text-center placeholder:text-[#D1D1D1] pb-2 transition-colors" />
+                        </div>
+                        <span id="time-colon" class="text-[#A3A3A3] pb-4 transition-colors">:</span>
+                        <div class="relative group">
+                            <input id="sec-input" type="text" inputmode="numeric" placeholder="00"
+                                class="w-32 md:w-40 bg-transparent border-b-[4px] border-[#A3A3A3] text-[#A3A3A3] focus:border-[#000000] focus:text-[#000000] outline-none text-center placeholder:text-[#D1D1D1] pb-2 transition-colors" />
+                        </div>
                     </div>
                 </div>
 
+                <!-- 統一使用藥丸狀按鈕樣式 -->
+                <div class="flex flex-wrap justify-center gap-4 w-full px-4 mt-auto">
+                    <button type="button" id="btn-history-1" onclick="useHistory(0)"
+                        class="setting-pill-btn font-bold">5m</button>
+                    <!-- 格式切換按鈕 -->
+                    <button type="button" id="btn-format-toggle" onclick="toggleFormat()"
+                        class="setting-pill-btn font-bold">格式</button>
+                    <button type="button" onclick="resetInputs()" class="setting-pill-btn font-bold">歸零</button>
+                    <button type="button" id="btn-toggle-hour" onclick="toggleHourInput()"
+                        class="setting-pill-btn font-bold">小時</button>
+                </div>
             </div>
-        </form>
 
+            <!-- 字體設定區塊 -->
+            <div id="section-font"
+                class="hidden-force flex flex-col items-center justify-center gap-8 w-full px-8 transition-opacity duration-300">
+                <div class="text-4xl font-bold tracking-tight text-[#000000]" id="font-size-display">160px</div>
+                <!-- 縮短滑桿寬度 max-w-xs -->
+                <div class="w-full relative py-4 max-w-xs">
+                    <input type="range" id="font-slider" min="20" max="600" value="160" step="5" class="w-full">
+                </div>
+
+                <!-- 精簡為兩個切換按鈕 -->
+                <div class="flex gap-6 mt-4">
+                    <button type="button" id="btn-toggle-family" onclick="toggleFontFamily()"
+                        class="setting-pill-btn active">字體：無襯線</button>
+                    <button type="button" id="btn-toggle-weight" onclick="toggleFontWeight()"
+                        class="setting-pill-btn active">粗細：粗體</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+    <!-- 版權文字固定底部 -->
+    <div
+        class="fixed bottom-4 left-0 w-full text-center text-[10px] text-[#ffffff] opacity-30 select-none pointer-events-none tracking-widest z-10">
+        &copy; <span id="year-display">Loading...</span> Gaolin
     </div>
 
     <script>
         lucide.createIcons();
 
-        const STATE_KEY = 'gaolin_timer_state_v5_final';
+        // 升級版本號以刷新緩存
+        const STATE_KEY = 'gaolin_timer_state_v9';
         const TIPS_KEY = 'gaolin_timer_tips_shown';
         const MAX_TIME_SECONDS = 99 * 3600 + 59 * 60 + 59;
         const MAX_TIME_MS = MAX_TIME_SECONDS * 1000;
+        const MAX_FONT_SIZE = 600;
 
         let appMode = 'timer';
 
         let initialTime = 3599;
-        let timeLeft = 3599;
+        let timeLeftMs = 3599000;
         let isTimerActive = false;
         let timerTarget = null;
 
@@ -356,8 +344,12 @@
         let intervalId = null;
         let currentEditMode = 'time';
         let currentFontSize = 160;
+        let currentFontFamily = 'sans';
+        let currentFontWeight = 'bold';
+        let isLongFormat = true;
         let showHoursInput = false;
-        let historyTimes = [300, 1800];
+        let historyTimes = [300];
+        let isTimeModified = false;
 
         let audioCtx;
 
@@ -377,7 +369,6 @@
         const domSecInput = document.getElementById('sec-input');
         const hourGroup = document.getElementById('hour-group');
         const minSecGroup = document.getElementById('min-sec-group');
-        const timeInputsContainer = document.getElementById('time-inputs-container');
         const btnToggleHour = document.getElementById('btn-toggle-hour');
         const timeColon = document.getElementById('time-colon');
         const confirmBtn = document.getElementById('confirm-btn');
@@ -389,7 +380,8 @@
         const tabBtnTime = document.getElementById('tab-btn-time');
         const tabBtnFont = document.getElementById('tab-btn-font');
         const btnHistory1 = document.getElementById('btn-history-1');
-        const btnHistory2 = document.getElementById('btn-history-2');
+        const btnToggleFamily = document.getElementById('btn-toggle-family');
+        const btnToggleWeight = document.getElementById('btn-toggle-weight');
 
         function loadState() {
             const savedJSON = localStorage.getItem(STATE_KEY);
@@ -398,25 +390,28 @@
                     const state = JSON.parse(savedJSON);
 
                     appMode = state.appMode || 'timer';
-                    currentFontSize = state.fontSize || 160;
-                    historyTimes = state.history || [300, 1800];
+                    currentFontSize = Math.min(state.fontSize || 160, MAX_FONT_SIZE);
+                    currentFontFamily = state.fontFamily || 'sans';
+                    currentFontWeight = state.fontWeight || 'bold';
+                    isLongFormat = state.isLongFormat ?? true;
+                    historyTimes = state.history || [300];
 
                     initialTime = state.timer.initial || 3599;
                     if (state.timer.isActive && state.timer.target) {
                         isTimerActive = true;
                         timerTarget = state.timer.target;
                         const now = Date.now();
-                        const remaining = Math.ceil((timerTarget - now) / 1000);
+                        const remaining = timerTarget - now;
                         if (remaining <= 0) {
-                            timeLeft = 0;
+                            timeLeftMs = 0;
                             isTimerActive = false;
                             timerTarget = null;
                         } else {
-                            timeLeft = remaining;
+                            timeLeftMs = remaining;
                         }
                     } else {
                         isTimerActive = false;
-                        timeLeft = state.timer.timeLeft;
+                        timeLeftMs = state.timer.timeLeftMs ?? (initialTime * 1000);
                     }
 
                     initialStopwatchTime = state.stopwatch.initial || 0;
@@ -437,7 +432,7 @@
                     }
 
                 } catch (e) {
-                    console.error("Failed to load state", e);
+                    console.error("State Load Error:", e);
                 }
             }
 
@@ -451,11 +446,14 @@
             const state = {
                 appMode: appMode,
                 fontSize: currentFontSize,
+                fontFamily: currentFontFamily,
+                fontWeight: currentFontWeight,
+                isLongFormat: isLongFormat,
                 history: historyTimes,
                 timer: {
                     initial: initialTime,
                     isActive: isTimerActive,
-                    timeLeft: timeLeft,
+                    timeLeftMs: timeLeftMs,
                     target: timerTarget
                 },
                 stopwatch: {
@@ -475,13 +473,45 @@
             if (fontSlider) fontSlider.value = currentFontSize;
             if (fontSizeDisplay) fontSizeDisplay.textContent = `${currentFontSize}px`;
 
+            applyFontStyles();
             updateHistoryButtons();
             updateDisplay();
         }
 
+        function applyFontStyles() {
+            // Apply Family
+            if (currentFontFamily === 'sans') {
+                btnToggleFamily.textContent = '字體：無襯線';
+                timerDisplay.style.fontFamily = "'Noto Sans', system-ui, sans-serif";
+            } else {
+                btnToggleFamily.textContent = '字體：襯線';
+                timerDisplay.style.fontFamily = "'Noto Serif', Georgia, serif";
+            }
+
+            // Apply Weight
+            if (currentFontWeight === 'bold') {
+                btnToggleWeight.textContent = '粗細：粗體';
+                timerDisplay.style.fontWeight = '700';
+            } else {
+                btnToggleWeight.textContent = '粗細：細體';
+                timerDisplay.style.fontWeight = '400';
+            }
+        }
+
+        function toggleFontFamily() {
+            currentFontFamily = currentFontFamily === 'sans' ? 'serif' : 'sans';
+            applyFontStyles();
+            saveState();
+        }
+
+        function toggleFontWeight() {
+            currentFontWeight = currentFontWeight === 'bold' ? 'normal' : 'bold';
+            applyFontStyles();
+            saveState();
+        }
+
         function updateHistoryButtons() {
             btnHistory1.textContent = formatButtonTime(historyTimes[0]);
-            btnHistory2.textContent = formatButtonTime(historyTimes[1]);
         }
 
         function formatButtonTime(seconds) {
@@ -493,6 +523,35 @@
             if (m > 0) return `${m}m${s > 0 ? s + 's' : ''}`;
             return `${s}s`;
         }
+
+        function toggleFormat() {
+            isLongFormat = !isLongFormat;
+            saveState();
+
+            if (isTimeModified) {
+                updatePreview();
+            } else {
+                updateDisplay();
+            }
+        }
+
+        function setupInputFocus(el) {
+            el.addEventListener('focus', (e) => {
+                e.target.dataset.oldValue = e.target.value;
+                e.target.value = '';
+            });
+            el.addEventListener('blur', (e) => {
+                if (e.target.value === '') {
+                    e.target.value = e.target.dataset.oldValue || '';
+                }
+                updateInputColors();
+                checkInputs();
+                if (isTimeModified) updatePreview();
+            });
+        }
+        setupInputFocus(domHourInput);
+        setupInputFocus(domMinInput);
+        setupInputFocus(domSecInput);
 
         function initAudio() {
             if (!audioCtx) {
@@ -545,26 +604,34 @@
             return safeSize;
         }
 
-        function formatTimerTime(seconds) {
-            const h = Math.floor(seconds / 3600);
-            const m = Math.floor((seconds % 3600) / 60);
-            const s = seconds % 60;
-            if (h > 0) return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-            return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-        }
+        function formatTimeDisplay(ms, isTimer) {
+            if (ms < 0) ms = 0;
 
-        function formatStopwatchTime(ms) {
-            const totalSeconds = Math.floor(ms / 1000);
-            const h = Math.floor(totalSeconds / 3600);
-            if (h > 0) {
-                const m = Math.floor((totalSeconds % 3600) / 60);
-                const s = totalSeconds % 60;
-                return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            let totalSeconds;
+            if (isTimer && (!isLongFormat || ms >= 3600000) && ms > 0) {
+                totalSeconds = Math.ceil(ms / 1000);
             } else {
-                const minutes = Math.floor(totalSeconds / 60);
-                const seconds = totalSeconds % 60;
-                const centiseconds = Math.floor((ms % 1000) / 10);
-                return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${centiseconds.toString().padStart(2, '0')}`;
+                totalSeconds = Math.floor(ms / 1000);
+            }
+
+            const tempH = Math.floor(ms / 3600000);
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = totalSeconds % 60;
+            const cs = Math.floor((ms % 1000) / 10);
+
+            if (isLongFormat) {
+                if (tempH > 0) {
+                    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                } else {
+                    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}.${cs.toString().padStart(2, '0')}`;
+                }
+            } else {
+                if (tempH > 0) {
+                    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+                } else {
+                    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                }
             }
         }
 
@@ -573,13 +640,13 @@
             let currentIsActive = false;
 
             if (appMode === 'timer') {
-                timeString = formatTimerTime(timeLeft);
+                timeString = formatTimeDisplay(timeLeftMs, true);
                 currentIsActive = isTimerActive;
-                const progress = initialTime > 0 ? (timeLeft / initialTime) * 100 : 0;
+                const progress = initialTime > 0 ? (timeLeftMs / (initialTime * 1000)) * 100 : 0;
                 progressBar.style.width = `${progress}%`;
                 progressBar.classList.remove('hidden-bar');
             } else {
-                timeString = formatStopwatchTime(stopwatchTime);
+                timeString = formatTimeDisplay(stopwatchTime, false);
                 currentIsActive = isStopwatchActive;
                 progressBar.classList.add('hidden-bar');
             }
@@ -587,8 +654,7 @@
             timerDisplay.textContent = timeString;
             document.title = currentIsActive ? `(${timeString}) 計時器` : '計時器';
 
-            const safeSize = getSafeFontSize(currentFontSize, timeString);
-            timerDisplay.style.fontSize = `${safeSize}px`;
+            timerDisplay.style.fontSize = `${Math.min(currentFontSize, MAX_FONT_SIZE)}px`;
 
             if (currentIsActive) {
                 playWrapper.classList.add('hidden-force');
@@ -628,16 +694,16 @@
                 let needSave = false;
 
                 if (isTimerActive) {
-                    const remaining = Math.ceil((timerTarget - now) / 1000);
+                    const remaining = timerTarget - now;
                     if (remaining <= 0) {
-                        timeLeft = 0;
+                        timeLeftMs = 0;
                         isTimerActive = false;
                         timerTarget = null;
                         playAlarmSound();
                         needSave = true;
                     } else {
-                        if (timeLeft !== remaining) {
-                            timeLeft = remaining;
+                        if (timeLeftMs !== remaining) {
+                            timeLeftMs = remaining;
                             needSave = true;
                         }
                     }
@@ -677,14 +743,14 @@
             const now = Date.now();
 
             if (appMode === 'timer') {
-                if (timeLeft === 0 && !isTimerActive) return;
+                if (timeLeftMs === 0 && !isTimerActive) return;
 
                 if (isTimerActive) {
                     isTimerActive = false;
                     timerTarget = null;
                 } else {
                     isTimerActive = true;
-                    timerTarget = now + (timeLeft * 1000);
+                    timerTarget = now + timeLeftMs;
                 }
             } else {
                 if (stopwatchTime >= MAX_TIME_MS) return;
@@ -711,7 +777,7 @@
             if (appMode === 'timer') {
                 isTimerActive = false;
                 timerTarget = null;
-                timeLeft = initialTime;
+                timeLeftMs = initialTime * 1000;
             } else {
                 isStopwatchActive = false;
                 stopwatchStartTime = null;
@@ -746,6 +812,8 @@
             if (appMode === 'timer' && isTimerActive) toggleTimer();
             if (appMode === 'stopwatch' && isStopwatchActive) toggleTimer();
 
+            isTimeModified = false;
+
             topBar.classList.add('hidden-force');
             controlsView.classList.add('hidden-force');
             editView.classList.remove('hidden-force');
@@ -753,11 +821,6 @@
 
             if (fontSlider) fontSlider.value = currentFontSize;
             if (fontSizeDisplay) fontSizeDisplay.textContent = `${currentFontSize}px`;
-
-            tabBtnTime.classList.remove('hidden-force');
-            tabBtnTime.style.display = 'flex';
-            tabBtnFont.classList.remove('hidden-force');
-            tabBtnFont.style.display = 'flex';
 
             switchTab('time');
 
@@ -778,7 +841,6 @@
 
             updateInputColors();
             checkInputs();
-            updatePreview();
         }
 
         function closeEditMode() {
@@ -804,7 +866,7 @@
                 modalTitle.textContent = "文字大小";
                 sectionTime.classList.add('hidden-force');
                 sectionFont.classList.remove('hidden-force');
-                confirmBtn.disabled = false;
+                checkInputs();
             }
         }
 
@@ -813,7 +875,6 @@
             const hourGroup = document.getElementById('hour-group');
             const minSecGroup = document.getElementById('min-sec-group');
             const btn = document.getElementById('btn-toggle-hour');
-            const hourIn = domHourInput;
             const modalTitle = document.getElementById('modal-title');
 
             if (showHoursInput) {
@@ -821,22 +882,20 @@
                 hourGroup.classList.add('flex');
                 minSecGroup.classList.add('hidden-force');
                 btn.classList.add('active');
-
                 modalTitle.textContent = "設定小時";
-                // Do not clear value
             } else {
                 hourGroup.classList.add('hidden-force');
                 hourGroup.classList.remove('flex');
                 minSecGroup.classList.remove('hidden-force');
                 btn.classList.remove('active');
-
                 modalTitle.textContent = "設定時間";
             }
             updateInputColors();
-            updatePreview();
+            if (isTimeModified) updatePreview();
         }
 
         function resetInputs() {
+            isTimeModified = true;
             domHourInput.value = "";
             domMinInput.value = "";
             domSecInput.value = "";
@@ -847,70 +906,50 @@
         }
 
         function checkInputs() {
-            if (currentEditMode === 'time') {
-                const h = domHourInput.value;
-                const m = domMinInput.value;
-                const s = domSecInput.value;
-                confirmBtn.disabled = !(m || s || h);
-            } else {
-                confirmBtn.disabled = false;
-            }
+            confirmBtn.disabled = false;
         }
 
         function updateInputColors() {
             const styleInput = (el) => {
                 if (el.value.length > 0) {
-                    el.classList.remove('text-[#A3A3A3]', 'border-[#A3A3A3]/50');
-                    el.classList.add('text-[#222222]', 'border-[#222222]');
+                    el.classList.remove('border-[#A3A3A3]', 'text-[#A3A3A3]');
+                    el.classList.add('border-[#000000]', 'text-[#000000]');
                 } else {
-                    el.classList.add('text-[#A3A3A3]', 'border-[#A3A3A3]/50');
-                    el.classList.remove('text-[#222222]', 'border-[#222222]');
+                    el.classList.add('border-[#A3A3A3]', 'text-[#A3A3A3]');
+                    el.classList.remove('border-[#000000]', 'text-[#000000]');
                 }
             };
             styleInput(domHourInput);
             styleInput(domMinInput);
             styleInput(domSecInput);
 
-            if (domMinInput.value.length > 0 || domHourInput.value.length > 0) {
+            if (domHourInput.value.length > 0 || domMinInput.value.length > 0 || domSecInput.value.length > 0) {
                 timeColon.classList.remove('text-[#A3A3A3]');
-                timeColon.classList.add('text-[#222222]');
+                timeColon.classList.add('text-[#000000]');
             } else {
                 timeColon.classList.add('text-[#A3A3A3]');
-                timeColon.classList.remove('text-[#222222]');
+                timeColon.classList.remove('text-[#000000]');
             }
         }
 
         function updatePreview() {
             if (editView.classList.contains('hidden-force')) return;
+            if (!isTimeModified) return;
 
-            let h = domHourInput.value || "00";
-            let m = domMinInput.value || "00";
-            let s = domSecInput.value || "00";
+            let h = parseInt(domHourInput.value) || 0;
+            let m = parseInt(domMinInput.value) || 0;
+            let s = parseInt(domSecInput.value) || 0;
 
-            h = parseInt(h).toString().padStart(2, '0');
-            m = parseInt(m).toString().padStart(2, '0');
-            s = parseInt(s).toString().padStart(2, '0');
+            let totalSecs = (h * 3600) + (m * 60) + s;
 
-            let previewString = "";
-            if (parseInt(h) > 0) {
-                previewString = `${h}:${m}:${s}`;
-            } else {
-                previewString = `${m}:${s}`;
-            }
+            timerDisplay.textContent = formatTimeDisplay(totalSecs * 1000, appMode === 'timer');
 
-            timerDisplay.textContent = previewString;
             const requestedSize = parseInt(fontSlider.value);
-            const safeSize = getSafeFontSize(requestedSize, previewString);
-
-            if (requestedSize > safeSize) {
-                fontSlider.value = safeSize;
-                fontSizeDisplay.textContent = `${safeSize}px`;
-            }
-
-            timerDisplay.style.fontSize = `${safeSize}px`;
+            timerDisplay.style.fontSize = `${Math.min(requestedSize, MAX_FONT_SIZE)}px`;
         }
 
         function useHistory(index) {
+            isTimeModified = true;
             quickSetTime(historyTimes[index] / 60);
         }
 
@@ -936,17 +975,18 @@
         }
 
         function addToHistory(seconds) {
+            if (seconds === 0) return;
             if (historyTimes[0] === seconds) return;
 
             historyTimes.unshift(seconds);
-            historyTimes = historyTimes.slice(0, 2);
+            historyTimes = historyTimes.slice(0, 1);
             updateHistoryButtons();
         }
 
         function submitEdit(e) {
             if (e) e.preventDefault();
 
-            if (currentEditMode === 'time') {
+            if (isTimeModified) {
                 let h = parseInt(domHourInput.value) || 0;
                 let m = parseInt(domMinInput.value) || 0;
                 let s = parseInt(domSecInput.value) || 0;
@@ -966,7 +1006,7 @@
 
                     if (appMode === 'timer') {
                         initialTime = totalSecs;
-                        timeLeft = totalSecs;
+                        timeLeftMs = totalSecs * 1000;
                     } else {
                         initialStopwatchTime = totalSecs * 1000;
                         stopwatchTime = initialStopwatchTime;
@@ -974,7 +1014,6 @@
                 }
             }
 
-            currentFontSize = parseInt(fontSlider.value);
             playBtn.disabled = false;
             updateDisplay();
             saveState();
@@ -982,6 +1021,7 @@
         }
 
         function handleInput(e) {
+            isTimeModified = true;
             let val = e.target.value;
             val = val.replace(/\D/g, '');
             if (val.length > 2) val = val.slice(-1);
@@ -997,14 +1037,11 @@
 
         fontSlider.addEventListener('input', (e) => {
             let requestedSize = parseInt(e.target.value);
-            const currentString = timerDisplay.textContent;
-            const safeSize = getSafeFontSize(requestedSize, currentString);
-
-            if (requestedSize > safeSize) {
-                e.target.value = safeSize;
-                requestedSize = safeSize;
+            if (requestedSize > MAX_FONT_SIZE) {
+                e.target.value = MAX_FONT_SIZE;
+                requestedSize = MAX_FONT_SIZE;
             }
-
+            currentFontSize = requestedSize;
             fontSizeDisplay.textContent = `${requestedSize}px`;
             timerDisplay.style.fontSize = `${requestedSize}px`;
         });
@@ -1038,45 +1075,36 @@
             }
         });
 
-        window.addEventListener('load', () => {
-            loadState();
-            window.addEventListener('resize', updateDisplay);
-        });
-
-    </script>
-    <div
-        class="absolute bottom-4 w-full text-center text-[10px] text-[#FEFAEF] opacity-30 select-none pointer-events-none font-sans tracking-widest z-0">
-        &copy; <span id="year-display">Loading...</span> Gaolin
-    </div>
-
-    <script>
-        (async function initCopyrightYear() {
+        // 網路時間校時
+        async function initCopyrightYear() {
             const display = document.getElementById('year-display');
-
             const localYear = new Date().getFullYear();
             display.textContent = localYear;
 
             try {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 3000);
-
                 const response = await fetch('https://worldtimeapi.org/api/timezone/Asia/Taipei', {
                     signal: controller.signal
                 });
-
                 clearTimeout(timeoutId);
 
                 if (response.ok) {
                     const data = await response.json();
                     const networkYear = data.datetime.substring(0, 4);
-
                     display.textContent = networkYear;
-                    console.log('已校正為網路時間:', networkYear);
                 }
             } catch (error) {
                 console.log('網路校時失敗，維持系統時間');
             }
-        })();
+        }
+
+        window.addEventListener('load', () => {
+            loadState();
+            initCopyrightYear();
+            window.addEventListener('resize', updateDisplay);
+        });
+
     </script>
 </body>
 
