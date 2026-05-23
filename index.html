@@ -4,17 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- 設定瀏覽器網址列顏色為純黑 -->
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>計時器</title>
-    <!-- 引入 Noto Sans 與 Noto Serif 字體 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&family=Noto+Serif:wght@400;700&display=swap"
-        rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -26,20 +21,32 @@
             outline: none;
         }
 
-        /* 極簡變數與字體統一 */
         :root {
             --bg-color: #000000;
             --text-color: #ffffff;
             --muted-color: #666666;
+            --editor-bg: #FEFAEF;
+            --editor-text: #1C1917;
+            --accent-color: #ffffff;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: 'Noto Sans', system-ui, -apple-system, sans-serif;
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
 
-        /* 統一按鈕樣式：移除所有背景、陰影，僅保留縮放與透明度變化 */
+        .ui-fade {
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), visibility 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .ui-hidden {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+
         button {
             background: transparent;
             border: none;
@@ -65,19 +72,30 @@
             transform: none !important;
         }
 
-        /* 頂部模式切換 */
         .mode-switch-container {
             display: flex;
-            gap: 16px;
+            gap: 8px;
+        }
+        @media (min-width: 640px) {
+            .mode-switch-container {
+                gap: 16px;
+            }
         }
 
         .mode-btn {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 500;
             color: var(--text-color);
             opacity: 0.4;
             transition: all 0.3s ease;
-            padding: 4px 8px;
+            padding: 2px 4px;
+            white-space: nowrap;
+        }
+        @media (min-width: 640px) {
+            .mode-btn {
+                font-size: 15px;
+                padding: 2px 6px;
+            }
         }
 
         .mode-btn.active {
@@ -85,13 +103,12 @@
             font-weight: 700;
         }
 
-        /* 藥丸狀設定按鈕統一樣式 (字體與時間設定共用) */
         .setting-pill-btn {
             border: 2px solid transparent;
-            padding: 8px 24px;
+            padding: 6px 16px;
             border-radius: 9999px;
             transition: all 0.3s;
-            font-size: 15px;
+            font-size: 14px;
             color: #666666;
         }
 
@@ -100,12 +117,11 @@
         }
 
         .setting-pill-btn.active {
-            border-color: #000000;
-            color: #000000;
+            border-color: var(--accent-color);
+            color: var(--accent-color);
             font-weight: 700;
         }
 
-        /* 自定義 Range Slider (優化軌道顏色與長度) */
         input[type=range] {
             -webkit-appearance: none;
             width: 100%;
@@ -117,9 +133,10 @@
             height: 24px;
             width: 24px;
             border-radius: 50%;
-            background: #000000;
+            background: var(--accent-color);
             cursor: pointer;
             margin-top: -10px;
+            transition: background-color 0.3s ease;
         }
 
         input[type=range]::-webkit-slider-runnable-track {
@@ -127,7 +144,6 @@
             height: 4px;
             cursor: pointer;
             background: #E5E5E5;
-            /* 改為更柔和的淺灰色 */
             border-radius: 2px;
         }
 
@@ -136,233 +152,518 @@
         }
 
         #timer-container {
-            transition: transform 0.3s ease-in-out;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .edit-mode-active #timer-container {
-            transform: translateY(-15vh);
+            transform: translateY(-26vh);
         }
 
-        #progress-bar {
-            transition: width 1s linear;
+        .ios-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 9999px;
+            background-color: #D1D1D1;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
         }
 
-        #progress-bar.hidden-bar {
-            opacity: 0;
-            width: 0 !important;
-            transition: opacity 0.3s, width 0s 0.3s;
+        .ios-dot.active {
+            width: 18px;
+            background-color: var(--accent-color);
+        }
+
+        #edit-view, #pomodoro-view {
+            transition: height 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.4s cubic-bezier(0.34, 1.3, 0.64, 1), background-color 0.3s ease, color 0.3s ease;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.25);
+        }
+
+        .pomo-icon-btn {
+            border: 1px solid transparent;
+            padding: 8px;
+            border-radius: 9999px;
+            transition: all 0.3s;
+            opacity: 0.6;
+        }
+
+        .pomo-icon-btn:hover {
+            opacity: 1;
+            background-color: rgba(128, 128, 128, 0.15);
+        }
+
+        .pomo-icon-btn.active {
+            opacity: 1;
+            background-color: rgba(128, 128, 128, 0.25);
+            border-color: currentColor;
         }
     </style>
 </head>
 
 <body class="min-h-screen flex flex-col items-center justify-center relative selection:bg-gray-700 overflow-hidden">
 
-    <!-- 頂部進度條 -->
-    <div class="fixed top-0 left-0 w-full h-1 bg-[#222222] z-50">
-        <div id="progress-bar" class="h-full bg-[#ffffff] w-full"></div>
-    </div>
+    <video id="invisible-video" loop muted playsinline class="hidden-force" src="data:video/mp4;base64,AAAAHGZ0eXBtcDQyAAAAAG1wNDJpc29tAAAAZmZyZWUAAAAidmRhdAAAAAAAAAAAAAAAAdgAc2gAdgAAdgBzaAB2AAAAbW9vdgAAAGxtdmhkAAAAAAAAAAAAAAAAAAAAAQAArgAAAAEAAAEAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAGGlvbmYAAAAUcHJ2cwAAAAAAdmRhdAAAAAA="></video>
 
-    <!-- 頂部列：首頁、模式切換、全螢幕 -->
-    <div id="top-bar"
-        class="fixed top-0 left-0 w-full p-6 flex justify-between items-center z-40 transition-opacity duration-300">
-        <button onclick="goHome()" title="回首頁">
-            <i data-lucide="home" width="28" height="28"></i>
+    <div id="pause-layer" class="fixed inset-0 z-10 hidden-force" onclick="pauseCurrentTimer()"></div>
+
+    <div id="top-bar" class="ui-fade fixed top-6 left-1/2 -translate-x-1/2 flex items-center gap-2 sm:gap-4 bg-[#111111] px-3 sm:px-5 py-2 sm:py-2.5 rounded-full z-40 transition-all duration-1000 text-white w-max max-w-[95vw] overflow-x-auto whitespace-nowrap" style="scrollbar-width: none; -ms-overflow-style: none;">
+        <style>#top-bar::-webkit-scrollbar { display: none; }</style>
+        <button onclick="showHelpModal()" title="功能說明" class="opacity-40 hover:opacity-100 transition-opacity p-1">
+            <i data-lucide="help-circle" width="20" height="20"></i>
         </button>
 
-        <div class="mode-switch-container">
-            <button onclick="switchAppMode('timer')" id="btn-mode-timer" class="mode-btn active">計時器</button>
+        <div class="h-4 w-[1px] bg-neutral-800"></div>
+
+        <div class="mode-switch-container flex items-center text-white">
+            <button onclick="switchAppMode('timer')" id="btn-mode-timer" class="mode-btn active">計時</button>
             <button onclick="switchAppMode('stopwatch')" id="btn-mode-stopwatch" class="mode-btn">碼錶</button>
+            <button onclick="switchAppMode('pomo')" id="btn-mode-pomo" class="mode-btn">番茄</button>
         </div>
 
-        <button onclick="toggleFullscreen()" id="fullscreen-btn" title="全螢幕 (Esc退出)">
-            <i data-lucide="maximize" width="28" height="28" id="icon-maximize"></i>
-            <i data-lucide="minimize" width="28" height="28" id="icon-minimize" class="hidden-force"></i>
-        </button>
+        <div class="h-4 w-[1px] bg-neutral-800"></div>
+
+        <div class="flex items-center gap-2 text-white">
+            <button onclick="toggleFullscreen()" id="fullscreen-btn" title="全螢幕" class="opacity-40 hover:opacity-100 transition-opacity p-1">
+                <i data-lucide="maximize" width="20" height="20" id="icon-maximize"></i>
+                <i data-lucide="minimize" width="20" height="20" id="icon-minimize" class="hidden-force"></i>
+            </button>
+
+            <button onclick="togglePin()" id="pin-btn" title="釘選控制列" class="opacity-40 hover:opacity-100 transition-opacity p-1">
+                <i data-lucide="pin" width="20" height="20" id="icon-pin"></i>
+                <i data-lucide="pin-off" width="20" height="20" id="icon-pin-off" class="hidden-force"></i>
+            </button>
+        </div>
     </div>
 
-    <!-- 時間顯示區塊 -->
-    <div
-        class="flex flex-col items-center justify-center w-full h-screen px-4 z-0 absolute top-0 left-0 pointer-events-none">
-        <div id="timer-container" class="relative flex items-center justify-center pointer-events-auto">
-
-            <!-- 狀態文字 -->
-            <div id="timer-status"
-                class="absolute bottom-full mb-4 left-1/2 -translate-x-1/2 text-sm font-medium tracking-widest text-[#888888] uppercase opacity-0 transition-opacity duration-300 whitespace-nowrap min-h-[20px]">
+    <div class="flex flex-col items-center justify-center w-full h-screen px-4 z-0 absolute top-0 left-0 pointer-events-none select-none" style="user-select: none; -webkit-user-select: none;">
+        <div id="timer-container" class="relative flex flex-col items-center justify-center pointer-events-auto w-full">
+            
+            <div id="timer-pomo-dots" class="flex justify-center items-center gap-2.5 mb-6 hidden-force">
             </div>
 
-            <!-- 時間數字 -->
-            <h1 id="timer-display" class="tracking-wide leading-none tabular-nums whitespace-nowrap text-center"
-                style="font-family: 'Noto Sans', sans-serif; font-weight: 700;">
+            <div id="timer-status" class="ui-fade absolute bottom-full mb-4 left-1/2 -translate-x-1/2 text-sm font-medium tracking-widest uppercase opacity-0 whitespace-nowrap min-h-[20px]">
+            </div>
+            
+            <h1 id="timer-display" class="tracking-wide leading-none tabular-nums whitespace-nowrap text-center" style="font-family: 'Noto Sans', sans-serif; font-weight: 700;">
                 Loading...
             </h1>
-
+            
         </div>
     </div>
 
-    <!-- 底部控制列 -->
-    <div id="controls-view"
-        class="fixed bottom-[80px] left-0 w-full flex justify-center items-center gap-16 z-20 animate-in fade-in duration-300">
-        <button onclick="resetTimer()" title="重置">
-            <i data-lucide="rotate-ccw" width="36" height="36"></i>
+    <div id="controls-view" class="ui-fade fixed bottom-[80px] left-0 w-full flex justify-center items-center gap-10 z-20 transition-all duration-1000">
+        <button onclick="resetTimer()" title="重置" class="w-14 h-14 rounded-full border border-current opacity-40 hover:opacity-100 flex items-center justify-center transition-all duration-300">
+            <i data-lucide="rotate-ccw" width="22" height="22"></i>
         </button>
 
-        <button id="play-pause-btn" onclick="toggleTimer()" title="開始/暫停 (Space)">
+        <button id="play-pause-btn" onclick="toggleTimer()" title="開始/暫停 (Space)" class="w-20 h-20 rounded-full border-[2.5px] flex items-center justify-center transition-all duration-300 shadow-xl" style="border-color: var(--accent-color); color: var(--accent-color);">
             <span id="play-icon-wrapper" class="flex items-center justify-center">
-                <i data-lucide="play" width="56" height="56" class="fill-current"></i>
+                <i data-lucide="play" width="32" height="32" class="fill-current"></i>
             </span>
             <span id="pause-icon-wrapper" class="hidden-force flex items-center justify-center">
-                <i data-lucide="pause" width="56" height="56" class="fill-current"></i>
+                <i data-lucide="pause" width="32" height="32" class="fill-current"></i>
             </span>
         </button>
 
-        <button onclick="openEditMode()" title="設定">
-            <i data-lucide="pencil" width="36" height="36"></i>
+        <button onclick="openEditMode()" title="設定" class="w-14 h-14 rounded-full border border-current opacity-40 hover:opacity-100 flex items-center justify-center transition-all duration-300">
+            <i data-lucide="pencil" width="22" height="22"></i>
         </button>
     </div>
 
-    <!-- 編輯介面 -->
-    <form id="edit-view"
-        class="hidden-force fixed bottom-0 left-0 w-full h-auto min-h-[50vh] bg-[#FEFAEF] text-[#000000] z-50 p-6 md:p-8 pb-10 flex flex-col items-center justify-between gap-6 animate-in slide-in-from-bottom duration-300 rounded-t-[2rem]">
+    <form id="edit-view" class="translate-y-full pointer-events-none fixed bottom-0 left-0 w-full h-[310px] z-50 p-4 md:p-6 pb-6 flex flex-col items-center justify-between gap-4 rounded-t-[2rem]" style="background-color: var(--editor-bg); color: var(--editor-text);">
 
-        <!-- 左上角切換分頁 (永遠黑色) -->
-        <div class="absolute top-8 left-8 flex gap-4 text-[#000000]">
-            <button type="button" id="tab-btn-time" onclick="switchTab('time')"
-                class="opacity-100 transition-opacity duration-300 hover:opacity-70">
-                <i data-lucide="clock" width="28" height="28"></i>
+        <h3 id="modal-title" class="text-xl font-bold tracking-wide text-center w-full absolute top-8 left-0 pointer-events-none opacity-60 transition-opacity duration-300">設定時間</h3>
+
+        <div class="absolute top-6 left-6 flex gap-4 items-center">
+            <div id="edit-tabs" class="flex gap-4">
+                <button type="button" id="tab-btn-time" onclick="switchTab('time')" class="opacity-100">
+                    <i data-lucide="clock" width="24" height="24"></i>
+                </button>
+                <button type="button" id="tab-btn-font" onclick="switchTab('font')" class="opacity-100">
+                    <i data-lucide="type" width="24" height="24"></i>
+                </button>
+                <button type="button" id="tab-btn-more" onclick="switchTab('more')" class="opacity-100">
+                    <i data-lucide="sliders" width="24" height="24"></i>
+                </button>
+            </div>
+            <div id="custom-theme-btns" class="hidden-force flex gap-4">
+                <button type="button" onclick="exitCustomThemeSave()" class="flex items-center gap-1 font-bold text-xs">
+                    <i data-lucide="arrow-left" width="16" height="16"></i> 返回
+                </button>
+                <button type="button" onclick="exitCustomThemeCancel()" class="flex items-center gap-1 text-xs opacity-60">
+                    <i data-lucide="x" width="14" height="14"></i> 取消
+                </button>
+            </div>
+        </div>
+
+        <div class="absolute top-6 right-6 flex gap-4 items-center">
+            <button type="button" onclick="cancelEditMode()" class="p-1">
+                <i data-lucide="x" width="24" height="24"></i>
             </button>
-            <button type="button" id="tab-btn-font" onclick="switchTab('font')"
-                class="opacity-100 transition-opacity duration-300 hover:opacity-70">
-                <i data-lucide="type" width="28" height="28"></i>
+            <button type="submit" id="confirm-btn" class="p-1">
+                <i data-lucide="check" width="24" height="24"></i>
             </button>
         </div>
 
-        <!-- 右上角確認/取消 -->
-        <div class="absolute top-8 right-8 flex gap-4 text-[#000000]">
-            <button type="button" onclick="closeEditMode()">
-                <i data-lucide="x" width="32" height="32"></i>
-            </button>
-            <button type="submit" id="confirm-btn">
-                <i data-lucide="check" width="32" height="32"></i>
-            </button>
-        </div>
+        <div class="flex-1 w-full flex flex-col items-center justify-center mt-10 mb-4 animate-fade-in">
 
-        <div class="flex-1 w-full flex flex-col items-center justify-center mt-20 mb-8">
-
-            <!-- 時間設定區塊 -->
-            <div id="section-time" class="flex flex-col items-center gap-12 w-full transition-opacity duration-300">
-                <h3 id="modal-title"
-                    class="text-xl font-bold tracking-wide text-[#666666] text-center w-full absolute top-10 left-0 pointer-events-none">
-                    設定時間</h3>
-
-                <div id="time-inputs-container"
-                    class="flex items-center justify-center gap-2 md:gap-4 text-7xl md:text-8xl font-bold transition-all duration-300">
-
-                    <!-- 小時輸入 -->
+            <div id="section-time" class="flex flex-col items-center gap-4 w-full transition-opacity duration-300">
+                <div id="time-inputs-container" class="flex items-center justify-center gap-2 md:gap-4 text-7xl font-bold transition-all duration-300">
+                    
                     <div id="hour-group" class="hidden-force flex items-center gap-2 md:gap-4">
                         <div class="relative group">
                             <input id="hour-input" type="text" inputmode="numeric" placeholder="00"
-                                class="w-32 md:w-40 bg-transparent border-b-[4px] border-[#A3A3A3] text-[#A3A3A3] focus:border-[#000000] focus:text-[#000000] outline-none text-center placeholder:text-[#D1D1D1] pb-2 transition-colors" />
+                                class="w-32 bg-transparent border-0 outline-none text-center pb-2 transition-colors text-current" />
                         </div>
                     </div>
 
-                    <!-- 分鐘/秒數輸入 -->
                     <div id="min-sec-group" class="flex items-center gap-2 md:gap-4">
                         <div class="relative group">
                             <input id="min-input" type="text" inputmode="numeric" placeholder="00"
-                                class="w-32 md:w-40 bg-transparent border-b-[4px] border-[#A3A3A3] text-[#A3A3A3] focus:border-[#000000] focus:text-[#000000] outline-none text-center placeholder:text-[#D1D1D1] pb-2 transition-colors" />
+                                class="w-32 bg-transparent border-0 outline-none text-center pb-2 transition-colors text-current" />
                         </div>
-                        <span id="time-colon" class="text-[#A3A3A3] pb-4 transition-colors">:</span>
+                        <span id="time-colon" class="pb-4 transition-colors text-current">:</span>
                         <div class="relative group">
                             <input id="sec-input" type="text" inputmode="numeric" placeholder="00"
-                                class="w-32 md:w-40 bg-transparent border-b-[4px] border-[#A3A3A3] text-[#A3A3A3] focus:border-[#000000] focus:text-[#000000] outline-none text-center placeholder:text-[#D1D1D1] pb-2 transition-colors" />
+                                class="w-32 bg-transparent border-0 outline-none text-center pb-2 transition-colors text-current" />
                         </div>
                     </div>
                 </div>
 
-                <!-- 統一使用藥丸狀按鈕樣式 -->
                 <div class="flex flex-wrap justify-center gap-4 w-full px-4 mt-auto">
-                    <button type="button" id="btn-history-1" onclick="useHistory(0)"
-                        class="setting-pill-btn font-bold">5m</button>
-                    <!-- 格式切換按鈕 -->
-                    <button type="button" id="btn-format-toggle" onclick="toggleFormat()"
-                        class="setting-pill-btn font-bold">格式</button>
-                    <button type="button" onclick="resetInputs()" class="setting-pill-btn font-bold">歸零</button>
-                    <button type="button" id="btn-toggle-hour" onclick="toggleHourInput()"
-                        class="setting-pill-btn font-bold">小時</button>
+                    <button type="button" id="btn-format-toggle" onclick="toggleFormat()" class="setting-pill-btn font-bold active">二位</button>
+                    <button type="button" onclick="resetInputs()" class="setting-pill-btn font-bold active">歸零</button>
+                    <button type="button" id="btn-toggle-hour" onclick="toggleHourInput()" class="setting-pill-btn font-bold active">小時</button>
                 </div>
             </div>
 
-            <!-- 字體設定區塊 -->
-            <div id="section-font"
-                class="hidden-force flex flex-col items-center justify-center gap-8 w-full px-8 transition-opacity duration-300">
-                <div class="text-4xl font-bold tracking-tight text-[#000000]" id="font-size-display">160px</div>
-                <!-- 縮短滑桿寬度 max-w-xs -->
-                <div class="w-full relative py-4 max-w-xs">
+            <div id="section-font" class="hidden-force flex flex-col items-center justify-center gap-4 w-full px-8 transition-opacity duration-300">
+                <div class="w-full relative py-2 max-w-xs">
                     <input type="range" id="font-slider" min="20" max="600" value="160" step="5" class="w-full">
                 </div>
+                
+                <div class="flex gap-4 justify-center mt-2">
+                    <button type="button" id="btn-toggle-family" onclick="toggleFontFamily()" class="setting-pill-btn active">無襯</button>
+                    <button type="button" id="btn-toggle-weight" onclick="toggleFontWeight()" class="setting-pill-btn active">粗體</button>
+                    <button type="button" id="btn-toggle-layout" onclick="toggleLayout()" class="setting-pill-btn active">橫排</button>
+                </div>
+            </div>
 
-                <!-- 精簡為兩個切換按鈕 -->
-                <div class="flex gap-6 mt-4">
-                    <button type="button" id="btn-toggle-family" onclick="toggleFontFamily()"
-                        class="setting-pill-btn active">字體：無襯線</button>
-                    <button type="button" id="btn-toggle-weight" onclick="toggleFontWeight()"
-                        class="setting-pill-btn active">粗細：粗體</button>
+            <div id="section-more" class="hidden-force flex flex-col items-center justify-center gap-6 w-full max-w-sm px-4 transition-opacity duration-300">
+                <div id="standard-more-content" class="flex flex-col gap-5 w-full">
+                    <div class="grid grid-cols-6 gap-2 w-full justify-items-center">
+                        <button type="button" id="s-beep" onclick="selectSound('beep')" class="setting-pill-btn p-2 rounded-xl flex items-center justify-center border border-transparent hover:border-current" title="電子">
+                            <i data-lucide="radio" width="20" height="20"></i>
+                        </button>
+                        <button type="button" id="s-bowl" onclick="selectSound('bowl')" class="setting-pill-btn p-2 rounded-xl flex items-center justify-center border border-transparent hover:border-current" title="磬音">
+                            <i data-lucide="bell" width="20" height="20"></i>
+                        </button>
+                        <button type="button" id="s-chord" onclick="selectSound('chord')" class="setting-pill-btn p-2 rounded-xl flex items-center justify-center border border-transparent hover:border-current" title="和弦">
+                            <i data-lucide="music" width="20" height="20"></i>
+                        </button>
+                        <button type="button" id="s-bell" onclick="selectSound('bell')" class="setting-pill-btn p-2 rounded-xl flex items-center justify-center border border-transparent hover:border-current" title="叮咚">
+                            <i data-lucide="bell-ring" width="20" height="20"></i>
+                        </button>
+                        <button type="button" id="s-tick" onclick="selectSound('tick')" class="setting-pill-btn p-2 rounded-xl flex items-center justify-center border border-transparent hover:border-current" title="水滴">
+                            <i data-lucide="droplet" width="20" height="20"></i>
+                        </button>
+                        <button type="button" id="s-none" onclick="selectSound('none')" class="setting-pill-btn p-2 rounded-xl flex items-center justify-center border border-transparent hover:border-current" title="無聲">
+                            <i data-lucide="volume-x" width="20" height="20"></i>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-6 gap-2 w-full justify-items-center">
+                        <button type="button" id="t-black" onclick="selectTheme('black')" class="setting-pill-btn p-1.5 rounded-full flex items-center justify-center" title="純黑">
+                            <div class="w-6 h-6 rounded-full bg-black border border-neutral-500"></div>
+                        </button>
+                        <button type="button" id="t-cream" onclick="selectTheme('cream')" class="setting-pill-btn p-1.5 rounded-full flex items-center justify-center" title="奶油">
+                            <div class="w-6 h-6 rounded-full bg-[#FEFAEF] border border-neutral-300"></div>
+                        </button>
+                        <button type="button" id="t-navy" onclick="selectTheme('navy')" class="setting-pill-btn p-1.5 rounded-full flex items-center justify-center" title="深夜極光">
+                            <div class="w-6 h-6 rounded-full bg-[#020C1B] border border-neutral-700"></div>
+                        </button>
+                        <button type="button" id="t-green" onclick="selectTheme('green')" class="setting-pill-btn p-1.5 rounded-full flex items-center justify-center" title="靜謐莫蘭迪">
+                            <div class="w-6 h-6 rounded-full bg-[#2D3A34] border border-neutral-700"></div>
+                        </button>
+                        <button type="button" id="t-ruby" onclick="selectTheme('ruby')" class="setting-pill-btn p-1.5 rounded-full flex items-center justify-center" title="勃根地紅">
+                            <div class="w-6 h-6 rounded-full bg-[#1F0407] border border-neutral-700"></div>
+                        </button>
+                        <button type="button" id="t-custom" onclick="selectTheme('custom')" class="setting-pill-btn p-1.5 rounded-full flex items-center justify-center" title="自訂">
+                            <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center"><i data-lucide="palette" width="12" height="12" class="text-white"></i></div>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center justify-between w-full px-2">
+                        <span class="text-xs font-bold tracking-wider uppercase opacity-60">秒針音效</span>
+                        <button type="button" id="btn-toggle-tick-sound" onclick="toggleTickSoundSetting()" class="setting-pill-btn font-bold active">開啟</button>
+                    </div>
+                </div>
+
+                <div id="custom-colors-panel" class="hidden-force flex flex-col gap-3 w-full">
+                    <div class="grid grid-cols-2 gap-3 text-xs w-full">
+                        <div class="flex items-center justify-between py-1.5 px-3 bg-neutral-500/10 rounded-xl cursor-pointer hover:bg-neutral-500/20 transition-colors" onclick="triggerColorInput('bg')">
+                            <div class="flex items-center gap-1.5">
+                                <i data-lucide="pencil" width="12" height="12" class="opacity-60"></i>
+                                <span class="font-medium text-xs">背景</span>
+                            </div>
+                            <span id="hex-bg" class="font-mono text-xs opacity-80">#000000</span>
+                            <input type="color" id="c-bg" oninput="customColorChange('bg', this.value)" class="w-0 h-0 opacity-0 absolute">
+                        </div>
+                        <div class="flex items-center justify-between py-1.5 px-3 bg-neutral-500/10 rounded-xl cursor-pointer hover:bg-neutral-500/20 transition-colors" onclick="triggerColorInput('txt')">
+                            <div class="flex items-center gap-1.5">
+                                <i data-lucide="pencil" width="12" height="12" class="opacity-60"></i>
+                                <span class="font-medium text-xs">字體</span>
+                            </div>
+                            <span id="hex-txt" class="font-mono text-xs opacity-80">#FFFFFF</span>
+                            <input type="color" id="c-txt" oninput="customColorChange('txt', this.value)" class="w-0 h-0 opacity-0 absolute">
+                        </div>
+                        <div class="flex items-center justify-between py-1.5 px-3 bg-neutral-500/10 rounded-xl cursor-pointer hover:bg-neutral-500/20 transition-colors" onclick="triggerColorInput('panel')">
+                            <div class="flex items-center gap-1.5">
+                                <i data-lucide="pencil" width="12" height="12" class="opacity-60"></i>
+                                <span class="font-medium text-xs">面板</span>
+                            </div>
+                            <span id="hex-panel" class="font-mono text-xs opacity-80">#FEFAEF</span>
+                            <input type="color" id="c-panel" oninput="customColorChange('panel', this.value)" class="w-0 h-0 opacity-0 absolute">
+                        </div>
+                        <div class="flex items-center justify-between py-1.5 px-3 bg-neutral-500/10 rounded-xl cursor-pointer hover:bg-neutral-500/20 transition-colors" onclick="triggerColorInput('accent')">
+                            <div class="flex items-center gap-1.5">
+                                <i data-lucide="pencil" width="12" height="12" class="opacity-60"></i>
+                                <span class="font-medium text-xs">配色</span>
+                            </div>
+                            <span id="hex-accent" class="font-mono text-xs opacity-80">#FFFFFF</span>
+                            <input type="color" id="c-accent" oninput="customColorChange('accent', this.value)" class="w-0 h-0 opacity-0 absolute">
+                        </div>
+                    </div>
                 </div>
             </div>
 
         </div>
     </form>
 
-    <!-- 版權文字固定底部 -->
-    <div
-        class="fixed bottom-4 left-0 w-full text-center text-[10px] text-[#ffffff] opacity-30 select-none pointer-events-none tracking-widest z-10">
-        &copy; <span id="year-display">Loading...</span> Gaolin
+    <form id="pomodoro-view" class="translate-y-full pointer-events-none fixed bottom-0 left-0 w-full h-[260px] z-50 p-4 md:p-6 pb-6 flex flex-col items-center justify-between gap-4 rounded-t-[2rem]" style="background-color: var(--editor-bg); color: var(--editor-text);">
+        
+        <div class="absolute top-6 left-8 flex gap-4 opacity-40">
+            <span id="pomo-step-title" class="text-sm font-bold tracking-wide uppercase">步驟 1 / 4</span>
+        </div>
+
+        <div class="absolute top-6 right-8 flex gap-4 items-center">
+            <button type="button" onclick="cancelPomodoroView()" class="p-1">
+                <i data-lucide="x" width="24" height="24"></i>
+            </button>
+            <button type="button" onclick="startPomodoroSequence()" class="p-1">
+                <i data-lucide="check" width="24" height="24"></i>
+            </button>
+        </div>
+
+        <div class="flex-1 w-full flex flex-col items-center justify-center mt-10 mb-4 gap-4">
+            
+            <div id="pomo-dots-container" class="flex justify-center items-center gap-2.5 mb-1">
+            </div>
+
+            <div class="flex items-center justify-between w-full max-w-md px-4">
+                <button type="button" onclick="navigatePomoStep(-1)" class="p-2 hover:scale-125 transition-transform">
+                    <i data-lucide="chevron-left" width="28" height="28"></i>
+                </button>
+
+                <div class="flex items-center justify-center gap-2 text-6xl font-bold transition-all duration-300">
+                    <div class="relative">
+                        <input id="pomo-min-input" type="text" inputmode="numeric" placeholder="25" oninput="handlePomoInput(event, 'min')" onfocus="this.value=''" onblur="restorePomoValue(this)"
+                            class="w-24 bg-transparent border-0 outline-none text-center pb-2 transition-colors text-current" />
+                    </div>
+                    <span class="pb-4 text-current">:</span>
+                    <div class="relative">
+                        <input id="pomo-sec-input" type="text" inputmode="numeric" placeholder="00" oninput="handlePomoInput(event, 'sec')" onfocus="this.value=''" onblur="restorePomoValue(this)"
+                            class="w-24 bg-transparent border-0 outline-none text-center pb-2 transition-colors text-current" />
+                    </div>
+                </div>
+
+                <button type="button" onclick="navigatePomoStep(1)" class="p-2 hover:scale-125 transition-transform">
+                    <i data-lucide="chevron-right" width="28" height="28"></i>
+                </button>
+            </div>
+
+            <div class="flex justify-center gap-3 w-full max-w-sm px-4">
+                <button type="button" id="pomo-type-focus" onclick="setPomoStepType('focus')" class="pomo-icon-btn active" title="工作">
+                    <i data-lucide="target" width="20" height="20"></i>
+                </button>
+                <button type="button" id="pomo-type-break" onclick="setPomoStepType('break')" class="pomo-icon-btn" title="休息">
+                    <i data-lucide="coffee" width="20" height="20"></i>
+                </button>
+                <button type="button" onclick="removePomoStep()" class="pomo-icon-btn" title="刪除步驟">
+                    <i data-lucide="trash-2" width="20" height="20"></i>
+                </button>
+                <button type="button" onclick="addPomoStep()" class="pomo-icon-btn" title="增加步驟">
+                    <i data-lucide="plus" width="20" height="20"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <div id="help-modal" class="hidden-force fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-300">
+        <div class="rounded-3xl p-6 max-w-sm w-full h-[450px] flex flex-col justify-between shadow-2xl relative select-none" id="help-modal-content" style="background-color: var(--editor-bg); color: var(--editor-text);">
+            
+            <div class="absolute top-6 right-6 z-50">
+                <button onclick="hideHelpModal()" class="p-1 hover:scale-110 transition-transform">
+                    <i data-lucide="x" width="24" height="24"></i>
+                </button>
+            </div>
+
+            <div class="flex-1 flex flex-col justify-center items-center text-center px-2">
+                <div id="help-slide-0" class="flex flex-col items-center gap-4 transition-opacity duration-300">
+                    <i data-lucide="smartphone" width="48" height="48"></i>
+                    <h4 class="text-lg font-bold">直覺手勢操作</h4>
+                    <p class="text-xs leading-relaxed opacity-80">
+                        在主畫面中，「按住並上下拖曳」可以微調文字大小。在畫面上「向左或向右滑動」可以快速在計時器、碼錶與番茄序列之間流暢切換。
+                    </p>
+                </div>
+
+                <div id="help-slide-1" class="hidden-force flex flex-col items-center gap-4 transition-opacity duration-300">
+                    <i data-lucide="palette" width="48" height="48"></i>
+                    <h4 class="text-lg font-bold">自訂配色與音效</h4>
+                    <p class="text-xs leading-relaxed opacity-80">
+                        支援多種背景主題。選擇自訂主題時，可分開調整背景、字體、面板與強調配色，系統將在您點選時動態進行亮暗易讀性優化與和諧自適應。
+                    </p>
+                </div>
+
+                <div id="help-slide-2" class="hidden-force flex flex-col items-center gap-4 transition-opacity duration-300">
+                    <i data-lucide="hourglass" width="48" height="48"></i>
+                    <h4 class="text-lg font-bold">極簡番茄序列</h4>
+                    <p class="text-xs leading-relaxed opacity-80">
+                        一鍵編輯最多 10 個步驟的專屬工作與休息流程，點選確認立即啟用。序列運作時按鈕將自動在 1 秒後花 1.5 秒淡出，點按螢幕即可隨時喚醒。
+                    </p>
+                </div>
+
+                <div id="help-slide-3" class="hidden-force flex flex-col items-center gap-4 transition-opacity duration-300">
+                    <i data-lucide="help-circle" width="48" height="48"></i>
+                    <h4 class="text-lg font-bold">實用操作與提示</h4>
+                    <p class="text-xs leading-relaxed opacity-80">
+                        計時開始後，點击「畫面任何地方」皆可暫停。開啟「釘選」將鎖定控制列不隱藏。防休眠模式會將此網頁模擬為播放影片狀態，螢幕將永久常亮不變暗。
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex justify-center items-center gap-6 pb-2">
+                <button type="button" onclick="navigateHelpPage(-1)" class="p-2 hover:scale-125 transition-transform" style="color: var(--accent-color);">
+                    <i data-lucide="chevron-left" width="20" height="20"></i>
+                </button>
+                <div class="flex justify-center items-center gap-3">
+                    <span class="ios-dot active" onclick="goHelpPage(0)" id="help-dot-0"></span>
+                    <span class="ios-dot" onclick="goHelpPage(1)" id="help-dot-1"></span>
+                    <span class="ios-dot" onclick="goHelpPage(2)" id="help-dot-2"></span>
+                    <span class="ios-dot" onclick="goHelpPage(3)" id="help-dot-3"></span>
+                </div>
+                <button type="button" onclick="navigateHelpPage(1)" class="p-2 hover:scale-125 transition-transform" style="color: var(--accent-color);">
+                    <i data-lucide="chevron-right" width="20" height="20"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="copyright-text" class="ui-fade fixed bottom-4 left-0 w-full text-center text-[10px] select-none pointer-events-none tracking-widest z-10" style="opacity: 0.3; color: #ffffff;">
+        &copy; <span id="year-display"></span> Gaolin
     </div>
 
     <script>
-        lucide.createIcons();
+        const body = document.body;
 
-        // 升級版本號以刷新緩存
-        const STATE_KEY = 'gaolin_timer_state_v9';
-        const TIPS_KEY = 'gaolin_timer_tips_shown';
-        const MAX_TIME_SECONDS = 99 * 3600 + 59 * 60 + 59;
+        try {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        } catch (e) {
+            console.error("Lucide failed to initialize", e);
+        }
+
+        const STATE_KEY = 'gaolin_timer_state_v20_final';
+        const MAX_TIME_SECONDS = 99 * 3600 + 59 * 60 + 59; 
         const MAX_TIME_MS = MAX_TIME_SECONDS * 1000;
         const MAX_FONT_SIZE = 600;
 
         let appMode = 'timer';
-
-        let initialTime = 3599;
-        let timeLeftMs = 3599000;
+        
+        let initialTime = 3599; 
+        let timeLeftMs = 3599000; 
         let isTimerActive = false;
-        let timerTarget = null;
-
+        let timerTarget = null; 
+        
         let stopwatchTime = 0;
         let initialStopwatchTime = 0;
         let isStopwatchActive = false;
-        let stopwatchStartTime = null;
-
+        let stopwatchStartTime = null; 
+        
         let intervalId = null;
+        let uiFadeTimeoutId = null; 
+        let tempTipTimeoutId = null;
+        
         let currentEditMode = 'time';
         let currentFontSize = 160;
-        let currentFontFamily = 'sans';
-        let currentFontWeight = 'bold';
-        let isLongFormat = true;
-        let showHoursInput = false;
-        let historyTimes = [300];
-        let isTimeModified = false;
+        let currentFontFamily = 'sans'; 
+        let currentFontWeight = 'bold'; 
+        let currentLayout = 'row'; 
+        
+        const FORMAT_MODES = ['two', 'three'];
+        let currentFormatMode = 'two'; 
+        let isPinned = false; 
 
+        let currentSound = 'bowl';
+        let currentTheme = 'black';
+        let customColors = {
+            bg: '#000000',
+            txt: '#ffffff',
+            panel: '#FEFAEF',
+            accent: '#ffffff'
+        };
+        let prevCustomColors = {};
+        let backupSettings = null;
+        let backupPomoSteps = null;
+        let prevTheme = 'black';
+        let currentEditorPage = 0;
+        let currentHelpPage = 0;
+
+        let showHoursInput = false;
+        let isTimeModified = false; 
+        let tempTipMsg = "";
+        
         let audioCtx;
+        let wakeLock = null;
+
+        let isPomoRunning = false;
+        let pomoTarget = null;
+        let isPomoActive = false;
+        let pomoTimeLeftMs = 1500 * 1000;
+        let pomoSteps = [
+            { duration: 1500, type: 'focus' },
+            { duration: 300, type: 'break' },
+            { duration: 1500, type: 'focus' },
+            { duration: 900, type: 'break' }
+        ];
+        let editPomoIndex = 0;
+        let activePomoIndex = 0;
+
+        let lastTickSecond = -1;
+        let alarmIntervalId = null;
+        let isTickSoundEnabled = true;
+
+        const THEMES = {
+            black: { bg: '#000000', text: '#ffffff', muted: '#888888', topBarBg: '#111111', panelBg: '#121212', panelText: '#ffffff', accent: '#38BDF8' },
+            cream: { bg: '#FAF6F0', text: '#1C1917', muted: '#78716C', topBarBg: '#F1EBE1', panelBg: '#FFFFFF', panelText: '#1C1917', accent: '#CA8A04' },
+            navy: { bg: '#020C1B', text: '#E2E8F0', muted: '#64748B', topBarBg: '#112240', panelBg: '#0B192F', panelText: '#E2E8F0', accent: '#64FFDA' },
+            green: { bg: '#081C15', text: '#D8F3DC', muted: '#7CA08F', topBarBg: '#1C312B', panelBg: '#1B4332', panelText: '#D8F3DC', accent: '#52B788' },
+            ruby: { bg: '#1C0306', text: '#FFE4E6', muted: '#B8787E', topBarBg: '#44191F', panelBg: '#2D0B0F', panelText: '#FFE4E6', accent: '#FF0D57' }
+        };
 
         const timerDisplay = document.getElementById('timer-display');
         const timerStatus = document.getElementById('timer-status');
-        const progressBar = document.getElementById('progress-bar');
         const playBtn = document.getElementById('play-pause-btn');
         const playWrapper = document.getElementById('play-icon-wrapper');
         const pauseWrapper = document.getElementById('pause-icon-wrapper');
         const controlsView = document.getElementById('controls-view');
         const editView = document.getElementById('edit-view');
+        const pomoView = document.getElementById('pomodoro-view');
         const topBar = document.getElementById('top-bar');
-        const body = document.body;
+        const copyrightText = document.getElementById('copyright-text');
+        const pauseLayer = document.getElementById('pause-layer');
+        const invisibleVideo = document.getElementById('invisible-video');
+        const timerPomoDots = document.getElementById('timer-pomo-dots');
 
         const domHourInput = document.getElementById('hour-input');
         const domMinInput = document.getElementById('min-input');
@@ -375,70 +676,147 @@
         const modalTitle = document.getElementById('modal-title');
         const sectionTime = document.getElementById('section-time');
         const sectionFont = document.getElementById('section-font');
+        const sectionMore = document.getElementById('section-more');
         const fontSlider = document.getElementById('font-slider');
-        const fontSizeDisplay = document.getElementById('font-size-display');
         const tabBtnTime = document.getElementById('tab-btn-time');
         const tabBtnFont = document.getElementById('tab-btn-font');
-        const btnHistory1 = document.getElementById('btn-history-1');
+        const tabBtnMore = document.getElementById('tab-btn-more');
+        const btnFormatToggle = document.getElementById('btn-format-toggle');
         const btnToggleFamily = document.getElementById('btn-toggle-family');
         const btnToggleWeight = document.getElementById('btn-toggle-weight');
+        const btnToggleLayout = document.getElementById('btn-toggle-layout');
+        const btnPin = document.getElementById('pin-btn');
+        const iconPin = document.getElementById('icon-pin');
+        const iconPinOff = document.getElementById('icon-pin-off');
 
         function loadState() {
-            const savedJSON = localStorage.getItem(STATE_KEY);
-            if (savedJSON) {
-                try {
+            try {
+                const savedJSON = localStorage.getItem(STATE_KEY);
+                if (savedJSON) {
                     const state = JSON.parse(savedJSON);
-
-                    appMode = state.appMode || 'timer';
-                    currentFontSize = Math.min(state.fontSize || 160, MAX_FONT_SIZE);
-                    currentFontFamily = state.fontFamily || 'sans';
-                    currentFontWeight = state.fontWeight || 'bold';
-                    isLongFormat = state.isLongFormat ?? true;
-                    historyTimes = state.history || [300];
-
-                    initialTime = state.timer.initial || 3599;
-                    if (state.timer.isActive && state.timer.target) {
-                        isTimerActive = true;
-                        timerTarget = state.timer.target;
-                        const now = Date.now();
-                        const remaining = timerTarget - now;
-                        if (remaining <= 0) {
-                            timeLeftMs = 0;
+                    if (state) {
+                        appMode = state.appMode || 'timer';
+                        currentFontSize = Math.min(state.fontSize || 160, MAX_FONT_SIZE);
+                        currentFontFamily = state.fontFamily || 'sans';
+                        currentFontWeight = state.fontWeight || 'bold';
+                        currentLayout = state.layout || 'row';
+                        currentFormatMode = state.formatMode || 'two';
+                        isPinned = state.isPinned || false;
+                        currentSound = state.currentSound || 'bowl';
+                        currentTheme = state.currentTheme || 'black';
+                        isTickSoundEnabled = state.isTickSoundEnabled !== undefined ? state.isTickSoundEnabled : true;
+                        
+                        if (state.customColors) {
+                            customColors = {
+                                bg: state.customColors.bg || '#000000',
+                                txt: state.customColors.txt || '#ffffff',
+                                panel: state.customColors.panel || '#FEFAEF',
+                                accent: state.customColors.accent || '#ffffff'
+                            };
+                        }
+                        
+                        if (state.pomoSteps && Array.isArray(state.pomoSteps) && state.pomoSteps.length > 0) {
+                            const validSteps = state.pomoSteps.filter(s => s && typeof s === 'object' && typeof s.duration === 'number');
+                            if (validSteps.length > 0) {
+                                pomoSteps = validSteps;
+                            }
+                        }
+                        isPomoActive = state.isPomoActive || false;
+                        activePomoIndex = state.activePomoIndex || 0;
+                        if (activePomoIndex >= pomoSteps.length) {
+                            activePomoIndex = 0;
+                        }
+                        
+                        const defaultPomoDuration = (pomoSteps && pomoSteps[activePomoIndex]) ? pomoSteps[activePomoIndex].duration : 1500;
+                        pomoTimeLeftMs = state.pomoTimeLeftMs ?? (defaultPomoDuration * 1000);
+                        
+                        if (state.timer) {
+                            initialTime = state.timer.initial || 3599;
+                            if (state.timer.isActive && state.timer.target) {
+                                isTimerActive = true;
+                                timerTarget = state.timer.target;
+                                const now = Date.now();
+                                const remaining = timerTarget - now;
+                                if (remaining <= 0) {
+                                    timeLeftMs = 0;
+                                    isTimerActive = false;
+                                    timerTarget = null;
+                                } else {
+                                    timeLeftMs = remaining;
+                                }
+                            } else {
+                                isTimerActive = false;
+                                timeLeftMs = state.timer.timeLeftMs ?? (initialTime * 1000);
+                            }
+                        } else {
+                            initialTime = 3599;
                             isTimerActive = false;
-                            timerTarget = null;
-                        } else {
-                            timeLeftMs = remaining;
+                            timeLeftMs = 3599 * 1000;
                         }
-                    } else {
-                        isTimerActive = false;
-                        timeLeftMs = state.timer.timeLeftMs ?? (initialTime * 1000);
-                    }
 
-                    initialStopwatchTime = state.stopwatch.initial || 0;
-                    if (state.stopwatch.isActive && state.stopwatch.startTime) {
-                        isStopwatchActive = true;
-                        stopwatchStartTime = state.stopwatch.startTime;
-                        const now = Date.now();
-                        const elapsed = now - stopwatchStartTime;
-                        if (elapsed >= MAX_TIME_MS) {
-                            stopwatchTime = MAX_TIME_MS;
+                        if (state.isPomoRunning && state.pomoTarget) {
+                            isPomoRunning = true;
+                            pomoTarget = state.pomoTarget;
+                            const now = Date.now();
+                            const remaining = pomoTarget - now;
+                            if (remaining <= 0) {
+                                pomoTimeLeftMs = 0;
+                                isPomoRunning = false;
+                                pomoTarget = null;
+                            } else {
+                                pomoTimeLeftMs = remaining;
+                            }
+                        } else {
+                            isPomoRunning = false;
+                            const defaultActivePomoDuration = (pomoSteps && pomoSteps[activePomoIndex]) ? pomoSteps[activePomoIndex].duration : 1500;
+                            pomoTimeLeftMs = state.pomoTimeLeftMs ?? (defaultActivePomoDuration * 1000);
+                        }
+
+                        if (state.stopwatch) {
+                            initialStopwatchTime = state.stopwatch.initial || 0;
+                            if (state.stopwatch.isActive && state.stopwatch.startTime) {
+                                isStopwatchActive = true;
+                                stopwatchStartTime = state.stopwatch.startTime;
+                                const now = Date.now();
+                                const elapsed = now - stopwatchStartTime;
+                                if (elapsed >= MAX_TIME_MS) {
+                                    stopwatchTime = MAX_TIME_MS;
+                                    isStopwatchActive = false;
+                                } else {
+                                    stopwatchTime = elapsed;
+                                }
+                            } else {
+                                isStopwatchActive = false;
+                                stopwatchTime = state.stopwatch.accumulated || initialStopwatchTime;
+                            }
+                        } else {
+                            initialStopwatchTime = 0;
                             isStopwatchActive = false;
-                        } else {
-                            stopwatchTime = elapsed;
+                            stopwatchTime = 0;
                         }
-                    } else {
-                        isStopwatchActive = false;
-                        stopwatchTime = state.stopwatch.accumulated || initialStopwatchTime;
                     }
-
-                } catch (e) {
-                    console.error("State Load Error:", e);
                 }
+            } catch (e) {
+                console.error("State Load Error:", e);
+                localStorage.removeItem(STATE_KEY);
+                appMode = 'timer';
+                isTimerActive = false;
+                isStopwatchActive = false;
+                isPomoRunning = false;
+                timeLeftMs = 3599000;
+                pomoTimeLeftMs = 1500000;
+                stopwatchTime = 0;
             }
-
-            updateUIFromState();
-            if (isTimerActive || isStopwatchActive) {
-                startIntervalLoop();
+            
+            try {
+                updateUIFromState();
+                applyTheme(currentTheme);
+                if (isTimerActive || isStopwatchActive || isPomoRunning) {
+                    startIntervalLoop();
+                    startUiFadeOut();
+                }
+            } catch (e) {
+                console.error("UI Update Error on Load:", e);
             }
         }
 
@@ -448,8 +826,19 @@
                 fontSize: currentFontSize,
                 fontFamily: currentFontFamily,
                 fontWeight: currentFontWeight,
-                isLongFormat: isLongFormat,
-                history: historyTimes,
+                layout: currentLayout,
+                formatMode: currentFormatMode,
+                isPinned: isPinned,
+                currentSound: currentSound,
+                currentTheme: currentTheme,
+                customColors: customColors,
+                pomoSteps: pomoSteps,
+                isPomoActive: isPomoActive,
+                activePomoIndex: activePomoIndex,
+                pomoTimeLeftMs: pomoTimeLeftMs,
+                isPomoRunning: isPomoRunning,
+                pomoTarget: pomoTarget,
+                isTickSoundEnabled: isTickSoundEnabled,
                 timer: {
                     initial: initialTime,
                     isActive: isTimerActive,
@@ -469,32 +858,38 @@
         function updateUIFromState() {
             document.getElementById('btn-mode-timer').classList.toggle('active', appMode === 'timer');
             document.getElementById('btn-mode-stopwatch').classList.toggle('active', appMode === 'stopwatch');
-
-            if (fontSlider) fontSlider.value = currentFontSize;
-            if (fontSizeDisplay) fontSizeDisplay.textContent = `${currentFontSize}px`;
-
+            document.getElementById('btn-mode-pomo').classList.toggle('active', appMode === 'pomo');
+            
+            if(fontSlider) fontSlider.value = currentFontSize;
+            
             applyFontStyles();
-            updateHistoryButtons();
+            updateFormatButton();
+            updatePinIcon();
             updateDisplay();
+            updateTickSoundButton();
         }
 
         function applyFontStyles() {
-            // Apply Family
             if (currentFontFamily === 'sans') {
-                btnToggleFamily.textContent = '字體：無襯線';
+                btnToggleFamily.textContent = '無襯';
                 timerDisplay.style.fontFamily = "'Noto Sans', system-ui, sans-serif";
             } else {
-                btnToggleFamily.textContent = '字體：襯線';
+                btnToggleFamily.textContent = '襯線';
                 timerDisplay.style.fontFamily = "'Noto Serif', Georgia, serif";
             }
 
-            // Apply Weight
             if (currentFontWeight === 'bold') {
-                btnToggleWeight.textContent = '粗細：粗體';
+                btnToggleWeight.textContent = '粗體';
                 timerDisplay.style.fontWeight = '700';
             } else {
-                btnToggleWeight.textContent = '粗細：細體';
+                btnToggleWeight.textContent = '細體';
                 timerDisplay.style.fontWeight = '400';
+            }
+
+            if (currentLayout === 'row') {
+                btnToggleLayout.textContent = '橫排';
+            } else {
+                btnToggleLayout.textContent = '直排';
             }
         }
 
@@ -510,24 +905,58 @@
             saveState();
         }
 
-        function updateHistoryButtons() {
-            btnHistory1.textContent = formatButtonTime(historyTimes[0]);
+        function toggleLayout() {
+            currentLayout = currentLayout === 'row' ? 'col' : 'row';
+            applyFontStyles();
+            if (isTimeModified) {
+                updatePreview();
+            } else {
+                updateDisplay();
+            }
+            saveState();
         }
 
-        function formatButtonTime(seconds) {
-            const h = Math.floor(seconds / 3600);
-            const m = Math.floor((seconds % 3600) / 60);
-            const s = seconds % 60;
+        function updateTickSoundButton() {
+            const btn = document.getElementById('btn-toggle-tick-sound');
+            if (!btn) return;
+            if (isTickSoundEnabled) {
+                btn.textContent = '開啟';
+                btn.classList.add('active');
+            } else {
+                btn.textContent = '關閉';
+                btn.classList.remove('active');
+            }
+        }
 
-            if (h > 0) return `${h}h${m > 0 ? m + 'm' : ''}`;
-            if (m > 0) return `${m}m${s > 0 ? s + 's' : ''}`;
-            return `${s}s`;
+        function toggleTickSoundSetting() {
+            isTickSoundEnabled = !isTickSoundEnabled;
+            updateTickSoundButton();
+            saveState();
+        }
+
+        function adjustFontSize(amount) {
+            initAudio();
+            let slider = document.getElementById('font-slider');
+            let newSize = parseInt(slider.value) + amount;
+            newSize = Math.max(20, Math.min(newSize, MAX_FONT_SIZE));
+            slider.value = newSize;
+            currentFontSize = newSize; 
+            timerDisplay.style.fontSize = `${newSize}px`;
+            saveState();
+        }
+
+        function updateFormatButton() {
+            if (!btnFormatToggle) return;
+            if (currentFormatMode === 'two') btnFormatToggle.textContent = '二位';
+            else if (currentFormatMode === 'three') btnFormatToggle.textContent = '三位';
         }
 
         function toggleFormat() {
-            isLongFormat = !isLongFormat;
+            const idx = FORMAT_MODES.indexOf(currentFormatMode);
+            currentFormatMode = FORMAT_MODES[(idx + 1) % FORMAT_MODES.length];
             saveState();
-
+            updateFormatButton();
+            
             if (isTimeModified) {
                 updatePreview();
             } else {
@@ -535,14 +964,444 @@
             }
         }
 
+        function updatePinIcon() {
+            if (isPinned) {
+                iconPin.classList.add('hidden-force');
+                iconPinOff.classList.remove('hidden-force');
+                btnPin.classList.remove('opacity-40');
+                btnPin.classList.add('opacity-100');
+            } else {
+                iconPin.classList.remove('hidden-force');
+                iconPinOff.classList.add('hidden-force');
+                btnPin.classList.remove('opacity-100');
+                btnPin.classList.add('opacity-40');
+            }
+        }
+
+        function togglePin() {
+            isPinned = !isPinned;
+            saveState();
+            updatePinIcon();
+            
+            if (isPinned) {
+                showTempTip("所有按鈕將永遠顯示", 3000);
+                cancelUiFadeOut();
+            } else {
+                showTempTip("按鈕將自動隱藏", 3000);
+                if (isTimerActive || isStopwatchActive || isPomoRunning) {
+                    clearTimeout(uiFadeTimeoutId);
+                    uiFadeTimeoutId = setTimeout(() => {
+                        topBar.classList.add('ui-hidden');
+                        controlsView.classList.add('ui-hidden');
+                        timerStatus.classList.add('ui-hidden');
+                        copyrightText.classList.add('ui-hidden');
+                    }, 3000);
+                }
+            }
+        }
+
+        function selectSound(soundName) {
+            currentSound = soundName;
+            const soundBtns = ['beep', 'bowl', 'chord', 'bell', 'tick', 'none'];
+            soundBtns.forEach(b => {
+                document.getElementById(`s-${b}`).classList.remove('active');
+            });
+            document.getElementById(`s-${soundName}`).classList.add('active');
+            
+            playAlarmSound();
+            saveState();
+        }
+
+        function applyTheme(themeName) {
+            currentTheme = themeName;
+            const customPanel = document.getElementById('custom-colors-panel');
+            const stdMoreContent = document.getElementById('standard-more-content');
+            const editTabs = document.getElementById('edit-tabs');
+            const customThemeBtns = document.getElementById('custom-theme-btns');
+            
+            if (themeName === 'custom') {
+                customPanel.classList.remove('hidden-force');
+                stdMoreContent.classList.add('hidden-force');
+                editTabs.classList.add('hidden-force');
+                customThemeBtns.classList.remove('hidden-force');
+                modalTitle.textContent = "自訂主題";
+                
+                prevCustomColors = { ...customColors };
+                
+                if (prevTheme && prevTheme !== 'custom' && THEMES[prevTheme]) {
+                    const preset = THEMES[prevTheme];
+                    customColors.bg = preset.bg;
+                    customColors.txt = preset.text;
+                    customColors.panel = preset.panelBg;
+                    customColors.accent = preset.accent;
+                }
+                
+                document.getElementById('c-bg').value = customColors.bg;
+                document.getElementById('c-txt').value = customColors.txt;
+                document.getElementById('c-panel').value = customColors.panel;
+                document.getElementById('c-accent').value = customColors.accent;
+                
+                applyCustomColors();
+                editView.style.height = "320px";
+            } else {
+                customPanel.classList.add('hidden-force');
+                stdMoreContent.classList.remove('hidden-force');
+                editTabs.classList.remove('hidden-force');
+                customThemeBtns.classList.add('hidden-force');
+                
+                if (currentEditorPage === 0) {
+                    modalTitle.textContent = showHoursInput ? "設定小時" : "設定時間";
+                    editView.style.height = "310px";
+                } else if (currentEditorPage === 1) {
+                    modalTitle.textContent = "文字規格";
+                    editView.style.height = "220px";
+                } else {
+                    modalTitle.textContent = "";
+                    editView.style.height = "250px";
+                }
+                
+                const theme = THEMES[themeName] || THEMES.black;
+                
+                document.documentElement.style.setProperty('--bg-color', theme.bg);
+                document.documentElement.style.setProperty('--text-color', theme.text);
+                document.documentElement.style.setProperty('--muted-color', theme.muted);
+                document.documentElement.style.setProperty('--editor-bg', theme.panelBg);
+                document.documentElement.style.setProperty('--editor-text', theme.panelText);
+                document.documentElement.style.setProperty('--accent-color', theme.accent);
+                
+                document.body.style.backgroundColor = theme.bg;
+                document.body.style.color = theme.text;
+                document.getElementById('top-bar').style.backgroundColor = theme.topBarBg;
+                
+                let r = parseInt(theme.bg.slice(1,3), 16);
+                let g = parseInt(theme.bg.slice(3,5), 16);
+                let b = parseInt(theme.bg.slice(5,7), 16);
+                let yiq = ((r*299)+(g*587)+(b*114))/1000;
+                
+                if (copyrightText) copyrightText.style.color = yiq >= 128 ? '#000000' : '#ffffff';
+                timerStatus.style.color = theme.muted;
+            }
+
+            const themeBtns = ['black', 'cream', 'navy', 'green', 'ruby', 'custom'];
+            themeBtns.forEach(t => {
+                document.getElementById(`t-${t}`).classList.remove('active');
+            });
+            document.getElementById(`t-${themeName}`).classList.add('active');
+        }
+
+        function exitCustomThemeSave() {
+            saveState();
+            applyTheme('custom');
+            const stdMoreContent = document.getElementById('standard-more-content');
+            const customPanel = document.getElementById('custom-colors-panel');
+            const editTabs = document.getElementById('edit-tabs');
+            const customThemeBtns = document.getElementById('custom-theme-btns');
+            
+            customPanel.classList.add('hidden-force');
+            stdMoreContent.classList.remove('hidden-force');
+            editTabs.classList.remove('hidden-force');
+            customThemeBtns.classList.add('hidden-force');
+            modalTitle.textContent = "更多設定";
+            editView.style.height = "250px";
+        }
+
+        function exitCustomThemeCancel() {
+            customColors = { ...prevCustomColors };
+            applyTheme(prevTheme || 'black');
+            switchTab('more');
+        }
+
+        function selectTheme(themeName) {
+            if (themeName !== 'custom') {
+                prevTheme = themeName;
+            }
+            applyTheme(themeName);
+            saveState();
+        }
+
+        function customColorChange(type, hex) {
+            customColors[type] = hex;
+            const element = document.getElementById(`hex-${type}`);
+            if (element) element.textContent = hex.toUpperCase();
+            applyCustomColors();
+            saveState();
+        }
+
+        function triggerColorInput(type) {
+            document.getElementById(`c-${type}`).click();
+        }
+
+        function applyCustomColors() {
+            document.documentElement.style.setProperty('--bg-color', customColors.bg);
+            document.documentElement.style.setProperty('--text-color', customColors.txt);
+            document.documentElement.style.setProperty('--editor-bg', customColors.panel);
+            document.documentElement.style.setProperty('--accent-color', customColors.accent);
+            
+            let r = parseInt(customColors.bg.slice(1,3), 16);
+            let g = parseInt(customColors.bg.slice(3,5), 16);
+            let b = parseInt(customColors.bg.slice(5,7), 16);
+            let yiq = ((r*299)+(g*587)+(b*114))/1000;
+            
+            let mutedColor = yiq >= 128 ? '#555555' : '#a3a3a3';
+            let topBarBg = yiq >= 128 ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.12)';
+            
+            document.documentElement.style.setProperty('--muted-color', mutedColor);
+            
+            document.body.style.backgroundColor = customColors.bg;
+            document.body.style.color = customColors.txt;
+            document.getElementById('top-bar').style.backgroundColor = topBarBg;
+            
+            let screenR = parseInt(customColors.bg.slice(1,3), 16);
+            let screenG = parseInt(customColors.bg.slice(3,5), 16);
+            let screenB = parseInt(customColors.bg.slice(5,7), 16);
+            let screenYiq = ((screenR*299)+(screenG*587)+(screenB*114))/1000;
+            if (copyrightText) copyrightText.style.color = screenYiq >= 128 ? '#000000' : '#ffffff';
+            
+            let pr = parseInt(customColors.panel.slice(1,3), 16);
+            let pg = parseInt(customColors.panel.slice(3,5), 16);
+            let pb = parseInt(customColors.panel.slice(5,7), 16);
+            let pyiq = ((pr*299)+(pg*587)+(pb*114))/1000;
+            let panelTextColor = pyiq >= 128 ? '#111111' : '#ffffff';
+            document.documentElement.style.setProperty('--editor-text', panelTextColor);
+
+            timerStatus.style.color = mutedColor;
+
+            const hexBg = document.getElementById('hex-bg');
+            if (hexBg) hexBg.textContent = customColors.bg.toUpperCase();
+            const hexTxt = document.getElementById('hex-txt');
+            if (hexTxt) hexTxt.textContent = customColors.txt.toUpperCase();
+            const hexPanel = document.getElementById('hex-panel');
+            if (hexPanel) hexPanel.textContent = customColors.panel.toUpperCase();
+            const hexAccent = document.getElementById('hex-accent');
+            if (hexAccent) hexAccent.textContent = customColors.accent.toUpperCase();
+        }
+
+        function switchTab(tabName) {
+            tabBtnTime.classList.replace('opacity-100', 'opacity-30');
+            tabBtnFont.classList.replace('opacity-100', 'opacity-30');
+            tabBtnMore.classList.replace('opacity-100', 'opacity-30');
+
+            sectionTime.classList.add('hidden-force');
+            sectionFont.classList.add('hidden-force');
+            sectionMore.classList.add('hidden-force');
+
+            if (tabName === 'time') {
+                currentEditorPage = 0;
+                tabBtnTime.classList.replace('opacity-30', 'opacity-100');
+                sectionTime.classList.remove('hidden-force');
+                modalTitle.textContent = showHoursInput ? "設定小時" : "設定時間";
+                editView.style.height = "310px";
+            } else if (tabName === 'font') {
+                currentEditorPage = 1;
+                tabBtnFont.classList.replace('opacity-30', 'opacity-100');
+                sectionFont.classList.remove('hidden-force');
+                modalTitle.textContent = "文字規格";
+                editView.style.height = "220px";
+            } else if (tabName === 'more') {
+                currentEditorPage = 2;
+                tabBtnMore.classList.replace('opacity-30', 'opacity-100');
+                sectionMore.classList.remove('hidden-force');
+                modalTitle.textContent = "";
+                editView.style.height = currentTheme === 'custom' ? "320px" : "250px";
+            }
+        }
+
+        function openPomodoroView() {
+            if (isTimerActive || isStopwatchActive || isPomoRunning) pauseCurrentTimer();
+            cancelUiFadeOut();
+
+            topBar.classList.add('opacity-0', 'pointer-events-none');
+            controlsView.classList.add('opacity-0', 'pointer-events-none');
+            
+            pomoView.classList.remove('translate-y-full', 'pointer-events-none');
+            body.classList.add('edit-mode-active');
+
+            editPomoIndex = 0;
+            renderPomoDots();
+            loadPomoStepToInputs();
+            backupCurrentSettings();
+        }
+
+        function closePomodoroView() {
+            topBar.classList.remove('opacity-0', 'pointer-events-none');
+            controlsView.classList.remove('opacity-0', 'pointer-events-none');
+            
+            pomoView.classList.add('translate-y-full', 'pointer-events-none');
+            body.classList.remove('edit-mode-active');
+            updateDisplay();
+        }
+
+        function loadPomoStepToInputs() {
+            const step = pomoSteps[editPomoIndex];
+            const pomoMinInput = document.getElementById('pomo-min-input');
+            const pomoSecInput = document.getElementById('pomo-sec-input');
+            const stepTitle = document.getElementById('pomo-step-title');
+
+            const totalS = step.duration;
+            const m = Math.floor(totalS / 60);
+            const s = totalS % 60;
+
+            pomoMinInput.value = m.toString().padStart(2, '0');
+            pomoSecInput.value = s.toString().padStart(2, '0');
+
+            const typeLabel = step.type === 'focus' ? '工作' : '休息';
+            stepTitle.textContent = `步驟 ${editPomoIndex + 1} / ${pomoSteps.length} (${typeLabel})`;
+
+            document.getElementById('pomo-type-focus').classList.toggle('active', step.type === 'focus');
+            document.getElementById('pomo-type-break').classList.toggle('active', step.type === 'break');
+
+            document.querySelectorAll('.pomo-dot').forEach((dot, idx) => {
+                dot.classList.toggle('active', idx === editPomoIndex);
+            });
+        }
+
+        function navigatePomoStep(dir) {
+            editPomoIndex += dir;
+            if (editPomoIndex < 0) editPomoIndex = pomoSteps.length - 1;
+            if (editPomoIndex >= pomoSteps.length) editPomoIndex = 0;
+            loadPomoStepToInputs();
+        }
+
+        function handlePomoInput(event, field) {
+            let val = event.target.value.replace(/\D/g, '');
+            if (val.length > 2) val = val.slice(-1);
+            event.target.value = val;
+
+            const m = parseInt(document.getElementById('pomo-min-input').value) || 0;
+            const s = parseInt(document.getElementById('pomo-sec-input').value) || 0;
+            
+            pomoSteps[editPomoIndex].duration = (m * 60) + s;
+            saveState();
+        }
+
+        function restorePomoValue(input) {
+            if (input.value === '') {
+                const totalS = pomoSteps[editPomoIndex].duration;
+                const m = Math.floor(totalS / 60);
+                const s = totalS % 60;
+                input.value = input.id.includes('min') ? m.toString().padStart(2, '0') : s.toString().padStart(2, '0');
+            }
+        }
+
+        function setPomoStepType(type) {
+            pomoSteps[editPomoIndex].type = type;
+            document.getElementById('pomo-type-focus').classList.toggle('active', type === 'focus');
+            document.getElementById('pomo-type-break').classList.toggle('active', type === 'break');
+            
+            const stepTitle = document.getElementById('pomo-step-title');
+            const typeLabel = type === 'focus' ? '工作' : '休息';
+            stepTitle.textContent = `步驟 ${editPomoIndex + 1} / ${pomoSteps.length} (${typeLabel})`;
+            
+            renderPomoDots();
+            saveState();
+        }
+
+        function addPomoStep() {
+            if (pomoSteps.length >= 10) {
+                showTempTip("最高設定 10 個步驟", 2000);
+                return;
+            }
+            pomoSteps.push({ duration: 1500, type: 'focus' });
+            editPomoIndex = pomoSteps.length - 1;
+            renderPomoDots();
+            loadPomoStepToInputs();
+            saveState();
+        }
+
+        function removePomoStep() {
+            if (pomoSteps.length <= 1) {
+                showTempTip("至少保留 1 個步驟", 2000);
+                return;
+            }
+            pomoSteps.splice(editPomoIndex, 1);
+            if (editPomoIndex >= pomoSteps.length) editPomoIndex = pomoSteps.length - 1;
+            renderPomoDots();
+            loadPomoStepToInputs();
+            saveState();
+        }
+
+        function renderPomoDots() {
+            const container = document.getElementById('pomo-dots-container');
+            container.innerHTML = '';
+            pomoSteps.forEach((step, idx) => {
+                const dot = document.createElement('span');
+                dot.className = `pomo-dot ios-dot ${idx === editPomoIndex ? 'active' : ''}`;
+                if (step && step.type === 'break') {
+                    dot.style.backgroundColor = idx === editPomoIndex ? 'var(--accent-color)' : '#FDA4AF';
+                }
+                dot.onclick = () => {
+                    editPomoIndex = idx;
+                    loadPomoStepToInputs();
+                };
+                container.appendChild(dot);
+            });
+        }
+
+        function renderMainTimerPomoDots() {
+            timerPomoDots.innerHTML = '';
+            pomoSteps.forEach((step, idx) => {
+                const dot = document.createElement('span');
+                dot.className = `ios-dot ${idx === activePomoIndex ? 'active' : ''}`;
+                if (step && step.type === 'break') {
+                    dot.style.backgroundColor = idx === activePomoIndex ? 'var(--text-color)' : '#FDA4AF';
+                } else {
+                    dot.style.backgroundColor = idx === activePomoIndex ? 'var(--text-color)' : 'var(--muted-color)';
+                }
+                timerPomoDots.appendChild(dot);
+            });
+        }
+
+        function startPomodoroSequence() {
+            isPomoActive = true;
+            activePomoIndex = 0;
+            switchAppMode('pomo');
+            
+            pomoTimeLeftMs = pomoSteps[activePomoIndex].duration * 1000;
+
+            closePomodoroView();
+            toggleTimer();
+        }
+
+        function showHelpModal() {
+            document.getElementById('help-modal').classList.remove('hidden-force');
+            goHelpPage(0);
+        }
+
+        function hideHelpModal() {
+            document.getElementById('help-modal').classList.add('hidden-force');
+        }
+
+        function goHelpPage(pageNum) {
+            currentHelpPage = pageNum;
+            document.getElementById('help-slide-0').classList.add('hidden-force');
+            document.getElementById('help-slide-1').classList.add('hidden-force');
+            document.getElementById('help-slide-2').classList.add('hidden-force');
+            document.getElementById('help-slide-3').classList.add('hidden-force');
+
+            document.getElementById(`help-slide-${pageNum}`).classList.remove('hidden-force');
+
+            document.getElementById('help-dot-0').classList.remove('active');
+            document.getElementById('help-dot-1').classList.remove('active');
+            document.getElementById('help-dot-2').classList.remove('active');
+            document.getElementById('help-dot-3').classList.remove('active');
+            document.getElementById(`help-dot-${pageNum}`).classList.add('active');
+        }
+
+        function navigateHelpPage(dir) {
+            currentHelpPage += dir;
+            if (currentHelpPage < 0) currentHelpPage = 3;
+            if (currentHelpPage > 3) currentHelpPage = 0;
+            goHelpPage(currentHelpPage);
+        }
+
         function setupInputFocus(el) {
             el.addEventListener('focus', (e) => {
-                e.target.dataset.oldValue = e.target.value;
-                e.target.value = '';
+                e.target.dataset.oldValue = e.target.value; 
+                e.target.value = ''; 
             });
             el.addEventListener('blur', (e) => {
                 if (e.target.value === '') {
-                    e.target.value = e.target.dataset.oldValue || '';
+                    e.target.value = e.target.dataset.oldValue || ''; 
                 }
                 updateInputColors();
                 checkInputs();
@@ -562,312 +1421,245 @@
             }
         }
 
-        function playAlarmSound() {
+        function playTickSound(type) {
             initAudio();
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            oscillator.type = 'sine';
-            oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
-            oscillator.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.5);
-            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-            oscillator.start();
-            oscillator.stop(audioCtx.currentTime + 0.5);
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
 
-            setTimeout(() => {
+            if (type === 'second') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(1200, now);
+                gain.gain.setValueAtTime(0.04, now);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.03);
+                osc.start(now);
+                osc.stop(now + 0.03);
+            } else if (type === 'minute') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(1800, now);
+                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.15);
+                osc.start(now);
+                osc.stop(now + 0.15);
+            } else if (type === 'hour') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(440, now);
+                gain.gain.setValueAtTime(0.18, now);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.4);
+                osc.start(now);
+                osc.stop(now + 0.4);
+
                 const osc2 = audioCtx.createOscillator();
                 const gain2 = audioCtx.createGain();
                 osc2.connect(gain2);
                 gain2.connect(audioCtx.destination);
                 osc2.type = 'sine';
-                osc2.frequency.setValueAtTime(880, audioCtx.currentTime);
-                osc2.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.5);
-                gain2.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-                osc2.start();
-                osc2.stop(audioCtx.currentTime + 0.5);
-            }, 600);
-        }
-
-        function getSafeFontSize(requestedSize, textContent) {
-            const windowHeight = window.innerHeight;
-            const windowWidth = window.innerWidth;
-            const reservedHeight = 280;
-            const maxSafeHeight = windowHeight - reservedHeight;
-            const charCount = textContent ? textContent.length : 5;
-            const widthRatio = charCount > 6 ? 5.5 : 3.5;
-            const paddingX = 40;
-            const maxSafeWidth = (windowWidth - paddingX) / widthRatio;
-            const safeSize = Math.floor(Math.min(requestedSize, Math.max(20, maxSafeHeight), maxSafeWidth));
-            return safeSize;
-        }
-
-        function formatTimeDisplay(ms, isTimer) {
-            if (ms < 0) ms = 0;
-
-            let totalSeconds;
-            if (isTimer && (!isLongFormat || ms >= 3600000) && ms > 0) {
-                totalSeconds = Math.ceil(ms / 1000);
-            } else {
-                totalSeconds = Math.floor(ms / 1000);
-            }
-
-            const tempH = Math.floor(ms / 3600000);
-            const h = Math.floor(totalSeconds / 3600);
-            const m = Math.floor((totalSeconds % 3600) / 60);
-            const s = totalSeconds % 60;
-            const cs = Math.floor((ms % 1000) / 10);
-
-            if (isLongFormat) {
-                if (tempH > 0) {
-                    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-                } else {
-                    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}.${cs.toString().padStart(2, '0')}`;
-                }
-            } else {
-                if (tempH > 0) {
-                    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
-                } else {
-                    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-                }
+                osc2.frequency.setValueAtTime(880, now);
+                gain2.gain.setValueAtTime(0.09, now);
+                gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.4);
+                osc2.start(now);
+                osc2.stop(now + 0.4);
             }
         }
 
-        function updateDisplay() {
-            let timeString = "";
-            let currentIsActive = false;
-
-            if (appMode === 'timer') {
-                timeString = formatTimeDisplay(timeLeftMs, true);
-                currentIsActive = isTimerActive;
-                const progress = initialTime > 0 ? (timeLeftMs / (initialTime * 1000)) * 100 : 0;
-                progressBar.style.width = `${progress}%`;
-                progressBar.classList.remove('hidden-bar');
-            } else {
-                timeString = formatTimeDisplay(stopwatchTime, false);
-                currentIsActive = isStopwatchActive;
-                progressBar.classList.add('hidden-bar');
-            }
-
-            timerDisplay.textContent = timeString;
-            document.title = currentIsActive ? `(${timeString}) 計時器` : '計時器';
-
-            timerDisplay.style.fontSize = `${Math.min(currentFontSize, MAX_FONT_SIZE)}px`;
-
-            if (currentIsActive) {
-                playWrapper.classList.add('hidden-force');
-                pauseWrapper.classList.remove('hidden-force');
-                playBtn.disabled = false;
-
-                timerStatus.classList.remove('opacity-100');
-                timerStatus.classList.add('opacity-0');
-            } else {
-                playWrapper.classList.remove('hidden-force');
-                pauseWrapper.classList.add('hidden-force');
-
-                if (appMode === 'stopwatch' && stopwatchTime >= MAX_TIME_MS) {
-                    playBtn.disabled = true;
-                } else {
-                    playBtn.disabled = false;
-                }
-
-                if (appMode === 'timer') {
-                    timerStatus.textContent = "Tips: 關閉視窗還是會繼續跑喔";
-                } else {
-                    if (stopwatchTime >= MAX_TIME_MS) {
-                        timerStatus.textContent = "已達上限";
-                    } else {
-                        timerStatus.textContent = "碼錶已暫停";
-                    }
-                }
-                timerStatus.classList.remove('opacity-0');
-                timerStatus.classList.add('opacity-100');
-            }
-        }
-
-        function startIntervalLoop() {
-            if (intervalId) clearInterval(intervalId);
-            intervalId = setInterval(() => {
-                const now = Date.now();
-                let needSave = false;
-
-                if (isTimerActive) {
-                    const remaining = timerTarget - now;
-                    if (remaining <= 0) {
-                        timeLeftMs = 0;
-                        isTimerActive = false;
-                        timerTarget = null;
-                        playAlarmSound();
-                        needSave = true;
-                    } else {
-                        if (timeLeftMs !== remaining) {
-                            timeLeftMs = remaining;
-                            needSave = true;
-                        }
-                    }
-                }
-
-                if (isStopwatchActive) {
-                    const elapsed = now - stopwatchStartTime;
-                    if (elapsed >= MAX_TIME_MS) {
-                        stopwatchTime = MAX_TIME_MS;
-                        isStopwatchActive = false;
-                        playAlarmSound();
-                        needSave = true;
-                    } else {
-                        stopwatchTime = elapsed;
-                    }
-                }
-
-                if (!isTimerActive && !isStopwatchActive) {
-                    clearInterval(intervalId);
-                }
-
-                updateDisplay();
-                if (needSave) saveState();
-
-            }, 16);
-        }
-
-        function switchAppMode(mode) {
-            if (mode === appMode) return;
-            appMode = mode;
-            updateUIFromState();
-            saveState();
-        }
-
-        function toggleTimer() {
+        function playAlarmSound() {
             initAudio();
-            const now = Date.now();
+            const now = audioCtx.currentTime;
+            if (currentSound === 'none') return;
+            
+            if (currentSound === 'beep') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(880, now);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+                osc.start(now);
+                osc.stop(now + 0.5);
+            } else if (currentSound === 'bowl') {
+                const freqs = [220, 330, 440, 550];
+                const gains = [0.4, 0.2, 0.1, 0.05];
+                freqs.forEach((f, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.value = f;
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    gain.gain.setValueAtTime(gains[i], now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 2.5);
+                    osc.start(now);
+                    osc.stop(now + 2.5);
+                });
+            } else if (currentSound === 'chord') {
+                const freqs = [261.63, 329.63, 392.00, 523.25];
+                freqs.forEach((f, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.value = f;
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+                    osc.start(now);
+                    osc.stop(now + 1.5);
+                });
+            } else if (currentSound === 'bell') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(1500, now);
+                gain.gain.setValueAtTime(0.25, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+                osc.start(now);
+                osc.stop(now + 1.2);
+            } else if (currentSound === 'tick') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(120, now);
+                gain.gain.setValueAtTime(0.4, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                osc.start(now);
+                osc.stop(now + 0.05);
+            }
+        }
 
-            if (appMode === 'timer') {
-                if (timeLeftMs === 0 && !isTimerActive) return;
-
-                if (isTimerActive) {
-                    isTimerActive = false;
-                    timerTarget = null;
-                } else {
-                    isTimerActive = true;
-                    timerTarget = now + timeLeftMs;
+        function playAlarmSound5Times() {
+            if (alarmIntervalId) clearInterval(alarmIntervalId);
+            let beepsPlayed = 0;
+            playAlarmSound();
+            beepsPlayed++;
+            alarmIntervalId = setInterval(() => {
+                if (beepsPlayed >= 5) {
+                    clearInterval(alarmIntervalId);
+                    alarmIntervalId = null;
+                    return;
                 }
-            } else {
-                if (stopwatchTime >= MAX_TIME_MS) return;
+                playAlarmSound();
+                beepsPlayed++;
+            }, 800);
+        }
 
-                if (isStopwatchActive) {
-                    isStopwatchActive = false;
-                    stopwatchTime = now - stopwatchStartTime;
-                    stopwatchStartTime = null;
-                } else {
-                    isStopwatchActive = true;
-                    stopwatchStartTime = now - stopwatchTime;
-                }
+        function backupCurrentSettings() {
+            backupSettings = {
+                fontSize: currentFontSize,
+                fontFamily: currentFontFamily,
+                fontWeight: currentFontWeight,
+                layout: currentLayout,
+                formatMode: currentFormatMode,
+                currentSound: currentSound,
+                currentTheme: currentTheme,
+                customColors: { ...customColors },
+                isTickSoundEnabled: isTickSoundEnabled,
+                initialTime: initialTime,
+                timeLeftMs: timeLeftMs
+            };
+            if (currentTheme !== 'custom') {
+                prevTheme = currentTheme;
+            }
+            backupPomoSteps = JSON.parse(JSON.stringify(pomoSteps));
+        }
+
+        function revertToBackup() {
+            if (!backupSettings) return;
+            currentFontSize = backupSettings.fontSize;
+            currentFontFamily = backupSettings.fontFamily;
+            currentFontWeight = backupSettings.fontWeight;
+            currentLayout = backupSettings.layout;
+            currentFormatMode = backupSettings.formatMode;
+            currentSound = backupSettings.currentSound;
+            currentTheme = backupSettings.currentTheme;
+            
+            customColors = backupSettings.customColors ? { ...backupSettings.customColors } : {
+                bg: '#000000',
+                txt: '#ffffff',
+                panel: '#FEFAEF',
+                accent: '#ffffff'
+            };
+            
+            isTickSoundEnabled = backupSettings.isTickSoundEnabled;
+            initialTime = backupSettings.initialTime;
+            timeLeftMs = backupSettings.timeLeftMs;
+
+            if (backupPomoSteps) {
+                pomoSteps = JSON.parse(JSON.stringify(backupPomoSteps));
             }
 
-            if (isTimerActive || isStopwatchActive) {
-                startIntervalLoop();
-            }
-
-            updateDisplay();
+            updateUIFromState();
+            applyTheme(currentTheme);
             saveState();
         }
 
-        function resetTimer() {
-            if (appMode === 'timer') {
-                isTimerActive = false;
-                timerTarget = null;
-                timeLeftMs = initialTime * 1000;
-            } else {
-                isStopwatchActive = false;
-                stopwatchStartTime = null;
-                stopwatchTime = initialStopwatchTime;
-            }
-
-            if (!isTimerActive && !isStopwatchActive) {
-                if (intervalId) clearInterval(intervalId);
-            }
-
-            playBtn.disabled = false;
-            updateDisplay();
-            saveState();
+        function cancelEditMode() {
+            revertToBackup();
+            closeEditMode();
         }
 
-        function goHome() {
-            console.log("Navigating Home");
-            location.href = "../index.html";
-        }
-
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(e => console.log(e));
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                }
+        function cancelPomodoroView() {
+            if (backupPomoSteps) {
+                pomoSteps = JSON.parse(JSON.stringify(backupPomoSteps));
             }
+            closePomodoroView();
         }
 
         function openEditMode() {
-            if (appMode === 'timer' && isTimerActive) toggleTimer();
-            if (appMode === 'stopwatch' && isStopwatchActive) toggleTimer();
+            if (appMode === 'pomo') {
+                openPomodoroView();
+                return;
+            }
 
-            isTimeModified = false;
+            if (isTimerActive || isStopwatchActive || isPomoRunning) pauseCurrentTimer();
 
-            topBar.classList.add('hidden-force');
-            controlsView.classList.add('hidden-force');
-            editView.classList.remove('hidden-force');
+            isTimeModified = false; 
+            cancelUiFadeOut();
+            backupCurrentSettings();
+
+            topBar.classList.add('opacity-0', 'pointer-events-none');
+            controlsView.classList.add('opacity-0', 'pointer-events-none');
+            
+            editView.classList.remove('translate-y-full', 'pointer-events-none');
             body.classList.add('edit-mode-active');
 
-            if (fontSlider) fontSlider.value = currentFontSize;
-            if (fontSizeDisplay) fontSizeDisplay.textContent = `${currentFontSize}px`;
+            if(fontSlider) fontSlider.value = currentFontSize;
 
             switchTab('time');
-
+            
             let loadTime = appMode === 'timer' ? initialTime : Math.floor(initialStopwatchTime / 1000);
             let h = Math.floor(loadTime / 3600);
             let m = Math.floor((loadTime % 3600) / 60);
             let s = loadTime % 60;
-
+            
             domHourInput.value = h > 0 ? h.toString().padStart(2, '0') : "";
             domMinInput.value = m.toString().padStart(2, '0');
             domSecInput.value = s.toString().padStart(2, '0');
-
+            
             if (h > 0) {
                 if (!showHoursInput) toggleHourInput();
             } else {
-                if (showHoursInput) toggleHourInput();
+                if (showHoursInput) toggleHourInput(); 
             }
-
+            
             updateInputColors();
             checkInputs();
         }
 
         function closeEditMode() {
-            topBar.classList.remove('hidden-force');
-            controlsView.classList.remove('hidden-force');
-            editView.classList.add('hidden-force');
+            topBar.classList.remove('opacity-0', 'pointer-events-none');
+            controlsView.classList.remove('opacity-0', 'pointer-events-none');
+            
+            editView.classList.add('translate-y-full', 'pointer-events-none');
             body.classList.remove('edit-mode-active');
             updateDisplay();
-        }
-
-        function switchTab(mode) {
-            currentEditMode = mode;
-            const sectionTime = document.getElementById('section-time');
-            const sectionFont = document.getElementById('section-font');
-            const modalTitle = document.getElementById('modal-title');
-
-            if (mode === 'time') {
-                modalTitle.textContent = showHoursInput ? "設定小時" : "設定時間";
-                sectionTime.classList.remove('hidden-force');
-                sectionFont.classList.add('hidden-force');
-                checkInputs();
-            } else {
-                modalTitle.textContent = "文字大小";
-                sectionTime.classList.add('hidden-force');
-                sectionFont.classList.remove('hidden-force');
-                checkInputs();
-            }
         }
 
         function toggleHourInput() {
@@ -899,7 +1691,7 @@
             domHourInput.value = "";
             domMinInput.value = "";
             domSecInput.value = "";
-
+            
             updateInputColors();
             checkInputs();
             updatePreview();
@@ -912,75 +1704,45 @@
         function updateInputColors() {
             const styleInput = (el) => {
                 if (el.value.length > 0) {
-                    el.classList.remove('border-[#A3A3A3]', 'text-[#A3A3A3]');
-                    el.classList.add('border-[#000000]', 'text-[#000000]');
+                    el.classList.remove('border-neutral-400');
+                    el.classList.add('border-current');
                 } else {
-                    el.classList.add('border-[#A3A3A3]', 'text-[#A3A3A3]');
-                    el.classList.remove('border-[#000000]', 'text-[#000000]');
+                    el.classList.add('border-neutral-400');
+                    el.classList.remove('border-current');
                 }
             };
             styleInput(domHourInput);
             styleInput(domMinInput);
             styleInput(domSecInput);
-
+            
             if (domHourInput.value.length > 0 || domMinInput.value.length > 0 || domSecInput.value.length > 0) {
                 timeColon.classList.remove('text-[#A3A3A3]');
-                timeColon.classList.add('text-[#000000]');
+                timeColon.classList.add('text-current');
             } else {
                 timeColon.classList.add('text-[#A3A3A3]');
-                timeColon.classList.remove('text-[#000000]');
+                timeColon.classList.remove('text-current');
             }
         }
 
         function updatePreview() {
-            if (editView.classList.contains('hidden-force')) return;
-            if (!isTimeModified) return;
+            if (editView.classList.contains('translate-y-full')) return;
+            if (!isTimeModified) return; 
 
             let h = parseInt(domHourInput.value) || 0;
             let m = parseInt(domMinInput.value) || 0;
             let s = parseInt(domSecInput.value) || 0;
-
+            
             let totalSecs = (h * 3600) + (m * 60) + s;
-
-            timerDisplay.textContent = formatTimeDisplay(totalSecs * 1000, appMode === 'timer');
-
+            
+            let previewString = formatTimeDisplay(totalSecs * 1000, appMode === 'timer');
+            if (currentLayout === 'col') {
+                timerDisplay.innerHTML = previewString.replace(/[:.]/g, '<br>');
+            } else {
+                timerDisplay.innerHTML = previewString;
+            }
+            
             const requestedSize = parseInt(fontSlider.value);
             timerDisplay.style.fontSize = `${Math.min(requestedSize, MAX_FONT_SIZE)}px`;
-        }
-
-        function useHistory(index) {
-            isTimeModified = true;
-            quickSetTime(historyTimes[index] / 60);
-        }
-
-        function quickSetTime(minutes) {
-            let h = 0, m = 0, s = 0;
-            let totalSeconds = Math.round(minutes * 60);
-
-            h = Math.floor(totalSeconds / 3600);
-            m = Math.floor((totalSeconds % 3600) / 60);
-            s = totalSeconds % 60;
-
-            if (h > 0 && !showHoursInput) {
-                toggleHourInput();
-            }
-
-            domHourInput.value = h > 0 ? h.toString().padStart(2, '0') : "";
-            domMinInput.value = m.toString().padStart(2, '0');
-            domSecInput.value = s.toString().padStart(2, '0');
-
-            updateInputColors();
-            checkInputs();
-            updatePreview();
-        }
-
-        function addToHistory(seconds) {
-            if (seconds === 0) return;
-            if (historyTimes[0] === seconds) return;
-
-            historyTimes.unshift(seconds);
-            historyTimes = historyTimes.slice(0, 1);
-            updateHistoryButtons();
         }
 
         function submitEdit(e) {
@@ -990,20 +1752,18 @@
                 let h = parseInt(domHourInput.value) || 0;
                 let m = parseInt(domMinInput.value) || 0;
                 let s = parseInt(domSecInput.value) || 0;
-
+                
                 if (s > 59) s = 59;
                 if (m > 59) {
-                    h += Math.floor(m / 60);
-                    m = m % 60;
+                     h += Math.floor(m / 60);
+                     m = m % 60;
                 }
-
+                
                 let totalSecs = (h * 3600) + (m * 60) + s;
-
+                
                 if (totalSecs > MAX_TIME_SECONDS) totalSecs = MAX_TIME_SECONDS;
 
                 if (totalSecs >= 0) {
-                    addToHistory(totalSecs);
-
                     if (appMode === 'timer') {
                         initialTime = totalSecs;
                         timeLeftMs = totalSecs * 1000;
@@ -1016,7 +1776,7 @@
 
             playBtn.disabled = false;
             updateDisplay();
-            saveState();
+            saveState(); 
             closeEditMode();
         }
 
@@ -1024,7 +1784,7 @@
             isTimeModified = true;
             let val = e.target.value;
             val = val.replace(/\D/g, '');
-            if (val.length > 2) val = val.slice(-1);
+            if (val.length > 2) val = val.slice(-1); 
             e.target.value = val;
             updateInputColors();
             checkInputs();
@@ -1041,13 +1801,12 @@
                 e.target.value = MAX_FONT_SIZE;
                 requestedSize = MAX_FONT_SIZE;
             }
-            currentFontSize = requestedSize;
-            fontSizeDisplay.textContent = `${requestedSize}px`;
+            currentFontSize = requestedSize; 
             timerDisplay.style.fontSize = `${requestedSize}px`;
         });
 
         editView.addEventListener('submit', submitEdit);
-
+        
         document.addEventListener('fullscreenchange', () => {
             const iconMaximize = document.getElementById('icon-maximize');
             const iconMinimize = document.getElementById('icon-minimize');
@@ -1069,40 +1828,481 @@
                 toggleTimer();
             }
             if (e.code === 'Escape') {
-                if (!editView.classList.contains('hidden-force')) {
+                if (!editView.classList.contains('translate-y-full')) {
                     closeEditMode();
+                }
+                if (!pomoView.classList.contains('translate-y-full')) {
+                    closePomodoroView();
                 }
             }
         });
 
-        // 網路時間校時
-        async function initCopyrightYear() {
-            const display = document.getElementById('year-display');
-            const localYear = new Date().getFullYear();
-            display.textContent = localYear;
+        let dragStartY = 0;
+        let dragStartX = 0;
+        let dragStartSize = 160;
+        let isDragging = false;
+        let gestureType = null;
 
-            try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 3000);
-                const response = await fetch('https://worldtimeapi.org/api/timezone/Asia/Taipei', {
-                    signal: controller.signal
-                });
-                clearTimeout(timeoutId);
+        function handleDragStart(clientX, clientY) {
+            if (!editView.classList.contains('translate-y-full') || !pomoView.classList.contains('translate-y-full')) return;
+            isDragging = true;
+            dragStartY = clientY;
+            dragStartX = clientX;
+            dragStartSize = currentFontSize;
+            gestureType = null;
+        }
 
-                if (response.ok) {
-                    const data = await response.json();
-                    const networkYear = data.datetime.substring(0, 4);
-                    display.textContent = networkYear;
+        function handleDragMove(clientX, clientY) {
+            if (!isDragging) return;
+            let diffY = dragStartY - clientY;
+            let diffX = clientX - dragStartX;
+            
+            if (gestureType === null) {
+                const threshold = 10;
+                if (Math.abs(diffX) > threshold || Math.abs(diffY) > threshold) {
+                    if (Math.abs(diffX) > Math.abs(diffY)) {
+                        gestureType = 'swipe';
+                    } else {
+                        gestureType = 'font';
+                    }
                 }
-            } catch (error) {
-                console.log('網路校時失敗，維持系統時間');
+            }
+            
+            if (gestureType === 'font') {
+                let newSize = dragStartSize + Math.round(diffY * 0.5);
+                currentFontSize = Math.max(20, Math.min(newSize, MAX_FONT_SIZE));
+                updateDisplay();
+            }
+        }
+
+        function handleDragEnd(clientX, clientY) {
+            if (!isDragging) return;
+            isDragging = false;
+            let diffX = clientX - dragStartX;
+            let diffY = clientY - dragStartY;
+            if (gestureType === 'swipe' && Math.abs(diffX) > 120 && Math.abs(diffY) < 100) {
+                let nextMode = 'timer';
+                if (diffX < 0) {
+                    if (appMode === 'timer') nextMode = 'stopwatch';
+                    else if (appMode === 'stopwatch') nextMode = 'pomo';
+                    else nextMode = 'timer';
+                } else {
+                    if (appMode === 'timer') nextMode = 'pomo';
+                    else if (appMode === 'pomo') nextMode = 'stopwatch';
+                    else nextMode = 'timer';
+                }
+                switchAppMode(nextMode);
+            }
+            gestureType = null;
+            saveState();
+        }
+
+        window.addEventListener('mousedown', (e) => {
+            if (e.target.closest('button') || e.target.closest('input') || e.target.closest('form') || e.target.closest('#help-modal')) return;
+            handleDragStart(e.clientX, e.clientY);
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            handleDragMove(e.clientX, e.clientY);
+        });
+
+        window.addEventListener('mouseup', (e) => {
+            handleDragEnd(e.clientX, e.clientY);
+        });
+
+        window.addEventListener('touchstart', (e) => {
+            if (e.target.closest('button') || e.target.closest('input') || e.target.closest('form') || e.target.closest('#help-modal')) return;
+            let touch = e.touches[0];
+            handleDragStart(touch.clientX, touch.clientY);
+        }, { passive: true });
+
+        window.addEventListener('touchmove', (e) => {
+            if (isDragging) {
+                e.preventDefault(); 
+            }
+            let touch = e.touches[0];
+            handleDragMove(touch.clientX, touch.clientY);
+        }, { passive: false });
+
+        window.addEventListener('touchend', (e) => {
+            if (e.touches.length === 0 && e.changedTouches.length > 0) {
+                let touch = e.changedTouches[0];
+                handleDragEnd(touch.clientX, touch.clientY);
+            }
+        });
+
+        let helpDragStartX = 0;
+        let isHelpDragging = false;
+        const helpModalContent = document.getElementById('help-modal-content');
+
+        helpModalContent.addEventListener('mousedown', (e) => {
+            if (e.target.closest('button')) return;
+            isHelpDragging = true;
+            helpDragStartX = e.clientX;
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isHelpDragging) return;
+        });
+
+        window.addEventListener('mouseup', (e) => {
+            if (!isHelpDragging) return;
+            isHelpDragging = false;
+            let diffX = e.clientX - helpDragStartX;
+            if (Math.abs(diffX) > 50) {
+                if (diffX < 0) {
+                    let next = currentHelpPage + 1;
+                    if (next > 3) next = 0;
+                    goHelpPage(next);
+                } else {
+                    let prev = currentHelpPage - 1;
+                    if (prev < 0) prev = 3;
+                    goHelpPage(prev);
+                }
+            }
+        });
+
+        helpModalContent.addEventListener('touchstart', (e) => {
+            if (e.target.closest('button')) return;
+            isHelpDragging = true;
+            helpDragStartX = e.touches[0].clientX;
+        }, { passive: true });
+
+        helpModalContent.addEventListener('touchmove', (e) => {
+            if (!isHelpDragging) return;
+        }, { passive: true });
+
+        helpModalContent.addEventListener('touchend', (e) => {
+            if (!isHelpDragging) return;
+            isHelpDragging = false;
+            let diffX = e.changedTouches[0].clientX - helpDragStartX;
+            if (Math.abs(diffX) > 50) {
+                if (diffX < 0) {
+                    let next = currentHelpPage + 1;
+                    if (next > 3) next = 0;
+                    goHelpPage(next);
+                } else {
+                    let prev = currentHelpPage - 1;
+                    if (prev < 0) prev = 3;
+                    goHelpPage(prev);
+                }
+            }
+        });
+
+        function initCopyrightYear() {
+            const display = document.getElementById('year-display');
+            if (display) {
+                display.textContent = new Date().getFullYear();
+            }
+        }
+
+        async function requestWakeLock() {
+            try {
+                if ('wakeLock' in navigator) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                }
+            } catch (err) {
+                console.warn('Wake Lock failed (disallowed by sandbox permissions policy):', err);
+            }
+        }
+
+        document.addEventListener('visibilitychange', async () => {
+            if (wakeLock !== null && document.visibilityState === 'visible') {
+                requestWakeLock();
+            }
+        });
+
+        function startUiFadeOut() {
+            if (isPinned) return;
+            
+            showTempTip(appMode === 'pomo' ? `步驟 ${activePomoIndex + 1}/${pomoSteps.length} (${pomoSteps[activePomoIndex].type === 'focus' ? '工作' : '休息'})` : "按空白鍵 / 畫面 暫停", 2500);
+            
+            clearTimeout(uiFadeTimeoutId);
+            uiFadeTimeoutId = setTimeout(() => {
+                topBar.classList.add('ui-hidden');
+                controlsView.classList.add('ui-hidden');
+                timerStatus.classList.add('ui-hidden');
+                copyrightText.classList.add('ui-hidden');
+                timerPomoDots.classList.add('ui-hidden');
+            }, 1000);
+        }
+
+        function cancelUiFadeOut() {
+            clearTimeout(uiFadeTimeoutId);
+            topBar.classList.remove('ui-hidden');
+            controlsView.classList.remove('ui-hidden');
+            timerStatus.classList.remove('ui-hidden');
+            copyrightText.classList.remove('ui-hidden');
+            timerPomoDots.classList.remove('ui-hidden');
+        }
+
+        function formatTimeDisplay(ms, isTimerMode) {
+            let totalSecs = isTimerMode ? Math.ceil(ms / 1000) : Math.floor(ms / 1000);
+            if (totalSecs < 0) totalSecs = 0;
+            
+            let h = Math.floor(totalSecs / 3600);
+            let m = Math.floor((totalSecs % 3600) / 60);
+            let s = totalSecs % 60;
+            
+            if (currentFormatMode === 'three' || h > 0) {
+                return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            } else {
+                return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            }
+        }
+
+        function showTempTip(msg, duration) {
+            tempTipMsg = msg;
+            updateDisplay();
+            clearTimeout(tempTipTimeoutId);
+            tempTipTimeoutId = setTimeout(() => {
+                tempTipMsg = "";
+                updateDisplay();
+            }, duration);
+        }
+
+        function switchAppMode(mode) {
+            if (isTimerActive || isStopwatchActive || isPomoRunning) pauseCurrentTimer();
+            appMode = mode;
+            saveState();
+            updateUIFromState();
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        function toggleTimer() {
+            initAudio();
+            if (appMode === 'timer') {
+                if (isTimerActive) {
+                    pauseCurrentTimer();
+                } else {
+                    if (timeLeftMs <= 0) return;
+                    isTimerActive = true;
+                    timerTarget = Date.now() + timeLeftMs;
+                    startIntervalLoop();
+                    startUiFadeOut();
+                }
+            } else if (appMode === 'pomo') {
+                if (isPomoRunning) {
+                    pauseCurrentTimer();
+                } else {
+                    if (pomoTimeLeftMs <= 0) return;
+                    isPomoRunning = true;
+                    pomoTarget = Date.now() + pomoTimeLeftMs;
+                    startIntervalLoop();
+                    startUiFadeOut();
+                }
+            } else {
+                if (isStopwatchActive) {
+                    pauseCurrentTimer();
+                } else {
+                    if (stopwatchTime >= MAX_TIME_MS) return;
+                    isStopwatchActive = true;
+                    stopwatchStartTime = Date.now() - stopwatchTime;
+                    startIntervalLoop();
+                    startUiFadeOut();
+                }
+            }
+            updateDisplay();
+            saveState();
+        }
+
+        function pauseCurrentTimer() {
+            isTimerActive = false;
+            isStopwatchActive = false;
+            isPomoRunning = false;
+            timerTarget = null;
+            stopwatchStartTime = null;
+            pomoTarget = null;
+            
+            if (intervalId) {
+                clearInterval(intervalId);
+                intervalId = null;
+            }
+            
+            lastTickSecond = -1;
+            
+            cancelUiFadeOut();
+            updateDisplay();
+            saveState();
+        }
+
+        function resetTimer() {
+            pauseCurrentTimer();
+            if (appMode === 'timer') {
+                timeLeftMs = initialTime * 1000;
+            } else if (appMode === 'pomo') {
+                activePomoIndex = 0;
+                pomoTimeLeftMs = pomoSteps[0].duration * 1000;
+                renderMainTimerPomoDots();
+            } else {
+                stopwatchTime = initialStopwatchTime;
+            }
+            
+            if (alarmIntervalId) {
+                clearInterval(alarmIntervalId);
+                alarmIntervalId = null;
+            }
+            
+            updateDisplay();
+            saveState();
+        }
+
+        function startIntervalLoop() {
+            if (intervalId) clearInterval(intervalId);
+            
+            const tick = () => {
+                let needsUpdate = false;
+                const now = Date.now();
+                
+                if (isTimerActive && timerTarget) {
+                    timeLeftMs = timerTarget - now;
+                    if (timeLeftMs <= 0) {
+                        timeLeftMs = 0;
+                        pauseCurrentTimer();
+                        playAlarmSound5Times();
+                        needsUpdate = true;
+                    } else {
+                        needsUpdate = true;
+                    }
+                }
+                
+                if (isPomoRunning && pomoTarget) {
+                    pomoTimeLeftMs = pomoTarget - now;
+                    if (pomoTimeLeftMs <= 0) {
+                        pomoTimeLeftMs = 0;
+                        pauseCurrentTimer();
+                        playAlarmSound5Times();
+                        
+                        activePomoIndex++;
+                        if (activePomoIndex >= pomoSteps.length) {
+                            activePomoIndex = 0; 
+                        }
+                        pomoTimeLeftMs = pomoSteps[activePomoIndex].duration * 1000;
+                        renderMainTimerPomoDots();
+                        
+                        needsUpdate = true;
+                    } else {
+                        needsUpdate = true;
+                    }
+                }
+                
+                if (isStopwatchActive && stopwatchStartTime) {
+                    stopwatchTime = now - stopwatchStartTime;
+                    if (stopwatchTime >= MAX_TIME_MS) {
+                        stopwatchTime = MAX_TIME_MS;
+                        pauseCurrentTimer();
+                    }
+                    needsUpdate = true;
+                }
+                
+                if (needsUpdate) {
+                    updateDisplay();
+                    
+                    if (isTickSoundEnabled && (isTimerActive || isStopwatchActive || isPomoRunning)) {
+                        let currentSec = -1;
+                        if (isTimerActive) currentSec = Math.ceil(timeLeftMs / 1000);
+                        else if (isPomoRunning) currentSec = Math.ceil(pomoTimeLeftMs / 1000);
+                        else currentSec = Math.floor(stopwatchTime / 1000);
+                        
+                        if (currentSec !== lastTickSecond && lastTickSecond !== -1) {
+                            if (currentSec % 3600 === 0 && currentSec > 0) {
+                                playTickSound('hour');
+                            } else if (currentSec % 60 === 0 && currentSec > 0) {
+                                playTickSound('minute');
+                            } else {
+                                playTickSound('second');
+                            }
+                        }
+                        lastTickSecond = currentSec;
+                    }
+                }
+            };
+            
+            intervalId = setInterval(tick, 50);
+        }
+
+        function updateDisplay() {
+            let timeString = "";
+            let currentIsActive = false;
+
+            if (appMode === 'timer') {
+                timeString = formatTimeDisplay(timeLeftMs, true);
+                currentIsActive = isTimerActive;
+                timerPomoDots.classList.add('hidden-force');
+            } else if (appMode === 'pomo') {
+                timeString = formatTimeDisplay(pomoTimeLeftMs, true);
+                currentIsActive = isPomoRunning;
+                timerPomoDots.classList.remove('hidden-force');
+                renderMainTimerPomoDots();
+            } else {
+                timeString = formatTimeDisplay(stopwatchTime, false);
+                currentIsActive = isStopwatchActive;
+                timerPomoDots.classList.add('hidden-force');
+            }
+
+            if (currentLayout === 'col') {
+                timerDisplay.innerHTML = timeString.replace(/[:.]/g, '<br>');
+            } else {
+                timerDisplay.innerHTML = timeString;
+            }
+
+            document.title = currentIsActive ? `(${timeString}) 計時器` : '計時器';
+            timerDisplay.style.fontSize = `${Math.min(currentFontSize, MAX_FONT_SIZE)}px`;
+
+            if (currentIsActive) {
+                pauseLayer.classList.remove('hidden-force');
+                playWrapper.classList.add('hidden-force');
+                pauseWrapper.classList.remove('hidden-force');
+                playBtn.disabled = false;
+            } else {
+                pauseLayer.classList.add('hidden-force');
+                playWrapper.classList.remove('hidden-force');
+                pauseWrapper.classList.add('hidden-force');
+                playBtn.disabled = false;
+                cancelUiFadeOut();
+            }
+
+            let currentStatusMsg = "";
+            if (tempTipMsg) {
+                currentStatusMsg = tempTipMsg;
+            } else if (!currentIsActive) {
+                if (appMode === 'pomo') {
+                    const stepTypeStr = pomoSteps[activePomoIndex].type === 'focus' ? '工作' : '休息';
+                    currentStatusMsg = `番茄序列：第 ${activePomoIndex + 1} / ${pomoSteps.length} 步 (${stepTypeStr})`;
+                } else if (appMode === 'timer') {
+                    currentStatusMsg = "Tips: 關閉視窗還是會繼續跑喔";
+                } else {
+                    currentStatusMsg = stopwatchTime >= MAX_TIME_MS ? "已達上限" : "碼錶已暫停";
+                }
+            }
+
+            if (currentStatusMsg) {
+                timerStatus.textContent = currentStatusMsg;
+                if (!timerStatus.classList.contains('ui-hidden')) {
+                    timerStatus.classList.remove('opacity-0');
+                    timerStatus.classList.add('opacity-100');
+                }
+            } else {
+                timerStatus.classList.remove('opacity-100');
+                timerStatus.classList.add('opacity-0');
             }
         }
 
         window.addEventListener('load', () => {
             loadState();
             initCopyrightYear();
-            window.addEventListener('resize', updateDisplay);
+            requestWakeLock();
         });
 
     </script>
