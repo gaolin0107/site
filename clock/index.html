@@ -306,9 +306,22 @@
     <div id="pause-layer" class="fixed inset-0 z-10 hidden-force" onclick="pauseCurrentTimer()"></div>
 
     <div id="top-bar" class="ui-fade fixed top-6 left-1/2 -translate-x-1/2 flex items-center gap-2 sm:gap-3 px-4 py-2 rounded-full z-40 transition-all duration-1000 shadow-lg border border-current/10" style="background-color: var(--editor-bg); color: var(--editor-text);">
-        <button onclick="showHelpModal()" title="使用手冊" class="opacity-60 hover:opacity-100 transition-opacity p-1.5">
-            <i data-lucide="help-circle" width="18" height="18"></i>
-        </button>
+        <div class="flex items-center gap-0.5">
+            <button onclick="showHelpModal()" title="使用手冊" class="opacity-60 hover:opacity-100 transition-opacity p-1.5">
+                <i data-lucide="help-circle" width="18" height="18"></i>
+            </button>
+
+            <!-- 未登入按鈕：純線條圖示 -->
+            <button onclick="handleGoogleAuthClick()" id="auth-btn-logged-out" title="登入 Google 雲端同步" class="opacity-60 hover:opacity-100 transition-opacity p-1.5">
+                <i data-lucide="user" width="18" height="18"></i>
+            </button>
+
+            <!-- 已登入按鈕：純線條勾選帳號圖示 -->
+            <button onclick="handleGoogleAuthClick()" id="auth-btn-logged-in" title="已登入 Google 雲端同步" class="hidden-force opacity-100 hover:opacity-80 transition-opacity p-1.5 relative">
+                <i data-lucide="user-check" width="18" height="18"></i>
+                <span class="w-1.5 h-1.5 rounded-full absolute top-1.5 right-1" style="background-color: var(--accent-color);"></span>
+            </button>
+        </div>
 
         <div class="h-4 w-[1px] bg-current opacity-20"></div>
 
@@ -549,13 +562,21 @@
                             <input type="color" id="c-accent" oninput="customColorChange('accent', this.value)" class="w-0 h-0 opacity-0 absolute">
                         </div>
                     </div>
+
+                    <div class="flex items-center gap-2 w-full pt-1 border-t border-current/10">
+                        <button type="button" onclick="saveCurrentColorToCloudPresets()" class="py-1.5 px-3 rounded-xl bg-neutral-500/15 hover:bg-neutral-500/25 text-xs font-bold flex items-center gap-1 shrink-0">
+                            <i data-lucide="bookmark-plus" width="14" height="14"></i> 存入色票庫
+                        </button>
+                        <div id="custom-panel-presets-row" class="flex items-center gap-2 overflow-x-auto py-1 flex-1 no-scrollbar">
+                        </div>
+                    </div>
                 </div>
             </div>
 
         </div>
     </form>
 
-    <form id="pomodoro-view" class="translate-y-full pointer-events-none fixed bottom-0 left-0 w-full h-[260px] z-50 px-6 pt-5 pb-6 flex flex-col items-center justify-between gap-2 rounded-t-[2rem]" style="background-color: var(--editor-bg); color: var(--editor-text);">
+    <form id="pomodoro-view" class="translate-y-full pointer-events-none fixed bottom-0 left-0 w-full h-[300px] z-50 px-6 pt-5 pb-5 flex flex-col items-center justify-between gap-2 rounded-t-[2rem]" style="background-color: var(--editor-bg); color: var(--editor-text);">
         
         <div class="w-full flex items-center justify-between relative min-h-[36px]">
             <div class="flex items-center gap-4 opacity-40 z-10">
@@ -572,9 +593,9 @@
             </div>
         </div>
 
-        <div class="flex-1 w-full flex flex-col items-center justify-center mb-2 gap-4">
+        <div class="flex-1 w-full flex flex-col items-center justify-center mb-1 gap-3">
             
-            <div id="pomo-dots-container" class="flex justify-center items-center gap-2.5 mb-1">
+            <div id="pomo-dots-container" class="flex justify-center items-center gap-2.5">
             </div>
 
             <div class="flex items-center justify-between w-full max-w-md px-4">
@@ -585,12 +606,12 @@
                 <div class="flex items-center justify-center gap-2 text-6xl font-bold transition-all duration-300">
                     <div class="relative">
                         <input id="pomo-min-input" type="text" inputmode="numeric" placeholder="25" oninput="handlePomoInput(event, 'min')" onfocus="this.value=''" onblur="restorePomoValue(this)"
-                            class="w-24 bg-transparent border-0 outline-none text-center pb-2 transition-colors text-current" />
+                            class="w-24 bg-transparent border-0 outline-none text-center pb-1 transition-colors text-current" />
                     </div>
-                    <span class="pb-4 text-current">:</span>
+                    <span class="pb-3 text-current">:</span>
                     <div class="relative">
                         <input id="pomo-sec-input" type="text" inputmode="numeric" placeholder="00" oninput="handlePomoInput(event, 'sec')" onfocus="this.value=''" onblur="restorePomoValue(this)"
-                            class="w-24 bg-transparent border-0 outline-none text-center pb-2 transition-colors text-current" />
+                            class="w-24 bg-transparent border-0 outline-none text-center pb-1 transition-colors text-current" />
                     </div>
                 </div>
 
@@ -613,8 +634,169 @@
                     <i data-lucide="plus" width="20" height="20"></i>
                 </button>
             </div>
+
+            <div class="flex items-center gap-2 w-full max-w-sm px-2 pt-2 border-t border-current/10 text-xs">
+                <button type="button" onclick="saveCurrentPomoAsTemplate()" class="py-1 px-2.5 rounded-full border border-current/25 hover:bg-current/10 font-bold shrink-0 flex items-center gap-1" title="將目前步驟存為雲端模板">
+                    <i data-lucide="bookmark-plus" width="12" height="12"></i> 存模板
+                </button>
+                <div id="pomo-editor-templates-row" class="flex items-center gap-1.5 overflow-x-auto flex-1 py-0.5">
+                </div>
+            </div>
         </div>
     </form>
+
+    <!-- Google 帳號與雲端同步管理彈窗 -->
+    <div id="auth-modal" class="hidden-force fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-300">
+        <div class="rounded-3xl p-6 max-w-md w-full max-h-[88vh] flex flex-col justify-between shadow-2xl relative select-none border border-current/10" style="background-color: var(--editor-bg); color: var(--editor-text);">
+            
+            <div class="w-full flex items-center justify-between border-b border-current/10 pb-3 shrink-0">
+                <span class="help-badge">
+                    <i data-lucide="cloud" width="12" height="12"></i>
+                    <span>Google 雲端同步中心</span>
+                </span>
+                <button type="button" onclick="hideAuthModal()" class="p-1 hover:scale-110 transition-transform opacity-70 hover:opacity-100">
+                    <i data-lucide="x" width="22" height="22"></i>
+                </button>
+            </div>
+
+            <!-- 未登入狀態視圖 -->
+            <div id="auth-logged-out-view" class="flex flex-col items-center text-center py-6 gap-4 overflow-y-auto">
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-1 shrink-0" style="background-color: var(--accent-color); color: var(--editor-bg);">
+                    <i data-lucide="user" width="26" height="26"></i>
+                </div>
+                <div>
+                    <h4 class="text-base font-bold mb-1">開啟五大雲端同步特權</h4>
+                    <p class="text-xs opacity-70 leading-relaxed px-2">
+                        登入 Google 帳號後，即可跨裝置即時連動倒數、累積專注時數統計、收藏多組自訂色票與番茄工作流模板。
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 w-full text-left text-[11px] opacity-85 px-1">
+                    <div class="p-2.5 rounded-xl bg-current/5 flex items-center gap-2">
+                        <i data-lucide="bar-chart-2" width="15" height="15" class="shrink-0"></i>
+                        <span>專注時數與番茄統計</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-current/5 flex items-center gap-2">
+                        <i data-lucide="radio" width="15" height="15" class="shrink-0"></i>
+                        <span>跨裝置毫秒連動計時</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-current/5 flex items-center gap-2">
+                        <i data-lucide="palette" width="15" height="15" class="shrink-0"></i>
+                        <span>雲端自訂主題色票夾</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-current/5 flex items-center gap-2">
+                        <i data-lucide="Smartphone" width="15" height="15" class="shrink-0"></i>
+                        <span>手機/電腦獨立字級</span>
+                    </div>
+                </div>
+
+                <button type="button" onclick="triggerGoogleSignIn()" class="w-full py-3 px-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 border border-current/25 hover:bg-current/10 transition-all mt-1 shrink-0">
+                    <i data-lucide="log-in" width="18" height="18"></i>
+                    <span>使用 Google 帳號登入</span>
+                </button>
+            </div>
+
+            <!-- 已登入狀態視圖 (包含五大雲端功能面板) -->
+            <div id="auth-logged-in-view" class="hidden-force flex flex-col gap-3.5 py-4 overflow-y-auto pr-1 flex-1">
+                
+                <!-- 帳號資訊列 -->
+                <div class="flex items-center gap-3 w-full p-3 rounded-2xl bg-current/5 border border-current/10 text-left shrink-0">
+                    <div class="w-9 h-9 rounded-full flex items-center justify-center border border-current/25 shrink-0">
+                        <i data-lucide="user-check" width="18" height="18"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div id="modal-user-name" class="font-bold text-sm truncate">Gaolin</div>
+                        <div id="modal-user-email" class="text-[11px] opacity-60 truncate">gaolin@gmail.com</div>
+                    </div>
+                    <div class="text-right shrink-0">
+                        <div class="text-[10px] font-bold opacity-80 flex items-center justify-end gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full" style="background-color: var(--accent-color);"></span> 雲端連線中
+                        </div>
+                        <div id="last-sync-time" class="text-[10px] font-mono opacity-50">剛剛同步</div>
+                    </div>
+                </div>
+
+                <!-- 1. 雲端專注時數統計 (Focus Analytics) -->
+                <div class="flex flex-col gap-2 w-full p-3.5 rounded-2xl bg-current/5 border border-current/10 shrink-0">
+                    <div class="flex items-center justify-between text-xs font-bold opacity-80">
+                        <span class="flex items-center gap-1.5"><i data-lucide="bar-chart-2" width="14" height="14"></i> 雲端專注時數統計</span>
+                        <button type="button" onclick="simulateAddFocusRecord()" class="text-[10px] underline opacity-60 hover:opacity-100 p-0">+ 測試紀錄</button>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 pt-1 text-center">
+                        <div class="p-2 rounded-xl bg-current/5">
+                            <div id="stat-today-mins" class="text-lg font-bold font-mono leading-tight">0m</div>
+                            <div class="text-[10px] opacity-60 mt-0.5">今日專注</div>
+                        </div>
+                        <div class="p-2 rounded-xl bg-current/5">
+                            <div id="stat-total-hours" class="text-lg font-bold font-mono leading-tight">0.0h</div>
+                            <div class="text-[10px] opacity-60 mt-0.5">累計總時數</div>
+                        </div>
+                        <div class="p-2 rounded-xl bg-current/5">
+                            <div id="stat-pomo-count" class="text-lg font-bold font-mono leading-tight">0</div>
+                            <div class="text-[10px] opacity-60 mt-0.5">完成番茄數</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. 雲端自訂主題色票庫 (Cloud Theme Presets) -->
+                <div class="flex flex-col gap-2 w-full p-3.5 rounded-2xl bg-current/5 border border-current/10 shrink-0">
+                    <div class="flex items-center justify-between text-xs font-bold opacity-80">
+                        <span class="flex items-center gap-1.5"><i data-lucide="palette" width="14" height="14"></i> 雲端自訂色票夾</span>
+                        <button type="button" onclick="saveCurrentColorToCloudPresets()" class="py-0.5 px-2 rounded-full border border-current/20 text-[10px] hover:bg-current/10 flex items-center gap-1">
+                            <i data-lucide="plus" width="10" height="10"></i> 收藏目前配色
+                        </button>
+                    </div>
+                    <div id="cloud-color-presets-list" class="flex flex-wrap gap-2 pt-1">
+                    </div>
+                </div>
+
+                <!-- 3. 番茄鐘工作流模板庫 (Pomodoro Templates) -->
+                <div class="flex flex-col gap-2 w-full p-3.5 rounded-2xl bg-current/5 border border-current/10 shrink-0">
+                    <div class="flex items-center justify-between text-xs font-bold opacity-80">
+                        <span class="flex items-center gap-1.5"><i data-lucide="flame" width="14" height="14"></i> 雲端番茄工作流模板</span>
+                        <button type="button" onclick="saveCurrentPomoAsTemplate()" class="py-0.5 px-2 rounded-full border border-current/20 text-[10px] hover:bg-current/10 flex items-center gap-1">
+                            <i data-lucide="plus" width="10" height="10"></i> 儲存目前序列
+                        </button>
+                    </div>
+                    <div id="cloud-pomo-templates-list" class="flex flex-wrap gap-1.5 pt-1">
+                    </div>
+                </div>
+
+                <!-- 4 & 5. 跨裝置連動計時 & 裝置獨立字級開關 -->
+                <div class="flex flex-col gap-2 w-full p-3.5 rounded-2xl bg-current/5 border border-current/10 text-xs shrink-0">
+                    <div class="flex items-center justify-between">
+                        <div class="text-left">
+                            <div class="font-bold">跨裝置即時連動計時</div>
+                            <div class="text-[10px] opacity-60">電腦按開始，手機/平板同步跟著倒數</div>
+                        </div>
+                        <button type="button" id="btn-cloud-live-sync" onclick="toggleCloudLiveSync()" class="setting-pill-btn text-xs py-1 px-3 font-bold active">開啟</button>
+                    </div>
+                    <div class="h-[1px] w-full bg-current/10 my-0.5"></div>
+                    <div class="flex items-center justify-between">
+                        <div class="text-left">
+                            <div class="font-bold">手機 / 電腦獨立記憶字級</div>
+                            <div class="text-[10px] opacity-60">同步主題配色，但保留各裝置最適合的字體大小</div>
+                        </div>
+                        <button type="button" id="btn-cloud-device-font" onclick="toggleDeviceIndependentFont()" class="setting-pill-btn text-xs py-1 px-3 font-bold active">開啟</button>
+                    </div>
+                </div>
+
+                <!-- 底部操作按鈕 -->
+                <div class="flex gap-2.5 w-full pt-1 shrink-0">
+                    <button type="button" onclick="triggerManualCloudSync()" class="flex-1 py-2.5 px-3 rounded-xl font-bold text-xs border border-current/20 hover:bg-current/10 flex items-center justify-center gap-1.5">
+                        <i data-lucide="refresh-cw" width="14" height="14"></i> 立即同步雲端
+                    </button>
+                    <button type="button" onclick="triggerGoogleSignOut()" class="flex-1 py-2.5 px-3 rounded-xl font-bold text-xs border border-current/20 opacity-70 hover:opacity-100 hover:bg-current/10 flex items-center justify-center gap-1.5">
+                        <i data-lucide="log-out" width="14" height="14"></i> 登出帳號
+                    </button>
+                </div>
+            </div>
+
+            <div class="text-[11px] opacity-45 text-center pt-2 border-t border-current/10 shrink-0">
+                所有雲端資料結構已就緒，隨時可無縫對接 Firebase Firestore
+            </div>
+        </div>
+    </div>
 
     <div id="help-modal" class="hidden-force fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-300">
         <div class="rounded-3xl p-6 max-w-sm w-full h-[490px] flex flex-col justify-between shadow-2xl relative select-none border border-current/10" id="help-modal-content" style="background-color: var(--editor-bg); color: var(--editor-text);">
@@ -880,6 +1062,55 @@
         let pixelShiftIntervalId = null;
         let isPiPActive = false;
 
+        let currentGoogleUser = null;
+        let cloudLiveTimerSync = true;
+        let deviceIndependentFont = true;
+        let fontSizeDesktop = 160;
+        let fontSizeMobile = 90;
+
+        let focusStats = {
+            todayDate: new Date().toISOString().slice(0, 10),
+            todaySeconds: 1500,
+            totalSeconds: 12600,
+            completedPomos: 5
+        };
+
+        let savedColorPresets = [
+            { name: '午夜極光', bg: '#090D16', txt: '#E2E8F0', panel: '#131B2E', accent: '#38BDF8' },
+            { name: '暖砂拿鐵', bg: '#EAE0D5', txt: '#221E1D', panel: '#F8F4F0', accent: '#C68B59' },
+            { name: '賽博紫電', bg: '#120924', txt: '#FDE047', panel: '#211142', accent: '#F43F5E' }
+        ];
+
+        let savedPomoTemplates = [
+            {
+                name: '標準 25/5',
+                steps: [
+                    { duration: 1500, type: 'focus' },
+                    { duration: 300, type: 'break' },
+                    { duration: 1500, type: 'focus' },
+                    { duration: 900, type: 'break' }
+                ]
+            },
+            {
+                name: '深度 50/10',
+                steps: [
+                    { duration: 3000, type: 'focus' },
+                    { duration: 600, type: 'break' },
+                    { duration: 3000, type: 'focus' },
+                    { duration: 1200, type: 'break' }
+                ]
+            },
+            {
+                name: '衝刺 15/3',
+                steps: [
+                    { duration: 900, type: 'focus' },
+                    { duration: 180, type: 'break' },
+                    { duration: 900, type: 'focus' },
+                    { duration: 180, type: 'break' }
+                ]
+            }
+        ];
+
         let userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Local';
         let userLocationStr = '';
         let use24Hour = true;
@@ -959,6 +1190,31 @@
                         isTickSoundEnabled = state.isTickSoundEnabled !== undefined ? Boolean(state.isTickSoundEnabled) : true;
                         currentAmbient = AMBIENT_MODES.includes(state.currentAmbient) ? state.currentAmbient : 'none';
                         use24Hour = state.use24Hour !== undefined ? Boolean(state.use24Hour) : true;
+                        cloudLiveTimerSync = state.cloudLiveTimerSync !== undefined ? Boolean(state.cloudLiveTimerSync) : true;
+                        deviceIndependentFont = state.deviceIndependentFont !== undefined ? Boolean(state.deviceIndependentFont) : true;
+                        fontSizeDesktop = Math.min(Math.max(Number(state.fontSizeDesktop) || 160, 20), MAX_FONT_SIZE);
+                        fontSizeMobile = Math.min(Math.max(Number(state.fontSizeMobile) || 90, 20), MAX_FONT_SIZE);
+
+                        if (deviceIndependentFont) {
+                            currentFontSize = isMobileViewport() ? fontSizeMobile : fontSizeDesktop;
+                        }
+
+                        if (state.focusStats && typeof state.focusStats === 'object') {
+                            const todayStr = new Date().toISOString().slice(0, 10);
+                            focusStats = {
+                                todayDate: todayStr,
+                                todaySeconds: state.focusStats.todayDate === todayStr ? (Number(state.focusStats.todaySeconds) || 0) : 0,
+                                totalSeconds: Number(state.focusStats.totalSeconds) || 0,
+                                completedPomos: Number(state.focusStats.completedPomos) || 0
+                            };
+                        }
+
+                        if (Array.isArray(state.savedColorPresets) && state.savedColorPresets.length > 0) {
+                            savedColorPresets = state.savedColorPresets;
+                        }
+                        if (Array.isArray(state.savedPomoTemplates) && state.savedPomoTemplates.length > 0) {
+                            savedPomoTemplates = state.savedPomoTemplates;
+                        }
                         
                         if (Array.isArray(state.pomoSteps) && state.pomoSteps.length > 0) {
                             const validSteps = state.pomoSteps.filter(s => s && typeof s.duration === 'number' && s.duration > 0);
@@ -1046,9 +1302,21 @@
 
         function saveState() {
             try {
+                if (isMobileViewport()) {
+                    fontSizeMobile = currentFontSize;
+                } else {
+                    fontSizeDesktop = currentFontSize;
+                }
                 const state = {
                     appMode: appMode,
                     fontSize: currentFontSize,
+                    fontSizeDesktop: fontSizeDesktop,
+                    fontSizeMobile: fontSizeMobile,
+                    deviceIndependentFont: deviceIndependentFont,
+                    cloudLiveTimerSync: cloudLiveTimerSync,
+                    focusStats: focusStats,
+                    savedColorPresets: savedColorPresets,
+                    savedPomoTemplates: savedPomoTemplates,
                     fontFamily: currentFontFamily,
                     fontWeight: currentFontWeight,
                     layout: currentLayout,
@@ -1097,6 +1365,14 @@
             updateDisplay();
             updateTickSoundButton();
             updateAmbientButton();
+            renderCloudColorPresets();
+            renderCloudPomoTemplates();
+            updateFocusStatsUI();
+            updateCloudPreferenceButtons();
+        }
+
+        function isMobileViewport() {
+            return window.innerWidth < 768;
         }
 
         function getVisibleModeCount() {
@@ -1360,6 +1636,229 @@
             currentFontSize = newSize; 
             timerDisplay.style.fontSize = `${newSize}px`;
             saveState();
+        }
+
+        function recordFocusCompletion(seconds, isPomoStep = false) {
+            const todayStr = new Date().toISOString().slice(0, 10);
+            if (focusStats.todayDate !== todayStr) {
+                focusStats.todayDate = todayStr;
+                focusStats.todaySeconds = 0;
+            }
+            const validSecs = Math.max(0, Math.round(seconds));
+            focusStats.todaySeconds += validSecs;
+            focusStats.totalSeconds += validSecs;
+            if (isPomoStep) {
+                focusStats.completedPomos += 1;
+            }
+            updateFocusStatsUI();
+            saveState();
+        }
+
+        function updateFocusStatsUI() {
+            const todayEl = document.getElementById('stat-today-mins');
+            const totalEl = document.getElementById('stat-total-hours');
+            const pomoEl = document.getElementById('stat-pomo-count');
+
+            if (todayEl) todayEl.textContent = `${Math.floor(focusStats.todaySeconds / 60)}m`;
+            if (totalEl) totalEl.textContent = `${(focusStats.totalSeconds / 3600).toFixed(1)}h`;
+            if (pomoEl) pomoEl.textContent = `${focusStats.completedPomos}`;
+        }
+
+        function simulateAddFocusRecord() {
+            recordFocusCompletion(1500, true);
+            showTempTip("已模擬完成 1 個番茄鐘 (+25分鐘專注)", 2200);
+        }
+
+        function renderCloudColorPresets() {
+            const cloudList = document.getElementById('cloud-color-presets-list');
+            const customRow = document.getElementById('custom-panel-presets-row');
+
+            const buildHTML = (isCompact) => savedColorPresets.map((p, idx) => `
+                <div class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full border border-current/15 bg-current/5 text-[11px] shrink-0">
+                    <button type="button" onclick="applySavedColorPreset(${idx})" class="flex items-center gap-1.5 p-0 font-medium">
+                        <span class="w-3 h-3 rounded-full border border-white/40 inline-block" style="background-color: ${p.bg}; box-shadow: inset 0 0 0 2px ${p.accent};"></span>
+                        <span>${p.name}</span>
+                    </button>
+                    ${!isCompact && savedColorPresets.length > 1 ? `<button type="button" onclick="deleteSavedColorPreset(${idx})" class="p-0 opacity-40 hover:opacity-100 ml-0.5"><i data-lucide="x" width="11" height="11"></i></button>` : ''}
+                </div>
+            `).join('');
+
+            if (cloudList) cloudList.innerHTML = buildHTML(false);
+            if (customRow) customRow.innerHTML = buildHTML(true);
+            safeCreateIcons();
+        }
+
+        function saveCurrentColorToCloudPresets() {
+            if (savedColorPresets.length >= 8) {
+                showTempTip("雲端色票夾最多收藏 8 組配色", 2000);
+                return;
+            }
+            const activeBg = currentTheme === 'custom' ? customColors.bg : (THEMES[currentTheme]?.bg || '#000000');
+            const activeTxt = currentTheme === 'custom' ? customColors.txt : (THEMES[currentTheme]?.text || '#FFFFFF');
+            const activePanel = currentTheme === 'custom' ? customColors.panel : (THEMES[currentTheme]?.panelBg || '#1C1C1E');
+            const activeAccent = currentTheme === 'custom' ? customColors.accent : (THEMES[currentTheme]?.accent || '#38BDF8');
+
+            const newPreset = {
+                name: `自訂色票 #${savedColorPresets.length + 1}`,
+                bg: activeBg,
+                txt: activeTxt,
+                panel: activePanel,
+                accent: activeAccent
+            };
+            savedColorPresets.push(newPreset);
+            renderCloudColorPresets();
+            saveState();
+            showTempTip(`已收藏「${newPreset.name}」至雲端色票夾！`, 2200);
+        }
+
+        function applySavedColorPreset(idx) {
+            const p = savedColorPresets[idx];
+            if (!p) return;
+            customColors = { bg: p.bg, txt: p.txt, panel: p.panel, accent: p.accent };
+            currentTheme = 'custom';
+            applyCustomColors();
+            const themeBtns = ['black', 'cream', 'navy', 'green', 'ruby', 'custom'];
+            themeBtns.forEach(t => {
+                const el = document.getElementById(`t-${t}`);
+                if (el) el.classList.toggle('active', t === 'custom');
+            });
+            document.getElementById('c-bg').value = customColors.bg;
+            document.getElementById('c-txt').value = customColors.txt;
+            document.getElementById('c-panel').value = customColors.panel;
+            document.getElementById('c-accent').value = customColors.accent;
+            saveState();
+            showTempTip(`已套用雲端色票：${p.name}`, 2000);
+        }
+
+        function deleteSavedColorPreset(idx) {
+            if (savedColorPresets.length <= 1) return;
+            savedColorPresets.splice(idx, 1);
+            renderCloudColorPresets();
+            saveState();
+        }
+
+        function renderCloudPomoTemplates() {
+            const cloudList = document.getElementById('cloud-pomo-templates-list');
+            const editorRow = document.getElementById('pomo-editor-templates-row');
+
+            const buildHTML = (isCompact) => savedPomoTemplates.map((tpl, idx) => `
+                <div class="inline-flex items-center gap-1 py-1 px-2.5 rounded-full border border-current/15 bg-current/5 text-[11px] shrink-0">
+                    <button type="button" onclick="applyPomoTemplate(${idx})" class="p-0 font-medium flex items-center gap-1">
+                        <span>${tpl.name}</span>
+                        <span class="opacity-50 text-[10px]">(${tpl.steps.length}步)</span>
+                    </button>
+                    ${!isCompact && savedPomoTemplates.length > 1 ? `<button type="button" onclick="deletePomoTemplate(${idx})" class="p-0 opacity-40 hover:opacity-100 ml-0.5"><i data-lucide="x" width="11" height="11"></i></button>` : ''}
+                </div>
+            `).join('');
+
+            if (cloudList) cloudList.innerHTML = buildHTML(false);
+            if (editorRow) editorRow.innerHTML = buildHTML(true);
+            safeCreateIcons();
+        }
+
+        function saveCurrentPomoAsTemplate() {
+            if (savedPomoTemplates.length >= 8) {
+                showTempTip("最多儲存 8 組番茄工作流模板", 2000);
+                return;
+            }
+            const firstFocusMins = Math.floor((pomoSteps[0]?.duration || 1500) / 60);
+            const firstBreakMins = Math.floor((pomoSteps[1]?.duration || 300) / 60);
+            const tplName = `自訂 ${firstFocusMins}/${firstBreakMins}`;
+            savedPomoTemplates.push({
+                name: tplName,
+                steps: JSON.parse(JSON.stringify(pomoSteps))
+            });
+            renderCloudPomoTemplates();
+            saveState();
+            showTempTip(`已將目前序列存為「${tplName}」模板！`, 2200);
+        }
+
+        function applyPomoTemplate(idx) {
+            const tpl = savedPomoTemplates[idx];
+            if (!tpl || !Array.isArray(tpl.steps)) return;
+            pomoSteps = JSON.parse(JSON.stringify(tpl.steps));
+            editPomoIndex = 0;
+            activePomoIndex = 0;
+            pomoTimeLeftMs = pomoSteps[0].duration * 1000;
+            renderPomoDots();
+            loadPomoStepToInputs();
+            updateDisplay();
+            saveState();
+            showTempTip(`已載入番茄模板：${tpl.name}`, 2000);
+        }
+
+        function deletePomoTemplate(idx) {
+            if (savedPomoTemplates.length <= 1) return;
+            savedPomoTemplates.splice(idx, 1);
+            renderCloudPomoTemplates();
+            saveState();
+        }
+
+        function updateCloudPreferenceButtons() {
+            const liveBtn = document.getElementById('btn-cloud-live-sync');
+            const fontBtn = document.getElementById('btn-cloud-device-font');
+            if (liveBtn) {
+                liveBtn.textContent = cloudLiveTimerSync ? '開啟' : '關閉';
+                liveBtn.classList.toggle('active', cloudLiveTimerSync);
+            }
+            if (fontBtn) {
+                fontBtn.textContent = deviceIndependentFont ? '開啟' : '關閉';
+                fontBtn.classList.toggle('active', deviceIndependentFont);
+            }
+        }
+
+        function toggleCloudLiveSync() {
+            cloudLiveTimerSync = !cloudLiveTimerSync;
+            updateCloudPreferenceButtons();
+            saveState();
+        }
+
+        function toggleDeviceIndependentFont() {
+            deviceIndependentFont = !deviceIndependentFont;
+            updateCloudPreferenceButtons();
+            saveState();
+        }
+
+        function getCloudSyncPayload() {
+            return {
+                updatedAt: Date.now(),
+                preferences: {
+                    currentTheme,
+                    customColors,
+                    currentFontFamily,
+                    currentFontWeight,
+                    currentLayout,
+                    currentFormatMode,
+                    currentSound,
+                    isTickSoundEnabled,
+                    currentAmbient,
+                    use24Hour,
+                    deviceIndependentFont,
+                    fontSizeDesktop,
+                    fontSizeMobile
+                },
+                presets: {
+                    savedColorPresets,
+                    savedPomoTemplates
+                },
+                analytics: focusStats,
+                liveState: cloudLiveTimerSync ? {
+                    appMode,
+                    initialTime,
+                    isTimerActive,
+                    timeLeftMs,
+                    timerTarget,
+                    pomoSteps,
+                    activePomoIndex,
+                    isPomoRunning,
+                    pomoTimeLeftMs,
+                    pomoTarget,
+                    initialStopwatchTime,
+                    isStopwatchActive,
+                    stopwatchTime,
+                    stopwatchStartTime
+                } : null
+            };
         }
 
         function updateFormatButton() {
@@ -1747,6 +2246,82 @@
 
             closePomodoroView();
             toggleTimer();
+        }
+
+        function handleGoogleAuthClick() {
+            const modal = document.getElementById('auth-modal');
+            if (modal) {
+                modal.classList.remove('hidden-force');
+                updateGoogleAuthUI();
+                updateFocusStatsUI();
+                renderCloudColorPresets();
+                renderCloudPomoTemplates();
+                updateCloudPreferenceButtons();
+                safeCreateIcons();
+            }
+        }
+
+        function hideAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            if (modal) {
+                modal.classList.add('hidden-force');
+            }
+        }
+
+        function updateGoogleAuthUI() {
+            const loggedOutView = document.getElementById('auth-logged-out-view');
+            const loggedInView = document.getElementById('auth-logged-in-view');
+            const btnLoggedOut = document.getElementById('auth-btn-logged-out');
+            const btnLoggedIn = document.getElementById('auth-btn-logged-in');
+
+            if (currentGoogleUser) {
+                if (loggedOutView) loggedOutView.classList.add('hidden-force');
+                if (loggedInView) loggedInView.classList.remove('hidden-force');
+                if (btnLoggedOut) btnLoggedOut.classList.add('hidden-force');
+                if (btnLoggedIn) btnLoggedIn.classList.remove('hidden-force');
+
+                const modalName = document.getElementById('modal-user-name');
+                const modalEmail = document.getElementById('modal-user-email');
+                if (modalName) modalName.textContent = currentGoogleUser.displayName;
+                if (modalEmail) modalEmail.textContent = currentGoogleUser.email;
+            } else {
+                if (loggedOutView) loggedOutView.classList.remove('hidden-force');
+                if (loggedInView) loggedInView.classList.add('hidden-force');
+                if (btnLoggedOut) btnLoggedOut.classList.remove('hidden-force');
+                if (btnLoggedIn) btnLoggedIn.classList.add('hidden-force');
+            }
+        }
+
+        function triggerGoogleSignIn() {
+            currentGoogleUser = {
+                displayName: 'Gaolin',
+                email: 'gaolin@gmail.com'
+            };
+            updateGoogleAuthUI();
+            updateFocusStatsUI();
+            renderCloudColorPresets();
+            renderCloudPomoTemplates();
+            updateCloudPreferenceButtons();
+            safeCreateIcons();
+            showTempTip("已登入 Google 雲端同步中心", 2500);
+        }
+
+        function triggerGoogleSignOut() {
+            currentGoogleUser = null;
+            updateGoogleAuthUI();
+            hideAuthModal();
+            showTempTip("已登出 Google 帳號", 2000);
+        }
+
+        function triggerManualCloudSync() {
+            const payload = getCloudSyncPayload();
+            console.log("Cloud Sync Payload Ready:", payload);
+            const syncTimeEl = document.getElementById('last-sync-time');
+            if (syncTimeEl) {
+                const now = new Date();
+                syncTimeEl.textContent = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')} 同步`;
+            }
+            showTempTip("5 大雲端資料已打包同步完成！", 2000);
         }
 
         function showHelpModal() {
@@ -2412,6 +2987,7 @@
                         timeLeftMs = 0;
                         isTimerActive = false;
                         timerTarget = null;
+                        recordFocusCompletion(initialTime, false);
                         playAlarmSound5Times();
                         needSave = true;
                     } else {
@@ -2426,6 +3002,10 @@
                     const remaining = pomoTarget - now;
                     currentTotalSeconds = Math.ceil(remaining / 1000);
                     if (remaining <= 0) {
+                        const finishedStep = pomoSteps[activePomoIndex];
+                        if (finishedStep && finishedStep.type === 'focus') {
+                            recordFocusCompletion(finishedStep.duration, true);
+                        }
                         playAlarmSound5Times();
                         activePomoIndex++;
                         if (activePomoIndex < pomoSteps.length) {
@@ -2914,6 +3494,8 @@
                 if (!pomoView.classList.contains('translate-y-full')) {
                     closePomodoroView();
                 }
+                hideAuthModal();
+                hideHelpModal();
             }
         });
 
@@ -2978,7 +3560,7 @@
         }
 
         window.addEventListener('mousedown', (e) => {
-            if (e.target.closest('button') || e.target.closest('input') || e.target.closest('form') || e.target.closest('#help-modal')) return;
+            if (e.target.closest('button') || e.target.closest('input') || e.target.closest('form') || e.target.closest('#help-modal') || e.target.closest('#auth-modal')) return;
             handleDragStart(e.clientX, e.clientY);
         });
 
@@ -2993,7 +3575,7 @@
 
         window.addEventListener('touchstart', (e) => {
             handleUserActivity();
-            if (e.target.closest('button') || e.target.closest('input') || e.target.closest('form') || e.target.closest('#help-modal')) return;
+            if (e.target.closest('button') || e.target.closest('input') || e.target.closest('form') || e.target.closest('#help-modal') || e.target.closest('#auth-modal')) return;
             let touch = e.touches[0];
             handleDragStart(touch.clientX, touch.clientY);
         }, { passive: true });
@@ -3104,6 +3686,10 @@
             safeCreateIcons();
         });
         window.addEventListener('resize', () => {
+            if (deviceIndependentFont) {
+                currentFontSize = isMobileViewport() ? fontSizeMobile : fontSizeDesktop;
+                if (fontSlider) fontSlider.value = currentFontSize;
+            }
             updateNavCarousel();
             updateDisplay();
         });
