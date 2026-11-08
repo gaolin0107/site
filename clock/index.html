@@ -19,6 +19,15 @@
             display: none !important;
         }
 
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
         input:focus {
             outline: none;
         }
@@ -30,6 +39,11 @@
             --editor-bg: #FEFAEF;
             --editor-text: #1C1917;
             --accent-color: #ffffff;
+        }
+
+        html, body {
+            overflow: hidden;
+            max-width: 100vw;
         }
 
         body {
@@ -72,6 +86,15 @@
             opacity: 0.2 !important;
             cursor: not-allowed;
             transform: none !important;
+        }
+
+        .modal-action-btn:hover {
+            transform: none !important;
+            opacity: 0.9;
+        }
+
+        .modal-action-btn:active {
+            transform: scale(0.98) !important;
         }
 
         .mode-viewport {
@@ -311,12 +334,10 @@
                 <i data-lucide="help-circle" width="18" height="18"></i>
             </button>
 
-            <!-- 未登入按鈕：純線條圖示 -->
             <button onclick="handleGoogleAuthClick()" id="auth-btn-logged-out" title="登入 Google 雲端同步" class="opacity-60 hover:opacity-100 transition-opacity p-1.5">
                 <i data-lucide="user" width="18" height="18"></i>
             </button>
 
-            <!-- 已登入按鈕：純線條勾選帳號圖示 -->
             <button onclick="handleGoogleAuthClick()" id="auth-btn-logged-in" title="已登入 Google 雲端同步" class="hidden-force opacity-100 hover:opacity-80 transition-opacity p-1.5 relative">
                 <i data-lucide="user-check" width="18" height="18"></i>
                 <span class="w-1.5 h-1.5 rounded-full absolute top-1.5 right-1" style="background-color: var(--accent-color);"></span>
@@ -393,7 +414,7 @@
         </button>
     </div>
 
-    <form id="edit-view" class="translate-y-full pointer-events-none fixed bottom-0 left-0 w-full h-[310px] z-50 px-6 pt-5 pb-6 flex flex-col items-center justify-between gap-2 rounded-t-[2rem]" style="background-color: var(--editor-bg); color: var(--editor-text);">
+    <form id="edit-view" class="translate-y-full pointer-events-none fixed bottom-0 left-0 w-full h-[310px] z-50 px-6 pt-5 pb-6 flex flex-col items-center justify-between gap-2 rounded-t-[2rem] overflow-hidden" style="background-color: var(--editor-bg); color: var(--editor-text);">
 
         <div class="w-full flex items-center justify-between relative min-h-[36px]">
             <div class="flex items-center gap-3 z-10">
@@ -564,7 +585,7 @@
                     </div>
 
                     <div class="flex items-center gap-2 w-full pt-1 border-t border-current/10">
-                        <button type="button" onclick="saveCurrentColorToCloudPresets()" class="py-1.5 px-3 rounded-xl bg-neutral-500/15 hover:bg-neutral-500/25 text-xs font-bold flex items-center gap-1 shrink-0">
+                        <button type="button" onclick="saveCurrentColorToCloudPresets()" class="modal-action-btn py-1.5 px-3 rounded-xl bg-neutral-500/15 hover:bg-neutral-500/25 text-xs font-bold flex items-center gap-1 shrink-0">
                             <i data-lucide="bookmark-plus" width="14" height="14"></i> 存入色票庫
                         </button>
                         <div id="custom-panel-presets-row" class="flex items-center gap-2 overflow-x-auto py-1 flex-1 no-scrollbar">
@@ -576,7 +597,7 @@
         </div>
     </form>
 
-    <form id="pomodoro-view" class="translate-y-full pointer-events-none fixed bottom-0 left-0 w-full h-[300px] z-50 px-6 pt-5 pb-5 flex flex-col items-center justify-between gap-2 rounded-t-[2rem]" style="background-color: var(--editor-bg); color: var(--editor-text);">
+    <form id="pomodoro-view" class="translate-y-full pointer-events-none fixed bottom-0 left-0 w-full h-[300px] z-50 px-6 pt-5 pb-5 flex flex-col items-center justify-between gap-2 rounded-t-[2rem] overflow-hidden" style="background-color: var(--editor-bg); color: var(--editor-text);">
         
         <div class="w-full flex items-center justify-between relative min-h-[36px]">
             <div class="flex items-center gap-4 opacity-40 z-10">
@@ -636,31 +657,31 @@
             </div>
 
             <div class="flex items-center gap-2 w-full max-w-sm px-2 pt-2 border-t border-current/10 text-xs">
-                <button type="button" onclick="saveCurrentPomoAsTemplate()" class="py-1 px-2.5 rounded-full border border-current/25 hover:bg-current/10 font-bold shrink-0 flex items-center gap-1" title="將目前步驟存為雲端模板">
+                <button type="button" onclick="saveCurrentPomoAsTemplate()" class="modal-action-btn py-1 px-2.5 rounded-full border border-current/25 hover:bg-current/10 font-bold shrink-0 flex items-center gap-1" title="將目前步驟存為雲端模板">
                     <i data-lucide="bookmark-plus" width="12" height="12"></i> 存模板
                 </button>
-                <div id="pomo-editor-templates-row" class="flex items-center gap-1.5 overflow-x-auto flex-1 py-0.5">
+                <div id="pomo-editor-templates-row" class="flex items-center gap-1.5 overflow-x-auto flex-1 py-0.5 no-scrollbar">
                 </div>
             </div>
         </div>
     </form>
 
     <!-- Google 帳號與雲端同步管理彈窗 -->
-    <div id="auth-modal" class="hidden-force fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-300">
-        <div class="rounded-3xl p-6 max-w-md w-full max-h-[88vh] flex flex-col justify-between shadow-2xl relative select-none border border-current/10" style="background-color: var(--editor-bg); color: var(--editor-text);">
+    <div id="auth-modal" class="hidden-force fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-300 overflow-hidden">
+        <div class="rounded-3xl p-6 max-w-md w-full max-h-[86vh] flex flex-col justify-between shadow-2xl relative select-none border border-current/10 overflow-hidden" style="background-color: var(--editor-bg); color: var(--editor-text);">
             
             <div class="w-full flex items-center justify-between border-b border-current/10 pb-3 shrink-0">
                 <span class="help-badge">
                     <i data-lucide="cloud" width="12" height="12"></i>
                     <span>Google 雲端同步中心</span>
                 </span>
-                <button type="button" onclick="hideAuthModal()" class="p-1 hover:scale-110 transition-transform opacity-70 hover:opacity-100">
+                <button type="button" onclick="hideAuthModal()" class="modal-action-btn p-1 opacity-70 hover:opacity-100">
                     <i data-lucide="x" width="22" height="22"></i>
                 </button>
             </div>
 
             <!-- 未登入狀態視圖 -->
-            <div id="auth-logged-out-view" class="flex flex-col items-center text-center py-6 gap-4 overflow-y-auto">
+            <div id="auth-logged-out-view" class="flex flex-col items-center text-center py-5 gap-4 overflow-y-auto overflow-x-hidden no-scrollbar">
                 <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-1 shrink-0" style="background-color: var(--accent-color); color: var(--editor-bg);">
                     <i data-lucide="user" width="26" height="26"></i>
                 </div>
@@ -685,19 +706,19 @@
                         <span>雲端自訂主題色票夾</span>
                     </div>
                     <div class="p-2.5 rounded-xl bg-current/5 flex items-center gap-2">
-                        <i data-lucide="Smartphone" width="15" height="15" class="shrink-0"></i>
+                        <i data-lucide="smartphone" width="15" height="15" class="shrink-0"></i>
                         <span>手機/電腦獨立字級</span>
                     </div>
                 </div>
 
-                <button type="button" onclick="triggerGoogleSignIn()" class="w-full py-3 px-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 border border-current/25 hover:bg-current/10 transition-all mt-1 shrink-0">
+                <button type="button" onclick="triggerGoogleSignIn()" class="modal-action-btn w-full py-3 px-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 border border-current/25 hover:bg-current/10 transition-colors mt-1 shrink-0">
                     <i data-lucide="log-in" width="18" height="18"></i>
                     <span>使用 Google 帳號登入</span>
                 </button>
             </div>
 
-            <!-- 已登入狀態視圖 (包含五大雲端功能面板) -->
-            <div id="auth-logged-in-view" class="hidden-force flex flex-col gap-3.5 py-4 overflow-y-auto pr-1 flex-1">
+            <!-- 已登入狀態視圖 -->
+            <div id="auth-logged-in-view" class="hidden-force flex flex-col gap-3 py-3 overflow-y-auto overflow-x-hidden no-scrollbar flex-1">
                 
                 <!-- 帳號資訊列 -->
                 <div class="flex items-center gap-3 w-full p-3 rounded-2xl bg-current/5 border border-current/10 text-left shrink-0">
@@ -705,22 +726,22 @@
                         <i data-lucide="user-check" width="18" height="18"></i>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <div id="modal-user-name" class="font-bold text-sm truncate">Gaolin</div>
-                        <div id="modal-user-email" class="text-[11px] opacity-60 truncate">gaolin@gmail.com</div>
+                        <div id="modal-user-name" class="font-bold text-sm truncate">Google 用戶</div>
+                        <div id="modal-user-email" class="text-[11px] opacity-60 truncate">已連結雲端帳號</div>
                     </div>
                     <div class="text-right shrink-0">
                         <div class="text-[10px] font-bold opacity-80 flex items-center justify-end gap-1">
                             <span class="w-1.5 h-1.5 rounded-full" style="background-color: var(--accent-color);"></span> 雲端連線中
                         </div>
-                        <div id="last-sync-time" class="text-[10px] font-mono opacity-50">剛剛同步</div>
+                        <div id="last-sync-time" class="text-[10px] font-mono opacity-50">尚未同步</div>
                     </div>
                 </div>
 
-                <!-- 1. 雲端專注時數統計 (Focus Analytics) -->
+                <!-- 1. 雲端專注時數統計 -->
                 <div class="flex flex-col gap-2 w-full p-3.5 rounded-2xl bg-current/5 border border-current/10 shrink-0">
                     <div class="flex items-center justify-between text-xs font-bold opacity-80">
                         <span class="flex items-center gap-1.5"><i data-lucide="bar-chart-2" width="14" height="14"></i> 雲端專注時數統計</span>
-                        <button type="button" onclick="simulateAddFocusRecord()" class="text-[10px] underline opacity-60 hover:opacity-100 p-0">+ 測試紀錄</button>
+                        <button type="button" onclick="resetFocusStats()" class="modal-action-btn text-[10px] opacity-50 hover:opacity-100 p-0">歸零紀錄</button>
                     </div>
                     <div class="grid grid-cols-3 gap-2 pt-1 text-center">
                         <div class="p-2 rounded-xl bg-current/5">
@@ -738,11 +759,11 @@
                     </div>
                 </div>
 
-                <!-- 2. 雲端自訂主題色票庫 (Cloud Theme Presets) -->
+                <!-- 2. 雲端自訂主題色票庫 -->
                 <div class="flex flex-col gap-2 w-full p-3.5 rounded-2xl bg-current/5 border border-current/10 shrink-0">
                     <div class="flex items-center justify-between text-xs font-bold opacity-80">
                         <span class="flex items-center gap-1.5"><i data-lucide="palette" width="14" height="14"></i> 雲端自訂色票夾</span>
-                        <button type="button" onclick="saveCurrentColorToCloudPresets()" class="py-0.5 px-2 rounded-full border border-current/20 text-[10px] hover:bg-current/10 flex items-center gap-1">
+                        <button type="button" onclick="saveCurrentColorToCloudPresets()" class="modal-action-btn py-0.5 px-2 rounded-full border border-current/20 text-[10px] hover:bg-current/10 flex items-center gap-1">
                             <i data-lucide="plus" width="10" height="10"></i> 收藏目前配色
                         </button>
                     </div>
@@ -750,11 +771,11 @@
                     </div>
                 </div>
 
-                <!-- 3. 番茄鐘工作流模板庫 (Pomodoro Templates) -->
+                <!-- 3. 番茄鐘工作流模板庫 -->
                 <div class="flex flex-col gap-2 w-full p-3.5 rounded-2xl bg-current/5 border border-current/10 shrink-0">
                     <div class="flex items-center justify-between text-xs font-bold opacity-80">
                         <span class="flex items-center gap-1.5"><i data-lucide="flame" width="14" height="14"></i> 雲端番茄工作流模板</span>
-                        <button type="button" onclick="saveCurrentPomoAsTemplate()" class="py-0.5 px-2 rounded-full border border-current/20 text-[10px] hover:bg-current/10 flex items-center gap-1">
+                        <button type="button" onclick="saveCurrentPomoAsTemplate()" class="modal-action-btn py-0.5 px-2 rounded-full border border-current/20 text-[10px] hover:bg-current/10 flex items-center gap-1">
                             <i data-lucide="plus" width="10" height="10"></i> 儲存目前序列
                         </button>
                     </div>
@@ -769,7 +790,7 @@
                             <div class="font-bold">跨裝置即時連動計時</div>
                             <div class="text-[10px] opacity-60">電腦按開始，手機/平板同步跟著倒數</div>
                         </div>
-                        <button type="button" id="btn-cloud-live-sync" onclick="toggleCloudLiveSync()" class="setting-pill-btn text-xs py-1 px-3 font-bold active">開啟</button>
+                        <button type="button" id="btn-cloud-live-sync" onclick="toggleCloudLiveSync()" class="modal-action-btn setting-pill-btn text-xs py-1 px-3 font-bold active">開啟</button>
                     </div>
                     <div class="h-[1px] w-full bg-current/10 my-0.5"></div>
                     <div class="flex items-center justify-between">
@@ -777,41 +798,41 @@
                             <div class="font-bold">手機 / 電腦獨立記憶字級</div>
                             <div class="text-[10px] opacity-60">同步主題配色，但保留各裝置最適合的字體大小</div>
                         </div>
-                        <button type="button" id="btn-cloud-device-font" onclick="toggleDeviceIndependentFont()" class="setting-pill-btn text-xs py-1 px-3 font-bold active">開啟</button>
+                        <button type="button" id="btn-cloud-device-font" onclick="toggleDeviceIndependentFont()" class="modal-action-btn setting-pill-btn text-xs py-1 px-3 font-bold active">開啟</button>
                     </div>
                 </div>
 
                 <!-- 底部操作按鈕 -->
                 <div class="flex gap-2.5 w-full pt-1 shrink-0">
-                    <button type="button" onclick="triggerManualCloudSync()" class="flex-1 py-2.5 px-3 rounded-xl font-bold text-xs border border-current/20 hover:bg-current/10 flex items-center justify-center gap-1.5">
+                    <button type="button" onclick="triggerManualCloudSync()" class="modal-action-btn flex-1 py-2.5 px-3 rounded-xl font-bold text-xs border border-current/20 hover:bg-current/10 flex items-center justify-center gap-1.5">
                         <i data-lucide="refresh-cw" width="14" height="14"></i> 立即同步雲端
                     </button>
-                    <button type="button" onclick="triggerGoogleSignOut()" class="flex-1 py-2.5 px-3 rounded-xl font-bold text-xs border border-current/20 opacity-70 hover:opacity-100 hover:bg-current/10 flex items-center justify-center gap-1.5">
+                    <button type="button" onclick="triggerGoogleSignOut()" class="modal-action-btn flex-1 py-2.5 px-3 rounded-xl font-bold text-xs border border-current/20 opacity-70 hover:opacity-100 hover:bg-current/10 flex items-center justify-center gap-1.5">
                         <i data-lucide="log-out" width="14" height="14"></i> 登出帳號
                     </button>
                 </div>
             </div>
 
             <div id="firebase-status-footer" class="text-[11px] opacity-45 text-center pt-2 border-t border-current/10 shrink-0">
-                Firebase 雲端即時同步引擎已掛載就緒
+                Firebase (website-online-9e2e7) 雲端同步引擎已掛載
             </div>
         </div>
     </div>
 
-    <div id="help-modal" class="hidden-force fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-300">
-        <div class="rounded-3xl p-6 max-w-sm w-full h-[490px] flex flex-col justify-between shadow-2xl relative select-none border border-current/10" id="help-modal-content" style="background-color: var(--editor-bg); color: var(--editor-text);">
+    <div id="help-modal" class="hidden-force fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-300 overflow-hidden">
+        <div class="rounded-3xl p-6 max-w-sm w-full h-[490px] flex flex-col justify-between shadow-2xl relative select-none border border-current/10 overflow-hidden" id="help-modal-content" style="background-color: var(--editor-bg); color: var(--editor-text);">
             
             <div class="w-full flex items-center justify-between border-b border-current/10 pb-3">
                 <span class="help-badge">
                     <i data-lucide="book-open" width="12" height="12"></i>
                     <span id="help-page-indicator">使用手冊 1 / 6</span>
                 </span>
-                <button onclick="hideHelpModal()" class="p-1 hover:scale-110 transition-transform opacity-70 hover:opacity-100">
+                <button onclick="hideHelpModal()" class="modal-action-btn p-1 opacity-70 hover:opacity-100">
                     <i data-lucide="x" width="22" height="22"></i>
                 </button>
             </div>
 
-            <div class="flex-1 flex flex-col justify-center items-center text-center px-1 py-2 overflow-y-auto">
+            <div class="flex-1 flex flex-col justify-center items-center text-center px-1 py-2 overflow-y-auto no-scrollbar">
                 
                 <div id="help-slide-0" class="flex flex-col items-center gap-3 w-full transition-opacity duration-300">
                     <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-1" style="background-color: var(--accent-color); color: var(--editor-bg);">
@@ -983,7 +1004,7 @@
         }
         safeCreateIcons();
 
-        const STATE_KEY = 'gaolin_timer_state_v20_final';
+        const STATE_KEY = 'gaolin_timer_state_v21_clean';
         const MAX_TIME_SECONDS = 99 * 3600 + 59 * 60 + 59; 
         const MAX_TIME_MS = MAX_TIME_SECONDS * 1000;
         const MAX_FONT_SIZE = 600;
@@ -1070,46 +1091,13 @@
 
         let focusStats = {
             todayDate: new Date().toISOString().slice(0, 10),
-            todaySeconds: 1500,
-            totalSeconds: 12600,
-            completedPomos: 5
+            todaySeconds: 0,
+            totalSeconds: 0,
+            completedPomos: 0
         };
 
-        let savedColorPresets = [
-            { name: '午夜極光', bg: '#090D16', txt: '#E2E8F0', panel: '#131B2E', accent: '#38BDF8' },
-            { name: '暖砂拿鐵', bg: '#EAE0D5', txt: '#221E1D', panel: '#F8F4F0', accent: '#C68B59' },
-            { name: '賽博紫電', bg: '#120924', txt: '#FDE047', panel: '#211142', accent: '#F43F5E' }
-        ];
-
-        let savedPomoTemplates = [
-            {
-                name: '標準 25/5',
-                steps: [
-                    { duration: 1500, type: 'focus' },
-                    { duration: 300, type: 'break' },
-                    { duration: 1500, type: 'focus' },
-                    { duration: 900, type: 'break' }
-                ]
-            },
-            {
-                name: '深度 50/10',
-                steps: [
-                    { duration: 3000, type: 'focus' },
-                    { duration: 600, type: 'break' },
-                    { duration: 3000, type: 'focus' },
-                    { duration: 1200, type: 'break' }
-                ]
-            },
-            {
-                name: '衝刺 15/3',
-                steps: [
-                    { duration: 900, type: 'focus' },
-                    { duration: 180, type: 'break' },
-                    { duration: 900, type: 'focus' },
-                    { duration: 180, type: 'break' }
-                ]
-            }
-        ];
+        let savedColorPresets = [];
+        let savedPomoTemplates = [];
 
         let userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Local';
         let userLocationStr = '';
@@ -1209,10 +1197,10 @@
                             };
                         }
 
-                        if (Array.isArray(state.savedColorPresets) && state.savedColorPresets.length > 0) {
+                        if (Array.isArray(state.savedColorPresets)) {
                             savedColorPresets = state.savedColorPresets;
                         }
-                        if (Array.isArray(state.savedPomoTemplates) && state.savedPomoTemplates.length > 0) {
+                        if (Array.isArray(state.savedPomoTemplates)) {
                             savedPomoTemplates = state.savedPomoTemplates;
                         }
                         
@@ -1657,6 +1645,18 @@
             saveState();
         }
 
+        function resetFocusStats() {
+            focusStats = {
+                todayDate: new Date().toISOString().slice(0, 10),
+                todaySeconds: 0,
+                totalSeconds: 0,
+                completedPomos: 0
+            };
+            updateFocusStatsUI();
+            saveState();
+            showTempTip("專注統計紀錄已歸零", 2000);
+        }
+
         function updateFocusStatsUI() {
             const todayEl = document.getElementById('stat-today-mins');
             const totalEl = document.getElementById('stat-total-hours');
@@ -1667,33 +1667,35 @@
             if (pomoEl) pomoEl.textContent = `${focusStats.completedPomos}`;
         }
 
-        function simulateAddFocusRecord() {
-            recordFocusCompletion(1500, true);
-            showTempTip("已模擬完成 1 個番茄鐘 (+25分鐘專注)", 2200);
-        }
-
         function renderCloudColorPresets() {
             const cloudList = document.getElementById('cloud-color-presets-list');
             const customRow = document.getElementById('custom-panel-presets-row');
 
-            const buildHTML = (isCompact) => savedColorPresets.map((p, idx) => `
+            if (savedColorPresets.length === 0) {
+                const emptyMsg = `<span class="text-[11px] opacity-40 py-1">尚無儲存的色票，點擊上方按鈕即可收藏</span>`;
+                if (cloudList) cloudList.innerHTML = emptyMsg;
+                if (customRow) customRow.innerHTML = `<span class="text-[11px] opacity-40">尚未收藏色票</span>`;
+                return;
+            }
+
+            const buildHTML = () => savedColorPresets.map((p, idx) => `
                 <div class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full border border-current/15 bg-current/5 text-[11px] shrink-0">
-                    <button type="button" onclick="applySavedColorPreset(${idx})" class="flex items-center gap-1.5 p-0 font-medium">
+                    <button type="button" onclick="applySavedColorPreset(${idx})" class="modal-action-btn flex items-center gap-1.5 p-0 font-medium">
                         <span class="w-3 h-3 rounded-full border border-white/40 inline-block" style="background-color: ${p.bg}; box-shadow: inset 0 0 0 2px ${p.accent};"></span>
                         <span>${p.name}</span>
                     </button>
-                    ${!isCompact && savedColorPresets.length > 1 ? `<button type="button" onclick="deleteSavedColorPreset(${idx})" class="p-0 opacity-40 hover:opacity-100 ml-0.5"><i data-lucide="x" width="11" height="11"></i></button>` : ''}
+                    <button type="button" onclick="deleteSavedColorPreset(${idx})" class="modal-action-btn p-0 opacity-40 hover:opacity-100 ml-0.5" title="刪除此色票"><i data-lucide="x" width="11" height="11"></i></button>
                 </div>
             `).join('');
 
-            if (cloudList) cloudList.innerHTML = buildHTML(false);
-            if (customRow) customRow.innerHTML = buildHTML(true);
+            if (cloudList) cloudList.innerHTML = buildHTML();
+            if (customRow) customRow.innerHTML = buildHTML();
             safeCreateIcons();
         }
 
         function saveCurrentColorToCloudPresets() {
-            if (savedColorPresets.length >= 8) {
-                showTempTip("雲端色票夾最多收藏 8 組配色", 2000);
+            if (savedColorPresets.length >= 10) {
+                showTempTip("雲端色票夾最多收藏 10 組配色", 2000);
                 return;
             }
             const activeBg = currentTheme === 'custom' ? customColors.bg : (THEMES[currentTheme]?.bg || '#000000');
@@ -1702,7 +1704,7 @@
             const activeAccent = currentTheme === 'custom' ? customColors.accent : (THEMES[currentTheme]?.accent || '#38BDF8');
 
             const newPreset = {
-                name: `自訂色票 #${savedColorPresets.length + 1}`,
+                name: `色票 #${savedColorPresets.length + 1}`,
                 bg: activeBg,
                 txt: activeTxt,
                 panel: activePanel,
@@ -1730,11 +1732,10 @@
             document.getElementById('c-panel').value = customColors.panel;
             document.getElementById('c-accent').value = customColors.accent;
             saveState();
-            showTempTip(`已套用雲端色票：${p.name}`, 2000);
+            showTempTip(`已套用色票：${p.name}`, 2000);
         }
 
         function deleteSavedColorPreset(idx) {
-            if (savedColorPresets.length <= 1) return;
             savedColorPresets.splice(idx, 1);
             renderCloudColorPresets();
             saveState();
@@ -1744,29 +1745,36 @@
             const cloudList = document.getElementById('cloud-pomo-templates-list');
             const editorRow = document.getElementById('pomo-editor-templates-row');
 
-            const buildHTML = (isCompact) => savedPomoTemplates.map((tpl, idx) => `
+            if (savedPomoTemplates.length === 0) {
+                const emptyMsg = `<span class="text-[11px] opacity-40 py-1">尚無儲存的番茄模板</span>`;
+                if (cloudList) cloudList.innerHTML = emptyMsg;
+                if (editorRow) editorRow.innerHTML = `<span class="text-[11px] opacity-40">尚未儲存模板</span>`;
+                return;
+            }
+
+            const buildHTML = () => savedPomoTemplates.map((tpl, idx) => `
                 <div class="inline-flex items-center gap-1 py-1 px-2.5 rounded-full border border-current/15 bg-current/5 text-[11px] shrink-0">
-                    <button type="button" onclick="applyPomoTemplate(${idx})" class="p-0 font-medium flex items-center gap-1">
+                    <button type="button" onclick="applyPomoTemplate(${idx})" class="modal-action-btn p-0 font-medium flex items-center gap-1">
                         <span>${tpl.name}</span>
                         <span class="opacity-50 text-[10px]">(${tpl.steps.length}步)</span>
                     </button>
-                    ${!isCompact && savedPomoTemplates.length > 1 ? `<button type="button" onclick="deletePomoTemplate(${idx})" class="p-0 opacity-40 hover:opacity-100 ml-0.5"><i data-lucide="x" width="11" height="11"></i></button>` : ''}
+                    <button type="button" onclick="deletePomoTemplate(${idx})" class="modal-action-btn p-0 opacity-40 hover:opacity-100 ml-0.5" title="刪除此模板"><i data-lucide="x" width="11" height="11"></i></button>
                 </div>
             `).join('');
 
-            if (cloudList) cloudList.innerHTML = buildHTML(false);
-            if (editorRow) editorRow.innerHTML = buildHTML(true);
+            if (cloudList) cloudList.innerHTML = buildHTML();
+            if (editorRow) editorRow.innerHTML = buildHTML();
             safeCreateIcons();
         }
 
         function saveCurrentPomoAsTemplate() {
-            if (savedPomoTemplates.length >= 8) {
-                showTempTip("最多儲存 8 組番茄工作流模板", 2000);
+            if (savedPomoTemplates.length >= 10) {
+                showTempTip("最多儲存 10 組番茄工作流模板", 2000);
                 return;
             }
             const firstFocusMins = Math.floor((pomoSteps[0]?.duration || 1500) / 60);
             const firstBreakMins = Math.floor((pomoSteps[1]?.duration || 300) / 60);
-            const tplName = `自訂 ${firstFocusMins}/${firstBreakMins}`;
+            const tplName = `序列 ${firstFocusMins}/${firstBreakMins}`;
             savedPomoTemplates.push({
                 name: tplName,
                 steps: JSON.parse(JSON.stringify(pomoSteps))
@@ -1791,7 +1799,6 @@
         }
 
         function deletePomoTemplate(idx) {
-            if (savedPomoTemplates.length <= 1) return;
             savedPomoTemplates.splice(idx, 1);
             renderCloudPomoTemplates();
             saveState();
@@ -1892,10 +1899,10 @@
                 }
 
                 if (data.presets) {
-                    if (Array.isArray(data.presets.savedColorPresets) && data.presets.savedColorPresets.length > 0) {
+                    if (Array.isArray(data.presets.savedColorPresets)) {
                         savedColorPresets = data.presets.savedColorPresets;
                     }
-                    if (Array.isArray(data.presets.savedPomoTemplates) && data.presets.savedPomoTemplates.length > 0) {
+                    if (Array.isArray(data.presets.savedPomoTemplates)) {
                         savedPomoTemplates = data.presets.savedPomoTemplates;
                     }
                 }
@@ -1904,11 +1911,9 @@
                     const todayStr = new Date().toISOString().slice(0, 10);
                     focusStats = {
                         todayDate: todayStr,
-                        todaySeconds: data.analytics.todayDate === todayStr
-                            ? Math.max(focusStats.todaySeconds, Number(data.analytics.todaySeconds) || 0)
-                            : focusStats.todaySeconds,
-                        totalSeconds: Math.max(focusStats.totalSeconds, Number(data.analytics.totalSeconds) || 0),
-                        completedPomos: Math.max(focusStats.completedPomos, Number(data.analytics.completedPomos) || 0)
+                        todaySeconds: data.analytics.todayDate === todayStr ? (Number(data.analytics.todaySeconds) || 0) : 0,
+                        totalSeconds: Number(data.analytics.totalSeconds) || 0,
+                        completedPomos: Number(data.analytics.completedPomos) || 0
                     };
                 }
 
@@ -2428,9 +2433,9 @@
                 return;
             }
             currentGoogleUser = {
-                uid: 'local-demo-user',
-                displayName: 'Gaolin',
-                email: 'gaolin@gmail.com'
+                uid: 'local-user',
+                displayName: 'Google 雲端用戶',
+                email: '已啟用本機與雲端同步'
             };
             updateGoogleAuthUI();
             updateFocusStatsUI();
@@ -2457,13 +2462,12 @@
                 window.pushCloudStateNow(true);
                 return;
             }
-            const payload = getCloudSyncPayload();
             const syncTimeEl = document.getElementById('last-sync-time');
             if (syncTimeEl) {
                 const now = new Date();
                 syncTimeEl.textContent = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')} 同步`;
             }
-            showTempTip("5 大雲端資料已打包同步完成！", 2000);
+            showTempTip("雲端資料已打包同步完成！", 2000);
         }
 
         function showHelpModal() {
@@ -3858,16 +3862,15 @@
             onSnapshot
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // ============================================================================
-        // 【部署到 GitHub + Cloudflare Pages 時，請將您的 Firebase 設定填入下方】
-        // ============================================================================
         const USER_FIREBASE_CONFIG = {
-            apiKey: "",
-            authDomain: "",
-            projectId: "",
-            storageBucket: "",
-            messagingSenderId: "",
-            appId: ""
+            apiKey: "AIzaSyCWUxmdXqmwheU0eNV5acDAUbZpcvEinp0",
+            authDomain: "website-online-9e2e7.firebaseapp.com",
+            databaseURL: "https://website-online-9e2e7-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "website-online-9e2e7",
+            storageBucket: "website-online-9e2e7.firebasestorage.app",
+            messagingSenderId: "712587568726",
+            appId: "1:712587568726:web:4fc367ea8aae8dda153df7",
+            measurementId: "G-HJRJC5W6QS"
         };
 
         window.__clientSyncId = crypto.randomUUID ? crypto.randomUUID() : ('client_' + Math.random().toString(36).slice(2));
@@ -3880,17 +3883,18 @@
         let syncDebounceTimer = null;
         let isCanvasEnv = false;
 
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'gaolin-minimal-timer';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'website-online-9e2e7';
 
         function getEffectiveFirebaseConfig() {
+            if (USER_FIREBASE_CONFIG.apiKey && USER_FIREBASE_CONFIG.projectId) {
+                isCanvasEnv = false;
+                return USER_FIREBASE_CONFIG;
+            }
             if (typeof __firebase_config !== 'undefined' && __firebase_config) {
                 try {
                     isCanvasEnv = true;
                     return JSON.parse(__firebase_config);
                 } catch (e) {}
-            }
-            if (USER_FIREBASE_CONFIG.apiKey && USER_FIREBASE_CONFIG.projectId) {
-                return USER_FIREBASE_CONFIG;
             }
             return null;
         }
@@ -3905,7 +3909,7 @@
 
             if (!config) {
                 if (footerEl) {
-                    footerEl.textContent = "提示：填入 USER_FIREBASE_CONFIG 後即可在 Cloudflare 啟用真實 Google 驗證";
+                    footerEl.textContent = "提示：尚未偵測到 Firebase 設定";
                 }
                 return;
             }
@@ -3936,7 +3940,7 @@
                 });
 
                 if (footerEl) {
-                    footerEl.textContent = "Firebase Firestore 即時雙向同步引擎已連線";
+                    footerEl.textContent = `Firebase (${config.projectId}) 即時同步引擎已就緒`;
                 }
             } catch (err) {
                 console.warn("Firebase Init Warning:", err);
@@ -3983,7 +3987,7 @@
                         const now = new Date();
                         syncTimeEl.textContent = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')} 本機同步`;
                     }
-                    showTempTip("已同步並保存雲端配置狀態！", 2000);
+                    showTempTip("已保存至本機（請確認網域已加入 Firebase 授權清單）", 2200);
                 }
                 return;
             }
@@ -4005,7 +4009,7 @@
             } catch (e) {
                 console.warn("Cloud Push Error:", e);
                 if (showNotification) {
-                    showTempTip("雲端寫入失敗，已自動保存於本機", 2200);
+                    showTempTip("雲端寫入失敗，請檢查 Firestore 規則設定", 2200);
                 }
             }
         };
@@ -4032,6 +4036,14 @@
                     }
                 } catch (e) {
                     console.warn("Google Popup Sign-In Fallback:", e);
+                    try {
+                        const anonRes = await signInAnonymously(auth);
+                        if (anonRes.user) {
+                            bindUserRealtimeSync(anonRes.user);
+                            showTempTip("已透過安全匿名通道連線至 Firebase 雲端！", 2500);
+                            return;
+                        }
+                    } catch (anonErr) {}
                 }
             }
 
@@ -4059,8 +4071,8 @@
 
             currentGoogleUser = {
                 uid: 'local-preview',
-                displayName: 'Gaolin',
-                email: 'gaolin@gmail.com'
+                displayName: 'Google 雲端用戶',
+                email: '本機預覽模式（部署至授權網域即可開啟 Google 彈窗）'
             };
             updateGoogleAuthUI();
             updateFocusStatsUI();
@@ -4068,7 +4080,7 @@
             renderCloudPomoTemplates();
             updateCloudPreferenceButtons();
             safeCreateIcons();
-            showTempTip("已開啟雲端同步中心（填入 Firebase Config 即可跨網域連線）", 2800);
+            showTempTip("已開啟雲端同步中心（將網域加入 Firebase 授權即可啟用彈窗）", 2800);
         };
 
         window.firebaseSignOut = async function() {
@@ -4090,31 +4102,6 @@
 
         initFirebaseEngine();
     </script>
-    <script type="module">
-  // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyCWUxmdXqmwheU0eNV5acDAUbZpcvEinp0",
-    authDomain: "website-online-9e2e7.firebaseapp.com",
-    databaseURL: "https://website-online-9e2e7-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "website-online-9e2e7",
-    storageBucket: "website-online-9e2e7.firebasestorage.app",
-    messagingSenderId: "712587568726",
-    appId: "1:712587568726:web:4fc367ea8aae8dda153df7",
-    measurementId: "G-HJRJC5W6QS"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
 </body>
 
 </html>
